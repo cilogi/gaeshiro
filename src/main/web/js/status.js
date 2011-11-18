@@ -5,7 +5,7 @@ shiro.status = (function(log) {
 
     function getStatus() {
         if (typeof(localStorage) != 'undefined') {
-            var time = localStorage.getItem("shiro.status.time"),
+            var time = parseInt(localStorage.getItem("shiro.status.time")),
                 val = localStorage.getItem("shiro.status.data"),
                 now = new Date().getTime();
             if (time) {
