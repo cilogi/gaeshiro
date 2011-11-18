@@ -7,4 +7,4 @@ with [http://code.google.com/appengine](App Engine) and
 Front end user registration and password management is also provided in as minimalistic
 a fashion as we could manage.
 
-The demo, running on App Engine, can be found [here](gaeshiro.appspot.com).
+The demo, running on App Engine, can be found [here](http://gaeshiro.appspot.com).
