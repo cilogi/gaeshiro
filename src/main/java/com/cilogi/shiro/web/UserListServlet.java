@@ -22,13 +22,12 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
+import com.cilogi.shiro.gae.MemcacheManager;
 import com.cilogi.shiro.gae.UserDAO;
 import com.google.appengine.api.datastore.QueryResultIterable;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.shiro.cache.Cache;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,10 +37,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Singleton
@@ -50,34 +48,10 @@ public class UserListServlet extends BaseServlet {
 
     private Cache<ListKey, List<GaeUser>> cache;
 
-
     UserListServlet() {
-        cache = genCache();
+        cache = new MemcacheManager().getCache("UserList");
     }
 
-    private Cache<ListKey, List<GaeUser>> genCache() {
-        return CacheBuilder.newBuilder()
-            .maximumSize(50)
-            .concurrencyLevel(4)
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build(new CacheLoader<ListKey, List<GaeUser>>() {
-                public List<GaeUser> load(ListKey key) {
-                    UserDAO dao = new UserDAO();
-                    QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
-                            .order("-dateRegistered")
-                            .offset(key.start)
-                            .limit(key.length)
-                            .fetch();
-                    List<GaeUser> out = Lists.newLinkedList();
-                    for (GaeUser aQuery : query) {
-                        out.add(aQuery);
-                    }
-                    LOG.info("Fresh load start " + key.start + " # " + key.length);
-                    return out;
-                }
-            }
-    );
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,6 +62,7 @@ public class UserListServlet extends BaseServlet {
             String sEcho = request.getParameter(DATATABLE_ECHO);
             doOutput(response, sSearch, iDisplayStart, iDisplayLength, sEcho);
         } catch (Exception e) {
+            LOG.severe("Error posting to list: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                     "Error generating JSON: " + e.getMessage(), response);
         }
@@ -95,9 +70,17 @@ public class UserListServlet extends BaseServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String invalidateCache = request.getParameter(INVALIDATE_CACHE);
-        if (invalidateCache != null) {
-            cache.invalidateAll();
+        try {
+            String invalidateCache = request.getParameter(INVALIDATE_CACHE);
+            int start = intParameter("start", request, 0);
+            int length = intParameter("length", request, 0);
+            if (invalidateCache != null) {
+                cache.remove(new ListKey(start, length));
+            }
+        } catch (Exception e) {
+            LOG.severe("Error putting to list (invalidate cache): " + e.getMessage());
+            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
+                    "Error invalidating cache: " + e.getMessage(), response);
         }
     }
 
@@ -118,7 +101,8 @@ public class UserListServlet extends BaseServlet {
             arr.put(user.getName());
             arr.put(dateFrom(user.getDateRegistered()));
             arr.put(set2string(user.getRoles()));
-            arr.put(String.format("<input type=\"checkbox\" name=\"%s\" value=\"%s\" %s>",
+            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" type=\"checkbox\" name=\"%s\" value=\"%s\" %s>",
+                    start, length,
                     user.getName(), user.getName(), user.isSuspended() ? "checked" : ""));
             array.put(arr);
         }
@@ -130,12 +114,22 @@ public class UserListServlet extends BaseServlet {
         if (sSearch != null && !"".equals(sSearch)) {
             return Lists.newArrayList(dao.findUser(sSearch));
         } else {
-            try {
-                return cache.get(new ListKey(start, length));
-            } catch (ExecutionException e) {
-                LOG.warning("Can't load users from " + start + " length " + length + ": " + e.getMessage());
-                return new ArrayList<GaeUser>();
+            ListKey key = new ListKey(start, length);
+            List<GaeUser> list =  cache.get(key);
+            if (list == null) {
+                list = Lists.newLinkedList();
+                QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
+                        .order("-dateRegistered")
+                        .offset(start)
+                        .limit(length)
+                        .fetch();
+                for (GaeUser aQuery : query) {
+                    list.add(aQuery);
+                }
+                LOG.info("Fresh load start " + start + " # " + length);
             }
+            cache.put(key, list);
+            return list;
         }
     }
 
@@ -166,7 +160,7 @@ public class UserListServlet extends BaseServlet {
         }
     }
 
-    private static class ListKey {
+    private static class ListKey implements Serializable {
         private final int start;
         private final int length;
 

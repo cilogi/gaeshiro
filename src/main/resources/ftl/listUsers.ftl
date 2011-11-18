@@ -109,8 +109,10 @@
         // user and invalidate the cache so we can see the change if we come back to this
         // page later.
         $("#userList input[type='checkbox']").live("click", function() {
-            var isChecked = $(this).is(":checked");
-            var name = $(this).attr("name");
+            var isChecked = $(this).is(":checked"),
+                name = $(this).attr("name"),
+                start = $(this).attr("data-start"),
+                length = $(this).attr("data-length");
             $.ajax(shiro.userBaseUrl+"/suspend", {
                 type: "POST",
                 dataType: "json",
@@ -130,7 +132,9 @@
                 type: "PUT",
                 dataType: "json",
                 data: {
-                    invalidateCache: true
+                    invalidateCache: true,
+                    start : start,
+                    length : length
                 }
             });
 

@@ -63,6 +63,10 @@
             <p>We provide a Shiro Realm which works with the App Engine datastore via
                 <a href="http://code.google.com/p/objectify-appengine">Objectify</a>.
                 Caching comes via App Engine's memcached service.</p>
+            <p style="text-align:left;">
+                <!-- Place this tag where you want the +1 button to render -->
+                <g:plusone></g:plusone>
+            </p>
         </div>
         <div class="span5">
             <h6>Guice and Shiro</h6>
@@ -76,7 +80,7 @@
 
             <p>Get the code, file issues, etc. on the Github repository</p>
 
-            <p><a class="btn primary" href="#">GAEShiro on GitHub &raquo;</a></p>
+            <p><a class="btn primary" href="https://github.com/cilogi/gaeshiro">GAEShiro on GitHub &raquo;</a></p>
         </div>
     </div>
 </div>
@@ -523,5 +527,12 @@ user = browse:*
             shiro.status.clearStatus();
         });
     });
+</script>
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'http://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
 </script>
 </html>

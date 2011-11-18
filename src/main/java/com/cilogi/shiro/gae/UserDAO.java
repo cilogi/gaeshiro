@@ -21,12 +21,11 @@
 
 package com.cilogi.shiro.gae;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.DAOBase;
+import org.apache.shiro.cache.Cache;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -46,21 +45,7 @@ public class UserDAO extends DAOBase {
     }
 
     public UserDAO() {
-        userCache = genCache();
-    }
-
-    private Cache<String,GaeUser> genCache() {
-        return CacheBuilder.newBuilder()
-            .maximumSize(200)
-            .concurrencyLevel(4)
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build(
-                new CacheLoader<String,GaeUser>() {
-                    public GaeUser load(String userName) {
-                        return findUserDirect(userName);
-                    }
-                }
-             );
+        userCache = new MemcacheManager().getCache("GaeUser");
     }
 
     /**
@@ -71,7 +56,7 @@ public class UserDAO extends DAOBase {
      */
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
         ofy().put(user);
-        userCache.invalidate(user.getName());
+        userCache.remove(user.getName());
         if (changeCount) {
             changeCount(1L);
         }
@@ -91,15 +76,17 @@ public class UserDAO extends DAOBase {
 
     public GaeUser findUser(String userName) {
         try {
-            return userCache.getUnchecked(userName);
+            GaeUser user = userCache.get(userName);
+            if (user == null) {
+                user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
+                if (user != null) {
+                    userCache.put(userName, user);
+                }
+            }
+            return user;
         } catch (NullPointerException _) {
             return null;
         }
-    }
-
-    private GaeUser findUserDirect(String userName) {
-        Key<GaeUser> key = new Key<GaeUser>(GaeUser.class, userName);
-        return ofy().find(key);
     }
 
     /**
@@ -116,7 +103,7 @@ public class UserDAO extends DAOBase {
         if (user != null) {
             user.register();
             ofy().put(user);
-            userCache.invalidate(userName);
+            userCache.remove(userName);
         }
         RegistrationString reg = ofy().find(new Key<RegistrationString>(RegistrationString.class, code));
         if (reg != null) {
