@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The Basics -->
+    <groupId>com.cilogi.shiro</groupId>
+    <artifactId>gaeshiro</artifactId>
+    <version>0.1</version>
+    <packaging>war</packaging>
+
+    <name>gaeshiro</name>
+    <description>Demo of Shiro on Google App Engine</description>
+
+
+    <repositories>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+          <id>objectify-appengine</id>
+          <url>http://objectify-appengine.googlecode.com/svn/maven</url>
+        </repository>
+        <repository>
+          <id>spy</id>
+          <name>Spy Repository</name>
+          <layout>default</layout>
+          <url>http://files.couchbase.com/maven2/</url>
+        </repository>
+        <repository>
+          <id>apache</id>
+          <url>http://repository.apache.org/snapshots</url>
+        </repository>
+        
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-gae-plugin-repo</id>
+            <name>Maven Google App Engine Repository</name>
+            <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
+        </pluginRepository>
+        <pluginRepository>
+          <name>oss.sonatype.org</name>
+          <id>oss.sonatype.org</id>
+          <url>http://oss.sonatype.org/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- Specify hard-coded project properties here -->
+    <properties>
+        <downloadSources>true</downloadSources>
+        <gae.version>1.5.5</gae.version>
+        <appengine.sdk.root>C:/software/appengine-java-sdk-1.5.5</appengine.sdk.root>
+        <gae.application.version>test</gae.application.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <!-- Google App Engine meta-package -->
+        <dependency>
+            <groupId>net.kindleit</groupId>
+            <artifactId>gae-runtime</artifactId>
+            <version>${gae.version}</version>
+            <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.jdo</groupId>
+                    <artifactId>jdo2-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.datanucleus</groupId>
+                    <artifactId>datanucleus-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.datanucleus</groupId>
+                    <artifactId>datanucleus-jpa</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.appengine.orm</groupId>
+                    <artifactId>datanucleus-appengine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_2.5_spec</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- These dependencies are here just for enabling logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+        -->
+        <!-- Test scope -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+              GAE libraries for local testing as described here:
+              http://code.google.com/appengine/docs/java/howto/unittesting.html
+          -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-labs</artifactId>
+            <version>${gae.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-stubs</artifactId>
+            <version>${gae.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-testing</artifactId>
+            <version>${gae.version}</version>
+            <scope>test</scope>
+        </dependency>
+       
+        <!--
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.2</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-servlet</artifactId>
+            <version>3.0</version>
+        </dependency>        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>10.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+          <groupId>com.googlecode.objectify</groupId>
+          <artifactId>objectify</artifactId>
+          <version>3.0</version>
+        </dependency>
+       <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+          <groupId>org.freemarker</groupId>
+          <artifactId>freemarker-gae</artifactId>
+          <version>2.3.18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <!--
+                    <archiveClasses>true</archiveClasses>
+                    -->
+                    <warSourceDirectory>${basedir}/src/main/web</warSourceDirectory>
+                    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+                    <webResources>
+                        <!--
+                        <resource>
+                            <directory>src/main/web</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>*.html</include>
+                                <include>*.properties</include>
+                                <include>cache.manifest</include>
+                                <include>favicon.ico</include>
+                                <include>**/*.xml</include>
+                                <include>**/*.tld</include>
+                                <include>**/*.ini</include>
+                                <include>css/**</include>
+                                <include>js/**</include>
+                                <include>images/**</include>
+                                <include>assets/**</include>
+                            </includes>
+                        </resource>
+                        -->
+                    </webResources>
+                </configuration>
+            </plugin>
+
+            <!--
+                The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
+                gae:deploy" to upload to GAE.
+            -->
+            <plugin>
+                <groupId>net.kindleit</groupId>
+                <artifactId>maven-gae-plugin</artifactId>
+                <version>0.7.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.kindleit</groupId>
+                        <artifactId>gae-runtime</artifactId>
+                        <version>${gae.version}</version>
+                        <type>pom</type>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <serverId>appengine.google.com</serverId>
+                    <sdkDir>${appengine.sdk.root}</sdkDir>
+                    <appDir>${basedir}/target/gaeshiro-0.1</appDir>
+                </configuration>
+                
+            </plugin>
+
+            <!--
+                Upload application to the appspot automatically, during
+                release:perform
+            -->
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <goals>gae:deploy</goals>
+                </configuration>
+            </plugin>
+
+            <!-- Java compiler version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+              <executions>
+                <execution>
+                  <id>attach-sources</id>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            
+            <plugin>
+              <groupId>com.googlecode.fmpp-maven-plugin</groupId>
+              <artifactId>fmpp-maven-plugin</artifactId>
+              <version>1.0</version>
+              <configuration>
+                <cfgFile>src/main/resources/fmpp/config.fmpp</cfgFile>
+                <outputDirectory>${basedir}/src/main/web</outputDirectory>
+                  <!--
+                <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
+                -->
+                <templateDirectory>src/main/resources/ftl/</templateDirectory>
+              </configuration>
+              <executions>
+                  <execution>
+                      <id>FMPP</id>
+                      <phase>compile</phase>
+                      <goals>
+                          <goal>
+                              generate
+                          </goal>
+                      </goals>
+                  </execution>
+              </executions>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>compress</goal>
+                    </goals>
+                  </execution>
+                </executions>
+                <configuration>
+                    <warSourceDirectory>${basedir}/src/main/web</warSourceDirectory>
+                    <nosuffix>true</nosuffix>
+                  <excludes>
+                      <exclude>**/*.min.js</exclude>
+                      <exclude>**/*.min.css</exclude>
+                  </excludes>
+                </configuration>
+            </plugin>
+            -->
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>                
+            </resource>
+            <resource>
+                <directory>src/test</directory>
+                <includes>
+                    <include>**/*.cfg</include>
+                </includes>
+            </resource>
+
+        </resources>
+    </build>
+
+
+    <profiles>
+        <!--
+            We can configure our integration server to activate this profile and
+            perform gae:deploy, thus uploading latest snapshot to the
+            http://1.latest.<applicationName>.appspot.com automatically
+        -->
+        <profile>
+            <id>integration-build</id>
+            <properties>
+                <gae.application.version>stage</gae.application.version>
+            </properties>
+        </profile>
+
+        <!--
+            This profile will activate automatically during release and upload
+            application to the http://2.latest.<applicationName>.appspot.com (We
+            might want to set the 2nd version as our applications Default version
+            to be accessible at http://<applicationName>.appspot.com)
+        -->
+        <profile>
+            <id>release-build</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <properties>
+                <!--
+                    During release, set application version in appengine-web.xml to 2
+                -->
+                <gae.application.version>release</gae.application.version>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

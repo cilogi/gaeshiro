@@ -1,0 +1,43 @@
+.hero-unitA {
+    background-image: url(../images/grid.png);
+    background-repeat: repeat;
+    background-size: 3px 3px;
+}
+
+.hero-unit {
+    background-image: url(../images/grid.png), url(../images/lock.jpg);
+    background-repeat: repeat, no-repeat;
+    background-size: 3px 3px, cover;
+}
+
+.semi {
+    background-color: white;
+    opacity: 0.8;
+    padding: 30px;
+}
+
+.semi a {
+    opacity: 1;
+}
+
+#modal-login label.error {
+    display: block;
+    float: none;
+    padding: 0;
+    text-align: left;
+    color: red;
+    width: 270px;
+}
+
+.dataTables_filter {
+    margin-bottom: 0.5em;
+    float: left;
+}
+
+.dataTables_filter label {
+    text-align: left;
+}
+
+.dataTables_filter input {
+    text-align: left;
+}

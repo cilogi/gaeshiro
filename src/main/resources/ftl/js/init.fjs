@@ -1,0 +1,3 @@
+var shiro = shiro || {}
+
+shiro.userBaseUrl = "${userBaseUrl}";

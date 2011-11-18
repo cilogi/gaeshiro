@@ -1,0 +1,27 @@
+
+#loginBox.dropdown-menu {
+    width: 260px;
+    max-width: 260px;
+}
+
+#loginBox label {
+    color: white;
+}
+
+#loginBox .rememberMe {
+    color: #ddd;
+    font-weight: 400;
+    display: inline;
+    margin-left: 10px;
+}
+
+#loginBox a {
+    padding-left: 0;
+    color: gray;
+    text-shadow: black 0 0 0;
+}
+
+#loginBox a:hover {
+    color: white;
+    background: #333;
+}

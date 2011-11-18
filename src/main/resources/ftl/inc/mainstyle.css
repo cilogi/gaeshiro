@@ -1,0 +1,7 @@
+body {
+  padding-top: 60px;
+}
+
+#spinner {
+ position: absolute; top: 90px; left: 50%;
+}
