@@ -1,5 +1,3 @@
-var shiro = shiro || {};
-
 shiro.login = function(action, onSuccess) {
     var loginForm = $("#loginForm");
 
@@ -12,6 +10,7 @@ shiro.login = function(action, onSuccess) {
             password = form.find("input[name='password']").val(),
             rememberMe = form.find("input[name='rememberMe']").is(":checked");
         if (form.valid()) {
+            shiro.spin.start();
             $.ajax(action, {
                 type: "POST",
                 data : {
@@ -21,6 +20,7 @@ shiro.login = function(action, onSuccess) {
                 },
                 dataType: "json",
                 success: function(data, status) {
+                    shiro.spin.stop();
                     if (status == 'success') {
                         onSuccess();
                     } else {
@@ -28,6 +28,7 @@ shiro.login = function(action, onSuccess) {
                     }
                 },
                 error: function(xhr) {
+                    shiro.spin.stop();
                     alert("login failed for " + username);
                 }
             });

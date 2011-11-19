@@ -63,10 +63,6 @@
             <p>We provide a Shiro Realm which works with the App Engine datastore via
                 <a href="http://code.google.com/p/objectify-appengine">Objectify</a>.
                 Caching comes via App Engine's memcached service.</p>
-            <p style="text-align:left;">
-                <!-- Place this tag where you want the +1 button to render -->
-                <g:plusone></g:plusone>
-            </p>
         </div>
         <div class="span5">
             <h6>Guice and Shiro</h6>
@@ -462,14 +458,11 @@ user = browse:*
 <script>
     $(document).ready(function() {
         prettyPrint();
-        var div = $("#spinner").get(0);
-        var spin = new Spinner({
-            color: "#802B2B"
-        }).spin(div);
+        shiro.spin.start();
 
         shiro.status.runStatus({
             success: function(data, status) {
-                spin.stop();
+                shiro.spin.stop();
                 if (status == 'success') {
                     $("html").removeClass("shiro-none-active");
                     if (data.message == "known") {
@@ -489,7 +482,7 @@ user = browse:*
                 }
             },
             error: function(xhr) {
-                spin.stop();
+                shiro.spin.stop();
                 alert("can't find status: " + xhr.responseText);
             }
         });
@@ -527,12 +520,5 @@ user = browse:*
             shiro.status.clearStatus();
         });
     });
-</script>
-<script type="text/javascript">
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'http://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
 </script>
 </html>

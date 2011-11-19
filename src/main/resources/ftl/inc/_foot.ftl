@@ -11,6 +11,7 @@
 <script src="js/bootstrap/bootstrap-modal.js"></script>
 
 <script src="js/init.js"></script>
+<script src="js/spin.js"></script>
 <script src="js/log.js"></script>
 <script src="js/status.js"></script>
 <script src="js/login.js"></script>
