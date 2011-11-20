@@ -65,6 +65,8 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/settings").with(SettingsServlet.class);
         // this one is here so that the default login filter works
         serve("/login.jsp").with(LoginJSPServlet.class);
+        // Lets check mail to see when stuff bounces
+        serve("/_ah/mail/*").with(MailReceiveServlet.class);
     }
 
     private static Map<String,String> map(String... params) {

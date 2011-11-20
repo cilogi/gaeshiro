@@ -52,7 +52,7 @@ public class ServeLogic extends AbstractModule {
         bind(ShiroFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
         bindString("tim", "tim");
-        bindString("email.from", "tim.niblett@cilogi.com");
+        bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
     }
 
