@@ -63,6 +63,13 @@ public class UserDAO extends DAOBase {
         return user;
     }
 
+    public GaeUser deleteUser(GaeUser user) {
+        ofy().delete(user);
+        userCache.remove(user.getName());
+        changeCount(-1L);
+        return user;
+    }
+
     public RegistrationString saveRegistration(String registrationString, String userName) {
         RegistrationString reg = new RegistrationString(registrationString, userName, REGISTRATION_VALID_DAYS, TimeUnit.DAYS);
         ofy().put(reg);

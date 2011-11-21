@@ -96,15 +96,20 @@ public class UserListServlet extends BaseServlet {
 
         List<GaeUser> users = users(dao, sSearch, start, length);
         JSONArray array = new JSONArray();
+        int index = 0;
         for (GaeUser user : users) {
             JSONArray arr = new JSONArray();
             arr.put(user.getName());
             arr.put(dateFrom(user.getDateRegistered()));
             arr.put(set2string(user.getRoles()));
-            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" type=\"checkbox\" name=\"%s\" value=\"%s\" %s>",
+            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" type=\"checkbox\" name=\"%s\" %s>",
                     start, length,
-                    user.getName(), user.getName(), user.isSuspended() ? "checked" : ""));
+                    user.getName(), user.isSuspended() ? "checked" : ""));
+            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" data-index=\"%d\" type=\"button\" name=\"%s\" value=\"delete\">",
+                    start, length, index,
+                    user.getName()));
             array.put(arr);
+            index++;
         }
         obj.put("aaData", array);
         issueJson(response, HTTP_STATUS_OK, obj);

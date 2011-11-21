@@ -23,6 +23,8 @@ package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.web.*;
 import com.cilogi.util.ShiroFreemarkerServlet;
+import com.google.appengine.tools.appstats.AppstatsFilter;
+import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.inject.servlet.ServletModule;
@@ -47,6 +49,7 @@ public class ServeModule extends ServletModule {
     protected void configureServlets() {
         filter("/*").through(ShiroFilter.class);
         filter("/*").through(AsyncCacheFilter.class);
+        filter("/*").through(AppstatsFilter.class);
         serve("*.ftl").with(ShiroFreemarkerServlet.class, map(
                 "TemplatePath", "/WEB-INF/classes/ftl",
                 "NoCache", "true",
@@ -63,10 +66,11 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
         serve(userBaseUrl + "/settings").with(SettingsServlet.class);
-        // this one is here so that the default login filter works
+            // this one is here so that the default login filter works
         serve("/login.jsp").with(LoginJSPServlet.class);
-        // Lets check mail to see when stuff bounces
+            // Lets check mail to see when stuff bounces
         serve("/_ah/mail/*").with(MailReceiveServlet.class);
+        serve("/appstats/*").with(AppstatsServlet.class);
     }
 
     private static Map<String,String> map(String... params) {

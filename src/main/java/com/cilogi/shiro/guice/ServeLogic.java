@@ -22,6 +22,8 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.util.doc.CreateDoc;
+import com.google.appengine.tools.appstats.AppstatsFilter;
+import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.cloud.sql.jdbc.internal.Charsets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -50,6 +52,8 @@ public class ServeLogic extends AbstractModule {
     protected void configure() {
         bind(CreateDoc.class).toInstance(createDoc());
         bind(ShiroFilter.class).in(Scopes.SINGLETON);
+        bind(AppstatsServlet.class).in(Scopes.SINGLETON);
+        bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
         bindString("tim", "tim");
         bindString("email.from", "admin@gaeshiro.appspotmail.com");

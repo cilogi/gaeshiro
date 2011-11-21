@@ -43,6 +43,7 @@
                             <th>Registration Date</th>
                             <th>Roles</th>
                             <th>Suspended</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,7 @@
                             <th>Registration Date</th>
                             <th>Roles</th>
                             <th>Suspended</th>
+                            <th>Delete</th>
                         </tr>
                     </tfoot>
                     </table>
@@ -105,40 +107,57 @@
            }
         });
 
+
+        function processCheckOrDelete(tgt, isCheck) {
+            var isChecked = tgt.is(":checked"),
+                name = tgt.attr("name"),
+                start = tgt.attr("data-start"),
+                length = tgt.attr("data-length"),
+                index = tgt.attr("data-index"),
+                data = isCheck
+                        ? { username : name, suspend : isChecked, delete: false}
+                        : { username : name, suspend : false, delete: true};
+            $.ajax(shiro.userBaseUrl+"/suspend", {
+                type: "POST",
+                dataType: "json",
+                data: data,
+                success: function(data, status) {
+                    $.ajax(shiro.userBaseUrl+"/list", {
+                        type: "PUT",
+                        dataType: "json",
+                        data: {
+                            invalidateCache: true,
+                            start : start,
+                            length : length
+                        },
+                        success: function() {
+                            if (!isCheck) {
+                                oTable.fnDeleteRow(index);
+                            }
+                            alert(data.message);
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    alert("suspend failed: " + xhr.responseText);
+                }
+            });
+
+            function success() {
+            }
+
+
+        }
         // When a checkbox is changed both suspend or unsuspend the relevant
         // user and invalidate the cache so we can see the change if we come back to this
         // page later.
         $("#userList input[type='checkbox']").live("click", function() {
-            var isChecked = $(this).is(":checked"),
-                name = $(this).attr("name"),
-                start = $(this).attr("data-start"),
-                length = $(this).attr("data-length");
-            $.ajax(shiro.userBaseUrl+"/suspend", {
-                type: "POST",
-                dataType: "json",
-                data: {
-                    username: name,
-                    suspend: isChecked
-                },
-                success: function(data, status) {
-                    alert(data.message);
-                },
-                error: function(xhr, message) {
-                    alert("suspend failed: " + message);
-                }
-            });
-
-            $.ajax(shiro.userBaseUrl+"/list", {
-                type: "PUT",
-                dataType: "json",
-                data: {
-                    invalidateCache: true,
-                    start : start,
-                    length : length
-                }
-            });
-
+            processCheckOrDelete($(this), true);
         });
+        $("#userList input[type='button']").live("click", function() {
+            processCheckOrDelete($(this), false);
+        });
+
     });
 </script>
 

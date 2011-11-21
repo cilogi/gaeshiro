@@ -45,17 +45,26 @@ public class UserSuspendServlet extends BaseServlet {
             GaeUser user = dao.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
-                user.setSuspended(isSuspend);
-                dao.saveUser(user, false);
-                issueJson(response, HTTP_STATUS_OK,
-                        MESSAGE, isSuspend
-                                ? "User " + userName + " is suspended"
-                                : "User " + userName + " is not suspended");
+                boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
+                if (isDelete) {
+                    dao.deleteUser(user);
+                    issueJson(response, HTTP_STATUS_OK,
+                            MESSAGE, "User " + userName + " is deleted");
+                } else {
+                    user.setSuspended(isSuspend);
+                    dao.saveUser(user, false);
+                    issueJson(response, HTTP_STATUS_OK,
+                            MESSAGE, isSuspend
+                                    ? "User " + userName + " is suspended"
+                                    : "User " + userName + " is not suspended");
+                }
             } else {
+                LOG.warning("Can't find user " + userName);
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
                       "Can't find user " + userName, response);
             }
         } catch (Exception e) {
+            LOG.severe("Suspend failure: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Error generating JSON: " + e.getMessage(), response);
         }
