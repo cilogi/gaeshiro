@@ -543,6 +543,7 @@ user = browse:*
 <script src="js/lib/jquery.tmpl.min.js"></script>
 <script src="js/lib/jquery.validate.min.js"></script>
 <script src="js/lib/spin.min.js"></script>
+<script src="js/lib/jquery.busy.min.js"></script>
 
 <script src="assets/js/google-code-prettify/prettify.js"></script>
 
@@ -572,11 +573,11 @@ user = browse:*
 <script>
     $(document).ready(function() {
         prettyPrint();
-        shiro.spin.start();
+        var spin = shiro.spin.start($("#spinner"));
 
         shiro.status.runStatus({
             success: function(data, status) {
-                shiro.spin.stop();
+                spin.stop();
                 if (status == 'success') {
                     $("html").removeClass("shiro-none-active");
                     if (data.message == "known") {
@@ -596,7 +597,7 @@ user = browse:*
                 }
             },
             error: function(xhr) {
-                shiro.spin.stop();
+                spin.stop();
                 alert("can't find status: " + xhr.responseText);
             }
         });

@@ -2,17 +2,13 @@
 shiro.spin =
 (function() {
 
-    var div = $("#spinner").get(0),
-        spin = new Spinner({
-            color: "#802B2B"
-        });
-
     return {
-        start: function() {
-            spin.spin(div);
-        },
-        stop: function() {
-            spin.stop();
+        start: function(jqueryElement) {
+            var spin = new Spinner({
+                color: "#802B2B"
+            });
+            spin.spin(jqueryElement.get(0));
+            return spin;
         }
     }
 })();

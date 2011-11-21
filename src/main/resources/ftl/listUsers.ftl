@@ -114,34 +114,23 @@
                 start = tgt.attr("data-start"),
                 length = tgt.attr("data-length"),
                 index = tgt.attr("data-index"),
+                spin = shiro.spin.start(tgt.parent()),
                 data = isCheck
                         ? { username : name, suspend : isChecked, delete: false}
                         : { username : name, suspend : false, delete: true};
-            tgt.busy();
             $.ajax(shiro.userBaseUrl+"/suspend", {
                 type: "POST",
                 dataType: "json",
                 data: data,
                 success: function(data, status) {
-                    $.ajax(shiro.userBaseUrl+"/list", {
-                        type: "PUT",
-                        dataType: "json",
-                        data: {
-                            invalidateCache: true,
-                            start : start,
-                            length : length
-                        },
-                        success: function() {
-                            if (!isCheck) {
-                                oTable.fnDeleteRow(index);
-                            }
-                            tgt.busy("hide")
-                            alert(data.message);
-                        }
-                    });
+                    if (!isCheck) {
+                        oTable.fnDeleteRow(index);
+                    }
+                    spin.stop();
+                    alert(data.message);
                 },
                 error: function(xhr) {
-                    tgt.busy("hide")
+                    spin.stop();
                     alert("suspend failed: " + xhr.responseText);
                 }
             });

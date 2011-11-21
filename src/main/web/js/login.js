@@ -10,7 +10,7 @@ shiro.login = function(action, onSuccess) {
             password = form.find("input[name='password']").val(),
             rememberMe = form.find("input[name='rememberMe']").is(":checked");
         if (form.valid()) {
-            shiro.spin.start();
+            var spin = shiro.spin.start($("#spinner"));
             $.ajax(action, {
                 type: "POST",
                 data : {
@@ -20,7 +20,7 @@ shiro.login = function(action, onSuccess) {
                 },
                 dataType: "json",
                 success: function(data, status) {
-                    shiro.spin.stop();
+                    spin.stop();
                     if (status == 'success') {
                         onSuccess();
                     } else {
@@ -28,7 +28,7 @@ shiro.login = function(action, onSuccess) {
                     }
                 },
                 error: function(xhr) {
-                    shiro.spin.stop();
+                    spin.stop();
                     alert("login failed for " + username);
                 }
             });

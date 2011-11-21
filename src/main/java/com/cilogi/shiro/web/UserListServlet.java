@@ -22,12 +22,10 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.MemcacheManager;
 import com.cilogi.shiro.gae.UserDAO;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.apache.shiro.cache.Cache;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
@@ -46,11 +43,8 @@ import java.util.logging.Logger;
 public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
-    private Cache<ListKey, List<GaeUser>> cache;
 
-    UserListServlet() {
-        cache = new MemcacheManager().getCache("UserList");
-    }
+    UserListServlet() {}
 
 
     @Override
@@ -65,22 +59,6 @@ public class UserListServlet extends BaseServlet {
             LOG.severe("Error posting to list: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                     "Error generating JSON: " + e.getMessage(), response);
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            String invalidateCache = request.getParameter(INVALIDATE_CACHE);
-            int start = intParameter("start", request, 0);
-            int length = intParameter("length", request, 0);
-            if (invalidateCache != null) {
-                cache.remove(new ListKey(start, length));
-            }
-        } catch (Exception e) {
-            LOG.severe("Error putting to list (invalidate cache): " + e.getMessage());
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                    "Error invalidating cache: " + e.getMessage(), response);
         }
     }
 
@@ -119,21 +97,16 @@ public class UserListServlet extends BaseServlet {
         if (sSearch != null && !"".equals(sSearch)) {
             return Lists.newArrayList(dao.findUser(sSearch));
         } else {
-            ListKey key = new ListKey(start, length);
-            List<GaeUser> list =  cache.get(key);
-            if (list == null) {
-                list = Lists.newLinkedList();
-                QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
-                        .order("-dateRegistered")
-                        .offset(start)
-                        .limit(length)
-                        .fetch();
-                for (GaeUser aQuery : query) {
-                    list.add(aQuery);
-                }
-                LOG.info("Fresh load start " + start + " # " + length);
+            List<GaeUser> list =  Lists.newLinkedList();
+            QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
+                    .order("-dateRegistered")
+                    .offset(start)
+                    .limit(length)
+                    .fetch();
+            for (GaeUser aQuery : query) {
+                list.add(aQuery);
             }
-            cache.put(key, list);
+            LOG.info("Fresh load start " + start + " # " + length);
             return list;
         }
     }
@@ -161,31 +134,6 @@ public class UserListServlet extends BaseServlet {
             for (int i = 0; i < 100; i++) {
                 user = new GaeUser("user" + i + "@acme.com", "acme", Sets.newHashSet("user"), Sets.<String>newHashSet());
                 dao.saveUser(user, true);
-            }
-        }
-    }
-
-    private static class ListKey implements Serializable {
-        private final int start;
-        private final int length;
-
-        ListKey(int start, int length) {
-            this.start = start;
-            this.length = length;
-        }
-
-        @Override
-        public int hashCode() {
-            return start * 503 + length;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof ListKey) {
-                ListKey k = (ListKey) o;
-                return start == k.start && length == k.length;
-            } else {
-                return false;
             }
         }
     }
