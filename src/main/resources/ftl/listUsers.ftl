@@ -117,6 +117,7 @@
                 data = isCheck
                         ? { username : name, suspend : isChecked, delete: false}
                         : { username : name, suspend : false, delete: true};
+            tgt.busy();
             $.ajax(shiro.userBaseUrl+"/suspend", {
                 type: "POST",
                 dataType: "json",
@@ -134,11 +135,13 @@
                             if (!isCheck) {
                                 oTable.fnDeleteRow(index);
                             }
+                            tgt.busy("hide")
                             alert(data.message);
                         }
                     });
                 },
                 error: function(xhr) {
+                    tgt.busy("hide")
                     alert("suspend failed: " + xhr.responseText);
                 }
             });

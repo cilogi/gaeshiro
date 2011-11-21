@@ -4,6 +4,7 @@
 <script src="js/lib/jquery.tmpl.min.js"></script>
 <script src="js/lib/jquery.validate.min.js"></script>
 <script src="js/lib/spin.min.js"></script>
+<script src="js/lib/jquery.busy.min.js"></script>
 
 <script src="assets/js/google-code-prettify/prettify.js"></script>
 
