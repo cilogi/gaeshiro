@@ -1,1 +1,3 @@
 userBaseUrl : "/user/admin"
+staticBaseUrl : "http://static.gaeshiro.appspot.com/"
+#staticBaseUrl : ""

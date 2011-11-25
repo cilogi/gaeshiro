@@ -33,25 +33,38 @@ import java.util.logging.Logger;
 public class ServeContextListener extends GuiceServletContextListener {
     static final Logger LOG = Logger.getLogger(ServeContextListener.class.getName());
 
-
+    // where we want to serve user management urls from.  Allows
+    // us to use this as a module of sorts
     private String userBaseUrl;
+
+    // Prefix for the url from which static files are served. Empty string by default.
+    // On App Engine we'll use static.<appid>.appspot.com.
+    // For debugging this can be overridden by local system property
+    private String staticBaseUrl;
 
     public ServeContextListener() {
         userBaseUrl = "";
+        staticBaseUrl = "";
     }
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent)  {
         ServletContext context = servletContextEvent.getServletContext();
-        if (context != null && context.getInitParameter("user-base-url") != null) {
-            userBaseUrl = context.getInitParameter("user-base-url");
+        if (context != null) {
+            if (context.getInitParameter("user-base-url") != null) {
+                userBaseUrl = context.getInitParameter("user-base-url");
+            }
+            String override = System.getProperty("staticBaseUrl");
+            if (override != null || context.getInitParameter("static-base-url") != null) {
+                staticBaseUrl = (override != null) ? override : context.getInitParameter("static-base-url");
+            }
         }
         super.contextInitialized(servletContextEvent);
     }
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServeLogic(userBaseUrl), new ServeModule(userBaseUrl));
+        return Guice.createInjector(new ServeLogic(userBaseUrl, staticBaseUrl), new ServeModule(userBaseUrl));
     }
     
 }

@@ -10,6 +10,11 @@
        <param-value>/user/admin</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>static-base-url</param-name>
+        <param-value>http://static.gaeshiro.appspot.com/</param-value>
+    </context-param>
+
     <filter>
         <filter-name>guiceFilter</filter-name>
         <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>

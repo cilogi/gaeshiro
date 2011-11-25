@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,15 +49,13 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     protected final int HTTP_STATUS_FORBIDDEN = 403;
     protected final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
-    private final CreateDoc create;
+    private CreateDoc create;
 
-    BaseServlet() {
-        try {
-            URL url = getClass().getResource("/ftl/");
-            create = new CreateDoc(url, Locale.getDefault(), Charsets.UTF_8.name());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't set up doc creator: " + e.getMessage());
-        }
+    BaseServlet() {}
+
+    @Inject
+    protected void setCreate(CreateDoc create) {
+        this.create = create;
     }
 
     protected void issue(String mimeType, int returnCode, String output, HttpServletResponse response) throws IOException {

@@ -43,9 +43,11 @@ public class ServeLogic extends AbstractModule {
     static final Logger LOG = Logger.getLogger(ServeLogic.class.getName());
 
     private final String userBaseUrl;
+    private final String staticBaseUrl;
 
-    public ServeLogic(String userBaseUrl) {
+    public ServeLogic(String userBaseUrl, String staticBaseUrl) {
         this.userBaseUrl = userBaseUrl;
+        this.staticBaseUrl = staticBaseUrl;
     }
 
     @Override
@@ -58,6 +60,7 @@ public class ServeLogic extends AbstractModule {
         bindString("tim", "tim");
         bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
+        bindString("staticBaseUrl", staticBaseUrl);
     }
 
     private void bindString(String key, String value) {
@@ -70,6 +73,7 @@ public class ServeLogic extends AbstractModule {
             CreateDoc create = new CreateDoc(base, Locale.getDefault(), Charsets.UTF_8.name());
             Configuration cfg = create.cfg();
             cfg.setSharedVariable("userBaseUrl", userBaseUrl);
+            cfg.setSharedVariable("staticBaseUrl", staticBaseUrl);
             return create;
         } catch (IOException e) {
             throw new RuntimeException(e);

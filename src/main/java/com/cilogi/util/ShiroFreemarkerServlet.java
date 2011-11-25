@@ -43,10 +43,14 @@ public class ShiroFreemarkerServlet extends FreemarkerServlet {
     // The base URL for user admin commands, variable so we can
     // decide where we want it to be.
     private final String userBaseUrl;
-
+    private final String staticBaseUrl;
+    
     @Inject
-    public ShiroFreemarkerServlet(@Named("userBaseUrl") String userBaseUrl) {
+    public ShiroFreemarkerServlet(
+            @Named("userBaseUrl") String userBaseUrl,
+            @Named("staticBaseUrl") String staticBaseUrl) {
         this.userBaseUrl = userBaseUrl;
+        this.staticBaseUrl = staticBaseUrl;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class ShiroFreemarkerServlet extends FreemarkerServlet {
             throws ServletException, IOException {
 
         ((SimpleHash) data).put("userBaseUrl", userBaseUrl);
+        ((SimpleHash) data).put("staticBaseUrl", staticBaseUrl);
         return true;
     }
 }

@@ -218,6 +218,11 @@
             <artifactId>mail</artifactId>
             <version>1.4.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
     </dependencies>
 
 

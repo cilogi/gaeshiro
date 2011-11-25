@@ -9,15 +9,15 @@
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<link href="css/dataTables/demo_table.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/dataTables/demo_table.css" type="text/css" rel="stylesheet">
 
 
 <!-- Le styles -->
-<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="assets/css/docs.css" type="text/css" rel="stylesheet">
-<link href="css/login.css" type="text/css" rel="stylesheet">
-<link href="css/local.css" type="text/css" rel="stylesheet">
-<link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/bootstrap.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}assets/css/docs.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/login.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/local.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
     <#include "${style}">
@@ -34,7 +34,7 @@
 
 
 <!-- Le fav and touch icons -->
-<link rel="shortcut icon" href="images/favicon.ico">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+<link rel="shortcut icon" href="${staticBaseUrl}images/favicon.ico">
+<link rel="apple-touch-icon" href="${staticBaseUrl}images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="${staticBaseUrl}images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="${staticBaseUrl}images/apple-touch-icon-114x114.png">
