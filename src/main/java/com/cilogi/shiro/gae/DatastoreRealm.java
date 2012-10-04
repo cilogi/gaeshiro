@@ -35,13 +35,15 @@ import java.util.logging.Logger;
 public class DatastoreRealm extends AuthorizingRealm {
     private static final Logger LOG = Logger.getLogger(DatastoreRealm.class.getName());
 
-    private final UserDAO userDAO;
 
     public DatastoreRealm() {
         super(new MemcacheManager(), theCredentials());
-        this.userDAO = new UserDAO();
 
         LOG.fine("Creating a new instance of DatastoreRealm");
+    }
+
+    private UserDAO dao() {
+        return UserDAOProvider.get();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class DatastoreRealm extends AuthorizingRealm {
         Preconditions.checkNotNull(userName, "User name can't be null");
 
         LOG.fine("Finding authentication info for " + userName + " in DB");
-        GaeUser user = userDAO.findUser(userName);
+        GaeUser user = dao().findUser(userName);
 
         if (user == null || userIsNotQualified(user)) {
             return null;
@@ -76,7 +78,7 @@ public class DatastoreRealm extends AuthorizingRealm {
             throw new NullPointerException("Can't find a principal in the collection");
         }
         LOG.fine("Finding authorization info for " + userName + " in DB");
-        GaeUser user = userDAO.findUser(userName);
+        GaeUser user = dao().findUser(userName);
         if (user == null || userIsNotQualified(user)) {
             return null;
         }

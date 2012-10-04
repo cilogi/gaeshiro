@@ -25,6 +25,9 @@ import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -99,4 +103,31 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
         String s = request.getParameter(name);
         return (s == null) ? deflt : Boolean.parseBoolean(s);
     }
+
+    /**
+     * Login and make sure you then have a new session.  This helps prevent session fixation attacks.
+     *
+     * @param token
+     * @param subject
+     */
+    static void loginWithNewSession(UsernamePasswordToken token, Subject subject) {
+        Session originalSession = subject.getSession();
+
+        Map<Object, Object> attributes = Maps.newLinkedHashMap();
+        Collection<Object> keys = originalSession.getAttributeKeys();
+        for(Object key : keys) {
+            Object value = originalSession.getAttribute(key);
+            if (value != null) {
+                attributes.put(key, value);
+            }
+        }
+        originalSession.stop();
+        subject.login(token);
+
+        Session newSession = subject.getSession();
+        for(Object key : attributes.keySet() ) {
+            newSession.setAttribute(key, attributes.get(key));
+        }
+    }
+
 }

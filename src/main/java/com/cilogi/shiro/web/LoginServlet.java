@@ -66,31 +66,4 @@ public class LoginServlet extends BaseServlet {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
-
-    /**
-     * Login and make sure you then have a new session.  This helps prevent session fixation attacks.
-     * 
-     * @param token
-     * @param subject
-     */
-    private void loginWithNewSession(UsernamePasswordToken token, Subject subject) {
-        Session originalSession = subject.getSession();
-
-        Map<Object, Object> attributes = Maps.newLinkedHashMap();
-        Collection<Object> keys = originalSession.getAttributeKeys();
-        for(Object key : keys) {
-            Object value = originalSession.getAttribute(key);
-            if (value != null) {
-                attributes.put(key, value);
-            }
-        }
-        originalSession.stop();
-        subject.login(token);
-
-        Session newSession = subject.getSession();
-        for(Object key : attributes.keySet() ) {
-            newSession.setAttribute(key, attributes.get(key));
-        }
-    }
-
 }

@@ -21,11 +21,14 @@
 
 package com.cilogi.shiro.guice;
 
+import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.cloud.sql.jdbc.internal.Charsets;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
@@ -33,6 +36,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 import org.apache.shiro.web.servlet.ShiroFilter;
 
+import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -41,6 +45,7 @@ import java.util.logging.Logger;
 
 public class ServeLogic extends AbstractModule {
     static final Logger LOG = Logger.getLogger(ServeLogic.class.getName());
+
 
     private final String userBaseUrl;
     private final String staticBaseUrl;
@@ -80,6 +85,11 @@ public class ServeLogic extends AbstractModule {
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Provides    
+    UserDAO provideUserDAO() {
+        return UserDAOProvider.get();
     }
 
 }

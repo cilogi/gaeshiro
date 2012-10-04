@@ -41,3 +41,7 @@
 .dataTables_filter input {
     text-align: left;
 }
+
+.modal-auth .btn-auth {
+    margin-left: 1em;
+}

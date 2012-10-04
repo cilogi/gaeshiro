@@ -25,6 +25,7 @@
     </fieldset>
     <div class="actions">
         <button id="modalLogin" type="submit" class="btn primary">Login</button>
+</a>
     </div>
 </form>
 <a id="loginRegister" href="/register.ftl" style="margin-left: 1em; margin-bottom: 1em;">Register</a>

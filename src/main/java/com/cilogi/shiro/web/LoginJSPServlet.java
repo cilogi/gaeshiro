@@ -42,5 +42,4 @@ public class LoginJSPServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         showView(response, "login.ftl");
     }
-
 }

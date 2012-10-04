@@ -68,6 +68,8 @@ public class GaeUser implements Serializable {
 
     private boolean isSuspended;
 
+    private boolean isGoogle;
+
     /** For objectify to create instances on retrieval */
     private GaeUser() {
         this.roles = new HashSet<String>();
@@ -95,6 +97,15 @@ public class GaeUser implements Serializable {
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
         this.isSuspended = false;
+        this.isGoogle = false;
+    }
+
+    public boolean isGoogle() {
+        return isGoogle;
+    }
+
+    public void setGoogle(boolean google) {
+        isGoogle = google;
     }
 
     public boolean isSuspended() {

@@ -516,6 +516,12 @@ user = browse:*
             return false;
         });
 
+        $("#google").click(function(e) {
+            e.preventDefault();
+            
+            return false;
+        });
+
         $("#logout").click(function(e) {
             shiro.status.clearStatus();
         });
