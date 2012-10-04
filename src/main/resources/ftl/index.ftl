@@ -517,9 +517,8 @@ user = browse:*
         });
 
         $("#google").click(function(e) {
-            e.preventDefault();
-            
-            return false;
+            $("#modal-login").modal('hide');
+            shiro.status.clearStatus();
         });
 
         $("#logout").click(function(e) {

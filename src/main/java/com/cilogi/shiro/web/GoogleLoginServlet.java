@@ -30,6 +30,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
@@ -53,11 +54,11 @@ public class GoogleLoginServlet extends BaseServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService =  UserServiceFactory.getUserService();
         try {
             String currentUri = WebUtils.getRequestUri(request);
-            if (currentUri.toLowerCase().endsWith("googleLoginAuth")) {
+            if (currentUri.endsWith("googleLoginAuth")) {
                 User currentUser = userService.getCurrentUser();
                 if (currentUser == null) {
                     issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login for unknown reasons", response);
@@ -70,13 +71,16 @@ public class GoogleLoginServlet extends BaseServlet {
                     try {
                         Subject subject = SecurityUtils.getSubject();
                         loginWithNewSession(token, subject);
-                        issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");
+                        // go back to where Shiro thought we should go or to home if that's not set
+                        SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+                        String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
+                        response.sendRedirect(response.encodeRedirectURL(redirectUrl));
                     } catch (AuthenticationException e) {
                         issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
                     }
                 }
             } else {
-                createUserAsNeeded(userService, request, response);
+                createUserAsNeeded(userService, response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
@@ -95,10 +99,8 @@ public class GoogleLoginServlet extends BaseServlet {
     }
 
     private static void createUserAsNeeded(UserService userService,
-                                           HttpServletRequest request,
                                            HttpServletResponse response) throws IOException {
-        String currentUri = WebUtils.getRequestUri(request);
-        String authUrl = userService.createLoginURL("/googleLoginAuth");
+        String authUrl = userService.createLoginURL("/user/admin/googleLoginAuth");
         response.sendRedirect(response.encodeRedirectURL(authUrl));
     }
 

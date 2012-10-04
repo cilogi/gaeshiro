@@ -504,7 +504,8 @@ user = browse:*
   <div id="modal-login" class="modal hide fade" style="padding-bottom: 1em;">
     <div class="modal-header">
         <a href="#" class="close">&times;</a>
-        <h3>Please login <span class="loginReason"></span> or <a class="btn-auth btn-google" href="#">Sign in with <b>Google</b></a></h3>
+        <h3>Please login <span class="loginReason"></span> or
+            <a id="google" class="btn-auth btn-google" href="user/admin/googleLogin">Sign in with <b>Google</b></a></h3>
     </div>
     <form id="loginForm" method="POST" action="">
     <fieldset>
@@ -631,6 +632,11 @@ user = browse:*
                 window.location.reload();
             });
             return false;
+        });
+
+        $("#google").click(function(e) {
+            $("#modal-login").modal('hide');
+            shiro.status.clearStatus();
         });
 
         $("#logout").click(function(e) {

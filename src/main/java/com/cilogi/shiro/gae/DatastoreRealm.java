@@ -19,6 +19,8 @@
 
 package com.cilogi.shiro.gae;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
@@ -58,7 +60,13 @@ public class DatastoreRealm extends AuthorizingRealm {
         LOG.fine("Finding authentication info for " + userName + " in DB");
         GaeUser user = dao().findUser(userName);
 
-        if (user == null || userIsNotQualified(user)) {
+        boolean isGoogleUserPretendingToBeCilogi = false;
+        User googleUser = UserServiceFactory.getUserService().getCurrentUser();
+        if (user != null && googleUser != null && !googleUser.getEmail().equals(user.getName())) {
+            isGoogleUserPretendingToBeCilogi = true;
+        }
+
+        if (user == null || userIsNotQualified(user) || isGoogleUserPretendingToBeCilogi) {
             return null;
         }
         LOG.fine("Found " + userName + " in DB");

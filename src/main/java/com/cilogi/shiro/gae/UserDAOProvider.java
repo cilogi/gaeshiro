@@ -22,7 +22,14 @@ package com.cilogi.shiro.gae;
 
 import java.util.logging.Logger;
 
-
+/**
+ * The UserDAO object is not thread-safe as the underlying objectify instance
+ * isn't thread-safe.  So, we provide a per thread DAO, which by construction will
+ * be thread safe.
+ * <p>This makes sense, I think, as a single thread will last at least one request,
+ * and quite likely many more if the container does thread management.  Keeping
+ * hold of the thread allows more caching, as the objectify instance caches. 
+ */
 public class UserDAOProvider {
     static final Logger LOG = Logger.getLogger(UserDAOProvider.class.getName());
 
