@@ -62,22 +62,29 @@ public class GoogleLoginServlet extends BaseServlet {
                 User currentUser = userService.getCurrentUser();
                 if (currentUser == null) {
                     issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login for unknown reasons", response);
-                }  else {
-                    String username = currentUser.getEmail();
-                    createShiroUser(username);
-                    boolean rememberMe = true;
-                    String host = request.getRemoteHost();
-                    UsernamePasswordToken token = new UsernamePasswordToken(username, "password", rememberMe, host);
-                    try {
-                        Subject subject = SecurityUtils.getSubject();
-                        loginWithNewSession(token, subject);
-                        // go back to where Shiro thought we should go or to home if that's not set
-                        SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
-                        String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                        response.sendRedirect(response.encodeRedirectURL(redirectUrl));
-                    } catch (AuthenticationException e) {
-                        issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
-                    }
+                    return;
+                }
+
+                String username = currentUser.getEmail();
+                if (!createShiroUser(username)) {
+                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username
+                             + " as you have registered the same Email before, as a non-Google email, which we don't allow "
+                             + " so please log in with a password...", response);
+                    return;
+                }
+                
+                boolean rememberMe = true;
+                String host = request.getRemoteHost();
+                UsernamePasswordToken token = new UsernamePasswordToken(username, "password", rememberMe, host);
+                try {
+                    Subject subject = SecurityUtils.getSubject();
+                    loginWithNewSession(token, subject);
+                    // go back to where Shiro thought we should go or to home if that's not set
+                    SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+                    String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
+                    response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                } catch (AuthenticationException e) {
+                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
                 }
             } else {
                 createUserAsNeeded(userService, response);
@@ -87,7 +94,7 @@ public class GoogleLoginServlet extends BaseServlet {
         }
     }
 
-    private void createShiroUser(String userName) {
+    private boolean createShiroUser(String userName) {
         UserDAO dao = daoProvider.get();
         GaeUser user = dao.findUser(userName);
         if (user == null) {
@@ -95,7 +102,9 @@ public class GoogleLoginServlet extends BaseServlet {
             user.setGoogle(true);
             user.register();
             dao.saveUser(user, true);
+            return true;
         }
+        return user.isGoogle();
     }
 
     private static void createUserAsNeeded(UserService userService,

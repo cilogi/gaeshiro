@@ -57,19 +57,21 @@ public class DatastoreRealm extends AuthorizingRealm {
     private AuthenticationInfo doGetAuthenticationInfo(String userName) throws AuthenticationException {
         Preconditions.checkNotNull(userName, "User name can't be null");
 
-        LOG.fine("Finding authentication info for " + userName + " in DB");
+        LOG.info("Finding authentication info for " + userName + " in DB");
         GaeUser user = dao().findUser(userName);
 
         boolean isGoogleUserPretendingToBeCilogi = false;
         User googleUser = UserServiceFactory.getUserService().getCurrentUser();
         if (user != null && googleUser != null && !googleUser.getEmail().equals(user.getName())) {
+            LOG.warning("Google says " + googleUser.getEmail() + " and Shiro remembers " + user.getName());
             isGoogleUserPretendingToBeCilogi = true;
         }
 
         if (user == null || userIsNotQualified(user) || isGoogleUserPretendingToBeCilogi) {
+            LOG.info("Rejecting " + user.getName());
             return null;
         }
-        LOG.fine("Found " + userName + " in DB");
+        LOG.info("Found " + userName + " in DB");
 
         SimpleAccount account = new SimpleAccount(user.getName(),
                 user.getPasswordHash(), new SimpleByteSource(user.getSalt()), getName());
