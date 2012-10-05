@@ -47,11 +47,10 @@ public class FacebookLoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(FacebookLoginServlet.class.getName());
 
     private final FacebookAuth auth;
-    private final Provider<UserDAO> daoProvider;
 
     @Inject
     public FacebookLoginServlet(Provider<UserDAO> daoProvider, FacebookAuth auth) {
-        this.daoProvider = daoProvider;
+        super(daoProvider);
         this.auth = auth;
     }
 

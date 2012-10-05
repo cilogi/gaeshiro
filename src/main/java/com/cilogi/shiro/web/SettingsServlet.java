@@ -26,6 +26,8 @@ import com.cilogi.shiro.gae.UserDAO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,10 @@ import java.util.logging.Logger;
 public class SettingsServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
-    SettingsServlet() {}
+    @Inject
+    SettingsServlet(Provider<UserDAO> daoProvider) {
+        super(daoProvider);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

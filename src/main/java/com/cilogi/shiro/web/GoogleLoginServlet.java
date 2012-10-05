@@ -65,11 +65,10 @@ import java.util.logging.Logger;
 public class GoogleLoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(GoogleLoginServlet.class.getName());
 
-    private Provider<UserDAO> daoProvider;
 
     @Inject
     public GoogleLoginServlet(Provider<UserDAO> daoProvider) {
-        this.daoProvider = daoProvider;
+        super(daoProvider);
     }
 
     @Override

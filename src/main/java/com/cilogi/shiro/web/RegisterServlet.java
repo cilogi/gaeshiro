@@ -35,6 +35,7 @@ import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,8 @@ public class RegisterServlet extends BaseServlet {
     private final String userBaseUrl;
 
     @Inject
-    RegisterServlet(@Named("userBaseUrl") String userBaseUrl) {
+    RegisterServlet(Provider<UserDAO> daoProvider, @Named("userBaseUrl") String userBaseUrl) {
+        super(daoProvider);
         this.userBaseUrl = userBaseUrl;
     }
 

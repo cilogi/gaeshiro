@@ -21,6 +21,7 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -31,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +54,11 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
 
     private CreateDoc create;
 
-    BaseServlet() {}
+    protected Provider<UserDAO> daoProvider;
+
+    protected BaseServlet(Provider<UserDAO> daoProvider) {
+        this.daoProvider = daoProvider;
+    }
 
     @Inject
     protected void setCreate(CreateDoc create) {
@@ -125,6 +131,10 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
         for(Object key : attributes.keySet() ) {
             newSession.setAttribute(key, attributes.get(key));
         }
+    }
+
+    protected void currentUser() {
+
     }
 
 }

@@ -36,9 +36,7 @@ import java.util.logging.Logger;
 public class MailReceiveServlet extends HttpServlet {
     static final Logger LOG = Logger.getLogger(MailReceiveServlet.class.getName());
 
-    public MailReceiveServlet() {
-
-    }
+    public MailReceiveServlet() {}
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)

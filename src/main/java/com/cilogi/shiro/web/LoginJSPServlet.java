@@ -22,6 +22,10 @@
 package com.cilogi.shiro.web;
 
 
+import com.cilogi.shiro.gae.UserDAO;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +40,10 @@ import java.util.logging.Logger;
 public class LoginJSPServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginJSPServlet.class.getName());
 
-    LoginJSPServlet() {}
+    @Inject
+    LoginJSPServlet(Provider<UserDAO> daoProvider) {
+        super(daoProvider);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -30,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,8 +47,10 @@ import java.util.logging.Logger;
 public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
-
-    UserListServlet() {}
+    @Inject
+    UserListServlet(Provider<UserDAO> daoProvider) {
+        super(daoProvider);
+    }
 
 
     @Override

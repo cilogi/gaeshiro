@@ -32,6 +32,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.util.WebUtils;
 
+import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ import java.util.logging.Logger;
 public class SocialLogoutFilter extends LogoutFilter {
     static final Logger LOG = Logger.getLogger(SocialLogoutFilter.class.getName());
 
-
+    @Inject
     public SocialLogoutFilter() {}
 
     @Override
