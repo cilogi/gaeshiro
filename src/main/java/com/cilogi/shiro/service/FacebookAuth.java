@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.service;
 
-import org.apache.shiro.web.util.WebUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
@@ -50,11 +49,12 @@ public class FacebookAuth {
 
     @Inject
     public FacebookAuth(@Named("fb.property.prefix") String prefix) {
+        LOG.info("prefix is " + prefix);
         Properties props = new Properties();
         loadProperties(props, "/fb.properties");
-        apiKey = props.getProperty(prefix + "fb.local.apiKey");
-        apiSecret = props.getProperty(prefix + "fb.local.apiSecret");
-        host = props.getProperty(prefix + "fb.local.host");
+        apiKey = props.getProperty(prefix + ".apiKey");
+        apiSecret = props.getProperty(prefix + ".apiSecret");
+        host = props.getProperty(prefix + ".host");
     }
 
     public String loginURL(String callbackUri) {
