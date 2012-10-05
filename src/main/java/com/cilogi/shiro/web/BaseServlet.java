@@ -21,10 +21,12 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -46,6 +48,7 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
     protected final String MESSAGE = "message";
+    protected final String CODE = "code";
 
     protected final int HTTP_STATUS_OK = 200;
     protected final int HTTP_STATUS_NOT_FOUND = 404;
@@ -133,8 +136,9 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
         }
     }
 
-    protected void currentUser() {
-
+    protected boolean isCurrentUserAdmin() {
+        Subject subject = SecurityUtils.getSubject();
+        return subject.hasRole("admin");
     }
 
 }

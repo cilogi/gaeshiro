@@ -52,16 +52,27 @@ public class UserSuspendServlet extends BaseServlet {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
                 if (isDelete) {
-                    dao.deleteUser(user);
-                    issueJson(response, HTTP_STATUS_OK,
-                            MESSAGE, "User " + userName + " is deleted");
+                    if (isCurrentUserAdmin()) {
+                        dao.deleteUser(user);
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "User " + userName + " is deleted");
+                    } else {
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "Only admins can delete users", CODE, "404");
+                    }
                 } else {
-                    user.setSuspended(isSuspend);
-                    dao.saveUser(user, false);
-                    issueJson(response, HTTP_STATUS_OK,
-                            MESSAGE, isSuspend
-                                    ? "User " + userName + " is suspended"
-                                    : "User " + userName + " is not suspended");
+                    if (isCurrentUserAdmin()) {
+                        user.setSuspended(isSuspend);
+                        dao.saveUser(user, false);
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, isSuspend
+                                        ? "User " + userName + " is suspended"
+                                        : "User " + userName + " is not suspended");
+                    } else {
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "Only admins can suspend users", CODE, "404");
+
+                    }
                 }
             } else {
                 LOG.warning("Can't find user " + userName);

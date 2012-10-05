@@ -126,6 +126,9 @@
                     if (!isCheck) {
                         oTable.fnDeleteRow(index);
                     }
+                    if (isCheck && data.code && data.code == "404") {
+                        tgt.removeAttr('checked');
+                    }
                     spin.stop();
                     alert(data.message);
                 },
