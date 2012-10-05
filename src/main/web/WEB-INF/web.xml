@@ -12,7 +12,10 @@
 
     <context-param>
         <param-name>static-base-url</param-name>
+        <!--
         <param-value>http://static.gaeshiro.appspot.com/</param-value>
+        -->
+        <param-value></param-value>
     </context-param>
 
     <filter>

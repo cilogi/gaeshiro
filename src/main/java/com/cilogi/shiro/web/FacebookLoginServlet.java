@@ -66,7 +66,7 @@ public class FacebookLoginServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String currentUri = WebUtils.getRequestUri(request);
-            String url = auth.loginURL(currentUri);
+            String url = isReAuthenticate() ? auth.reAuthenticateURL(currentUri) : auth.loginURL(currentUri);
             WebUtils.issueRedirect(request, response, url);
         } catch (Exception e) {
             issue("text/plain", 500, "Something unexpected went wrong: " + e.getMessage(), response);
@@ -90,9 +90,11 @@ public class FacebookLoginServlet extends BaseServlet {
                     user = new GaeUser(email, "password", Sets.newHashSet("user"), Sets.<String>newHashSet());
                     user.setUserAuthType(UserAuthType.FACEBOOK);
                     user.register();
-                    user.setAccessToken(info.getString("access_token"));
-                    dao.saveUser(user, true);
                 }
+
+                user.setAccessToken(info.getString("access_token"));
+                dao.saveUser(user, true);
+
                 if (user.getUserAuthType() != UserAuthType.FACEBOOK) {
                     issue("text/plain", 400, "You can't log in with Facebook if you're already registered via " + user.getUserAuthType(), response);
                     return;
@@ -119,7 +121,18 @@ public class FacebookLoginServlet extends BaseServlet {
     private void recordPassForUser(String email) {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
-        session.setAttribute("cilogi_logged_in" + email, "true");
+        session.setAttribute("cilogi_logged_in_" + email, "true");
+    }
+
+    private boolean isReAuthenticate() {
+        Subject subject = SecurityUtils.getSubject();
+        String principal = (String)subject.getPrincipal();
+        if (principal != null) {
+            GaeUser user = daoProvider.get().findUser(principal);
+            return (user != null) && user.getAccessToken() != null;
+        } else {
+            return false;
+        }
     }
 
 

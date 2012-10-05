@@ -500,10 +500,10 @@ user = browse:*
         });
         $("#admin").click(function(e) {
             e.preventDefault();
-            if ($("html").hasClass("shiro-admin-active")) {
+            if ($("html").hasClass("shiro-user-active")) {
                 window.location.assign("listUsers.ftl");
             } else {
-                alert("You need admin privileges to view the user list.")
+                alert("You need user privileges to view the user list.")
             }
             return false;
         });

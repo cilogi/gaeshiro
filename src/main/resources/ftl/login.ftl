@@ -26,7 +26,11 @@
         <section>
             <div class="page-header">
                 <h1>Login
-                    <small>to the Shiro GAE demo</small>
+                    <small>or</small>
+                        <a id="google" class="btn-auth btn-google" href="${userBaseUrl}/googleLogin" style="vertical-align:middle"><b>Google</b> login</a>
+                        <form id="facebook" action="${userBaseUrl}/fbLogin" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-auth btn-facebook" style="vertical-align:middle;"><b>Facebook</b> login</button>
+                        </form>
                 </h1>
             </div>
             <div class="row">
@@ -52,6 +56,17 @@ $(document).ready(function() {
            error.insertAfter(element);
       }
     });
+
+    $("#google").click(function(e) {
+        $("#modal-login").modal('hide');
+        shiro.status.clearStatus();
+    });
+
+    $("#facebook").submit(function(e) {
+        $("#modal-login").modal('hide');
+        shiro.status.clearStatus();
+    });
+
 });
 </script>
 

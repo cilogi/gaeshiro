@@ -65,6 +65,10 @@ public class FacebookAuth {
         return service.getAuthorizationUrl(EMPTY_TOKEN);
     }
 
+    public String reAuthenticateURL(String callbackUri) {
+        return loginURL(callbackUri)+"&auth_type=reauthenticate";
+    }
+
     private String makeAbsolute(String uri) {
         return uri.startsWith("/") ? host + uri : uri;
     }

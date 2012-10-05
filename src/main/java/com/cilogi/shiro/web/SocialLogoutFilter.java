@@ -91,6 +91,9 @@ public class SocialLogoutFilter extends LogoutFilter {
 
         HttpServletResponse httpResponse = (HttpServletResponse)response;
         httpResponse.sendRedirect(httpResponse.encodeRedirectURL(url));
+
+        user.setAccessToken(null);
+        UserDAOProvider.get().saveUser(user, false);
     }
 
     static String makeRoot(String fullURL) {
