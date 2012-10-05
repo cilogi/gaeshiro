@@ -21,14 +21,16 @@ package com.cilogi.util.doc;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;

@@ -36,7 +36,6 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 import org.apache.shiro.web.servlet.ShiroFilter;
 
-import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;

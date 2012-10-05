@@ -521,7 +521,7 @@ user = browse:*
             shiro.status.clearStatus();
         });
 
-        $("#google").submit(function(e) {
+        $("#facebook").submit(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
         });

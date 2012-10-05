@@ -3,7 +3,7 @@
         <a href="#" class="close">&times;</a>
         <h3>Please login <span class="loginReason"></span> or
             <a id="google" class="btn-auth btn-google" href="${userBaseUrl}/googleLogin"><b>Google</b> login</a>
-            <form id="facebook" action="${userBaseUrl}/fbLogin" style="display:inline">
+            <form id="facebook" action="${userBaseUrl}/fbLogin" method="POST" style="display:inline">
                 <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b> login</button>
             </form>
         </h3>

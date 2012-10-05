@@ -20,12 +20,12 @@
 
 package com.cilogi.shiro.fb;
 
-import java.util.*;
-
-import org.scribe.builder.*;
-import org.scribe.builder.api.*;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.FacebookApi;
 import org.scribe.model.*;
-import org.scribe.oauth.*;
+import org.scribe.oauth.OAuthService;
+
+import java.util.Scanner;
 
 public class FbDemo {
   private static final String NETWORK_NAME = "Facebook";

@@ -38,7 +38,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import static com.cilogi.shiro.gae.UserAuthType.*;
+
+import static com.cilogi.shiro.gae.UserAuthType.CILOGI;
 
 @Cached
 @Unindexed
@@ -70,6 +71,8 @@ public class GaeUser implements Serializable {
 
     private UserAuthType userAuthType;
 
+    private String accessToken;
+
     /** For objectify to create instances on retrieval */
     private GaeUser() {
         this.roles = new HashSet<String>();
@@ -99,6 +102,14 @@ public class GaeUser implements Serializable {
         this.dateRegistered = isRegistered ? new Date() : null;
         this.isSuspended = false;
         this.userAuthType = CILOGI;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public UserAuthType getUserAuthType() {

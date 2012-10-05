@@ -22,7 +22,6 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.util.doc.CreateDoc;
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -36,9 +35,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 

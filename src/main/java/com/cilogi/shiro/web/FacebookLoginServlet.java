@@ -31,9 +31,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.scribe.model.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -78,8 +76,9 @@ public class FacebookLoginServlet extends BaseServlet {
     // Step 2 is the return from Facebook, either giving permission and returning the email, or not...
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String code = WebUtils.getCleanParam(request, "code");
-        JSONObject info = auth.getUserInfo(code);
+        String currentUri = WebUtils.getRequestUri(request);
         try {
+            JSONObject info = auth.getUserInfo(code, currentUri);
             if (info.has("error")) {
                 String message = info.getJSONObject("error").getString("message");
                 issue("text/plain", 400, "Couldn't get Facebook permission: " + message, response);
@@ -90,6 +89,8 @@ public class FacebookLoginServlet extends BaseServlet {
                 if (user == null) {
                     user = new GaeUser(email, "password", Sets.newHashSet("user"), Sets.<String>newHashSet());
                     user.setUserAuthType(UserAuthType.FACEBOOK);
+                    user.register();
+                    user.setAccessToken(info.getString("access_token"));
                     dao.saveUser(user, true);
                 }
                 if (user.getUserAuthType() != UserAuthType.FACEBOOK) {

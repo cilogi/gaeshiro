@@ -506,8 +506,8 @@ user = browse:*
         <a href="#" class="close">&times;</a>
         <h3>Please login <span class="loginReason"></span> or
             <a id="google" class="btn-auth btn-google" href="/user/admin/googleLogin"><b>Google</b> login</a>
-            <form style="display:inline">
-            <a id="facebook" class="btn-auth btn-facebook" href="/user/admin/fbLogin"><b>Facebook</b> login</a>
+            <form id="facebook" action="/user/admin/fbLogin" method="POST" style="display:inline">
+                <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b> login</button>
             </form>
         </h3>
     </div>
@@ -638,7 +638,12 @@ user = browse:*
             return false;
         });
 
-        $("#google, #facebook").click(function(e) {
+        $("#google").click(function(e) {
+            $("#modal-login").modal('hide');
+            shiro.status.clearStatus();
+        });
+
+        $("#facebook").submit(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
         });
