@@ -50,9 +50,9 @@ public class FacebookLoginServlet extends BaseServlet {
     private final Provider<UserDAO> daoProvider;
 
     @Inject
-    public FacebookLoginServlet(Provider<UserDAO> daoProvider) {
+    public FacebookLoginServlet(Provider<UserDAO> daoProvider, FacebookAuth auth) {
         this.daoProvider = daoProvider;
-        this.auth = new FacebookAuth();
+        this.auth = auth;
     }
 
     /**

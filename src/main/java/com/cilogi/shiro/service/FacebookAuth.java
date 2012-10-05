@@ -29,6 +29,8 @@ import org.scribe.model.*;
 import org.scribe.oauth.OAuthService;
 import org.scribe.utils.OAuthEncoder;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
@@ -46,12 +48,13 @@ public class FacebookAuth {
     private final String apiSecret;
     private final String host;
 
-    public FacebookAuth() {
+    @Inject
+    public FacebookAuth(@Named("fb.property.prefix") String prefix) {
         Properties props = new Properties();
         loadProperties(props, "/fb.properties");
-        apiKey = props.getProperty("fb.local.apiKey");
-        apiSecret = props.getProperty("fb.local.apiSecret");
-        host = props.getProperty("fb.local.host");
+        apiKey = props.getProperty(prefix + "fb.local.apiKey");
+        apiSecret = props.getProperty(prefix + "fb.local.apiSecret");
+        host = props.getProperty(prefix + "fb.local.host");
     }
 
     public String loginURL(String callbackUri) {

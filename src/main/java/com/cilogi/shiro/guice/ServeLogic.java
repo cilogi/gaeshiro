@@ -24,6 +24,7 @@ package com.cilogi.shiro.guice;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.cloud.sql.jdbc.internal.Charsets;
@@ -65,6 +66,7 @@ public class ServeLogic extends AbstractModule {
         bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
+        bindString("fb.property.prefix", isDevelopmentServer() ? "fb.local" : "fb.live");
     }
 
     private void bindString(String key, String value) {
@@ -90,5 +92,11 @@ public class ServeLogic extends AbstractModule {
     UserDAO provideUserDAO() {
         return UserDAOProvider.get();
     }
+
+    private static boolean isDevelopmentServer() {
+        SystemProperty.Environment.Value server = SystemProperty.environment.value();
+        return server == SystemProperty.Environment.Value.Development;
+    }
+
 
 }
