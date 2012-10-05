@@ -22,13 +22,16 @@ package com.cilogi.shiro.gae;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Preconditions;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.SimpleByteSource;
 
 import java.util.logging.Logger;
@@ -60,14 +63,14 @@ public class DatastoreRealm extends AuthorizingRealm {
         LOG.info("Finding authentication info for " + userName + " in DB");
         GaeUser user = dao().findUser(userName);
 
-        boolean isGoogleUserPretendingToBeCilogi = false;
+        boolean isSocialUserFaking = false;
         User googleUser = UserServiceFactory.getUserService().getCurrentUser();
-        if (user != null && googleUser != null && !googleUser.getEmail().equals(user.getName())) {
+        if (user != null && googleUser != null && isSocialUserFaking(user)) {
             LOG.warning("Google says " + googleUser.getEmail() + " and Shiro remembers " + user.getName());
-            isGoogleUserPretendingToBeCilogi = true;
+            isSocialUserFaking = true;
         }
 
-        if (user == null || userIsNotQualified(user) || isGoogleUserPretendingToBeCilogi) {
+        if (user == null || userIsNotQualified(user) || isSocialUserFaking) {
             LOG.info("Rejecting " + user.getName());
             return null;
         }
@@ -107,5 +110,20 @@ public class DatastoreRealm extends AuthorizingRealm {
 
     private static boolean userIsNotQualified(GaeUser user) {
         return !user.isRegistered() || user.isSuspended();
+    }
+
+    private boolean isSocialUserFaking(GaeUser user) {
+        switch (user.getUserAuthType()) {
+            case CILOGI: return false; // not a social user, so can't fake
+            case GOOGLE:
+                User googleUser = UserServiceFactory.getUserService().getCurrentUser();
+                return !user.getName().equals(googleUser.getEmail());
+            case FACEBOOK:
+                Subject subject = SecurityUtils.getSubject();
+                Session session = subject.getSession();
+                return !"true".equals(session.getAttribute("cilogi_logged_in" + user.getName()));
+            default: return false;
+
+        }
     }
 }

@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-
+import static com.cilogi.shiro.gae.UserAuthType.*;
 
 @Cached
 @Unindexed
@@ -68,12 +68,13 @@ public class GaeUser implements Serializable {
 
     private boolean isSuspended;
 
-    private boolean isGoogle;
+    private UserAuthType userAuthType;
 
     /** For objectify to create instances on retrieval */
     private GaeUser() {
         this.roles = new HashSet<String>();
         this.permissions = new HashSet<String>();
+        this.userAuthType = CILOGI;
     }
     
     GaeUser(String name, String password) {
@@ -97,15 +98,16 @@ public class GaeUser implements Serializable {
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
         this.isSuspended = false;
-        this.isGoogle = false;
+        this.userAuthType = CILOGI;
     }
 
-    public boolean isGoogle() {
-        return isGoogle;
+    public UserAuthType getUserAuthType() {
+        return userAuthType;
     }
 
-    public void setGoogle(boolean google) {
-        isGoogle = google;
+    public void setUserAuthType(UserAuthType userAuthType) {
+        Preconditions.checkNotNull(userAuthType, "The auth type of a user cannot be null");
+        this.userAuthType = userAuthType;
     }
 
     public boolean isSuspended() {

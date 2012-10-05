@@ -21,6 +21,7 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
+import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -42,6 +43,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+/**
+ * Google authentication is handled using the built-in service API, rather than calls
+ * to OAuth, as for Facebook.  This is deliberate as if you only want this, then you don't
+ * need to include the OAuth library.
+ * <p>The idea is that you login by (a) logging in the user service and then (b) logging in to
+ * Shiro with an access token, whose password is a dummy.  You "check" the password by making sure
+ * that the logged-in user is the same as the one you are authenticating.
+ * <p>What happens is that a request to URL "googleLogin" is made.  This then logs you
+ * in with GAE user service.
+ * Once this is done, and you're definitely logged in there is a redirect to URL "googleLoginAuth".
+ * You are logged in to the suer service when you get here, and if there is no GAEUser with your Email
+ * we create one (tagged as a Google user).
+ * <p>When the <code>DatastoreRealm</code> is queried about this user (with dummy password) it authenticates
+ * if the Google user has the same Email as the GAEUser.  This seems to be secure.
+ * <p>One tiny fly in the ointment is that we really log you out on logout, which means that your browser
+ * is logged out & you'll have to re-authenticate with other Google services.  I guess we could make this
+ * an option if users find it too annoying.
+ */
 @Singleton
 public class GoogleLoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(GoogleLoginServlet.class.getName());
@@ -99,12 +118,12 @@ public class GoogleLoginServlet extends BaseServlet {
         GaeUser user = dao.findUser(userName);
         if (user == null) {
             user = new GaeUser(userName, "password", Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.setGoogle(true);
+            user.setUserAuthType(UserAuthType.GOOGLE);
             user.register();
             dao.saveUser(user, true);
             return true;
         }
-        return user.isGoogle();
+        return user.getUserAuthType() == UserAuthType.GOOGLE;
     }
 
     private static void createUserAsNeeded(UserService userService,

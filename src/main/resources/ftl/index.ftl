@@ -521,6 +521,12 @@ user = browse:*
             shiro.status.clearStatus();
         });
 
+        $("#google").submit(function(e) {
+            $("#modal-login").modal('hide');
+            shiro.status.clearStatus();
+        });
+
+
         $("#logout").click(function(e) {
             shiro.status.clearStatus();
         });

@@ -59,6 +59,7 @@ public class ServeModule extends ServletModule {
                 "number_format", "0.###"
         ));
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
+        serve(userBaseUrl + "/fbLogin").with(FacebookLoginServlet.class);
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/googleLoginAuth").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/register").with(RegisterServlet.class);

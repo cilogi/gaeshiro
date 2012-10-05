@@ -505,7 +505,11 @@ user = browse:*
     <div class="modal-header">
         <a href="#" class="close">&times;</a>
         <h3>Please login <span class="loginReason"></span> or
-            <a id="google" class="btn-auth btn-google" href="/user/admin/googleLogin">Sign in with <b>Google</b></a></h3>
+            <a id="google" class="btn-auth btn-google" href="/user/admin/googleLogin"><b>Google</b> login</a>
+            <form style="display:inline">
+            <a id="facebook" class="btn-auth btn-facebook" href="/user/admin/fbLogin"><b>Facebook</b> login</a>
+            </form>
+        </h3>
     </div>
 <form id="loginForm" method="POST" action="">
     <fieldset>
@@ -634,10 +638,11 @@ user = browse:*
             return false;
         });
 
-        $("#google").click(function(e) {
+        $("#google, #facebook").click(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
         });
+
 
         $("#logout").click(function(e) {
             shiro.status.clearStatus();
