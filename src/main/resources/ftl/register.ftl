@@ -112,9 +112,7 @@
         </section>
     </div>
 
-    <footer>
-        <p>&copy; Cilogi Limited 2011</p>
-    </footer>
+<#include "inc/footer.ftl">
 
 </div>
 

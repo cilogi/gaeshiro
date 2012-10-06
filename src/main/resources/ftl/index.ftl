@@ -20,6 +20,7 @@
                 <li><a href="#what">What</a></li>
                 <li><a href="#motivation">Motivation</a></li>
                 <li><a href="#shiro">Shiro</a></li>
+                <li><a href="#social">Social</a></li>
                 <li><a href="#guice">Guice</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
@@ -47,10 +48,7 @@
 
         <p> Front end user registration and password management is also provided in as minimalistic
             a fashion as we could manage</p>
-
-        <div class="shiro-guest">
-            <p><a href="/register.ftl" class="btn primary large">Register &raquo;</a></p>
-        </div>
+        <p> <span class="btn danger">New!</span> Sign in with Google or Facebook accounts.</p>
     </div>
 </div>
 
@@ -96,7 +94,9 @@
 
             <p>forget or change your password,</p>
 
-            <p> and suspend users as an administrator</p>
+            <p>suspend users as an administrator, </p>
+
+            <p>and now login with Google or Facebook accounts.</p>
         </div>
         <div class="span9">
             <p>You can sign in from the link at the top right.  There are two built-in accounts you
@@ -111,6 +111,8 @@
                enter the code or follow the link to do the reset.</p>
             <p>When logged in as <code>zenith</code> you can list users and choose whether to suspend them or not.
                A suspended user cannot login.</p>
+            <p>For convenience we allow users to log in with Google or Facebook accounts.  In each case we grab
+               the Email address, but no registration is required.</p>
             <p>In practice all the URLs must run under <code>HTTPS</code>, since passwords are contained in the
                HTTP requests. This demo does <em>not</em> use <code>HTTPS</code> so be warned!</p>
         </div>
@@ -252,6 +254,46 @@
         </div>
     </div>
 </section>
+<section id="social">
+    <div class="page-header">
+        <h1>Social
+            <small>authentication with Google and Facebook</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h2>Friends</h2>
+
+            <p>You can log in with Google or Facebook</p>
+
+            <p>Google uses GAE's user service, which may be a mistake</p>
+
+            <p>Facebook uses OAuth and even does re-authentication.</p>
+        </div>
+        <div class="span9">
+            <p>Its a lot easier for users if they don't have to go through the hassle of registration, and remember
+               a password for yet another application. So, we've set things up to allow Google and Facebook login. The
+               Facebook implementation is reasonably generic and could easily be extended to other providers, such as
+               Yahoo!, LinkedIn and so on.  There is work involved I'm afraid as one needs to get credentials from each
+               provider.  Also, you are restricted as to the website on which you can use any particular set of credentials.</p>
+
+            <p>Google login is implemented by taking advantage of App Engine's user service.  This is convenient, as
+               you don't need extra libraries, but has some problems, which don't occur if an OAuth solution were used.
+               In particular if you're already logged in with the browser, you will find that you don't get the opportunity
+               to choose the account you want to use -- you're logged in immediately with the account you came with.
+               Similarly there is no way to force re-authentication.  Both of these problems go away if OAuth is used...</p>
+
+            <p>Facebook login, which uses OAuth, words much better. You always get to see the initial screen asking for permission,
+               and you can force re-authentication.</p>
+
+            <p>We're only considering services which provide a user email, on the principle that if some problem occurs
+               with the provider we can still service these users by registering them in the normal way.  Of course people
+               change their Emails, but in this case its one at a time, not a whole class at once, and for our applications
+               not a huge issue. Its a problem that is always with us.</p>
+        </div>
+    </div>
+</section>
+
 <section id="guice">
     <div class="page-header">
         <h1>Guice
@@ -419,7 +461,9 @@ user = browse:*
             <p>As well as Guice and Shiro</p>
             <p>the demo also uses <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter</a>
                for its CSS framework</p>
-            <p>and <a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating.</p>
+            <p><a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating.</p>
+            <p>and the megalicious <a href="https://github.com/fernandezpablo85/scribe-java">scribe</a></p>
+            library to do OAuth.
         </div>
         <div class="span9">
             <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework
@@ -429,6 +473,8 @@ user = browse:*
                main page for example (this one) is pre-generated using Freemarker to avoid a wait while App Engine spins
                up an instance.  This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
                the Freemarker pre-processor</p>
+            <p>OAuth for the social login is done with <code>scribe</code> which makes a complicated process incredibly
+               simple.  Heartily recommended.</p>
             <p>All the administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax
                features.  This is intended to decouple the login from the presentation if we wish to produce
                a mobile version of this demo, which will require different layouts.  We also do some caching in
@@ -447,9 +493,7 @@ user = browse:*
     </div>
 </section>
 
-<footer>
-    <p>&copy; <a href="http://www.cilogi.com">Cilogi</a> Limited 2011</p>
-</footer>
+<#include "inc/footer.ftl">
 
 </div>
 <#include "inc/modal-login-template.ftl">
