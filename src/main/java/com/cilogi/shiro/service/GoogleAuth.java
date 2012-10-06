@@ -102,9 +102,8 @@ public class GoogleAuth {
         }
     }
 
-    public static String logoutUrl(String redirect, String accessToken, ServletRequest request, ServletResponse response) throws IOException {
-        String redirectOK = OAuthEncoder.encode(redirect);
-        String logoutUrl = "https://www.facebook.com/logout.php?next="+redirectOK+"&access_token=" + accessToken;
+    public static String logoutUrl(String accessToken) throws IOException {
+        String logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
         return logoutUrl;
     }
 
