@@ -49,7 +49,7 @@ public class ServeModule extends ServletModule {
     protected void configureServlets() {
         filter("/*").through(ShiroFilter.class);
         filter("/*").through(AsyncCacheFilter.class);
-        filter("/*").through(AppstatsFilter.class);
+        filter("/*").through(AppstatsFilter.class, map("calculateRpcCosts", "true"));
         serve("*.ftl").with(ShiroFreemarkerServlet.class, map(
                 "TemplatePath", "/WEB-INF/classes/ftl",
                 "NoCache", "true",
