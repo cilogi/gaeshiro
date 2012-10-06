@@ -68,8 +68,10 @@ public class SocialLogoutFilter extends LogoutFilter {
                     break;
                 case FACEBOOK: logoutFacebook(gaeUser, request, response);
                     break;
-                default: // do nothing
+                default:
             }
+        } else {
+            WebUtils.issueRedirect(request, response, "/");
         }
         return false;
     }
@@ -109,6 +111,6 @@ public class SocialLogoutFilter extends LogoutFilter {
 
     private static GaeUser findUser(String principal) {
         UserDAO dao = UserDAOProvider.get();
-        return dao.findUser(principal);
+        return (principal == null) ? null : dao.findUser(principal);
     }
 }

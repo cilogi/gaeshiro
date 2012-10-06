@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        FacebookAuth.java  (05-Oct-2012)
+// File:        GoogleAuth.java  (06-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -23,7 +23,9 @@ package com.cilogi.shiro.service;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FacebookApi;
+import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.*;
 import org.scribe.oauth.OAuthService;
 import org.scribe.utils.OAuthEncoder;
@@ -37,10 +39,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class FacebookAuth {
-    static final Logger LOG = Logger.getLogger(FacebookAuth.class.getName());
+public class GoogleAuth {
+    static final Logger LOG = Logger.getLogger(GoogleAuth.class.getName());
 
-    private static final String PROTECTED_RESOURCE_URL = "https://graph.facebook.com/me";
+    private static final String PROTECTED_RESOURCE_URL = "https://www.googleapis.com/userinfo/email?alt=json";
+    private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     private static final Token EMPTY_TOKEN = null;
 
     private final String apiKey;
@@ -48,7 +51,7 @@ public class FacebookAuth {
     private final String host;
 
     @Inject
-    public FacebookAuth(@Named("fb.property.prefix") String prefix) {
+    public GoogleAuth(@Named("gg.property.prefix") String prefix) {
         LOG.info("prefix is " + prefix);
         Properties props = new Properties();
         loadProperties(props, "/social.properties");
@@ -59,17 +62,17 @@ public class FacebookAuth {
 
     public String loginURL(String callbackUri) {
         OAuthService service = new ServiceBuilder()
-                                      .provider(FacebookApi.class)
+                                      .provider(GoogleApi20.class)
                                       .apiKey(apiKey)
                                       .apiSecret(apiSecret)
                                       .callback(makeAbsolute(callbackUri))
-                                      .scope("email")
+                                      .scope("https://www.googleapis.com/auth/userinfo.email")
                                       .build();
         return service.getAuthorizationUrl(EMPTY_TOKEN);
     }
 
     public String reAuthenticateURL(String callbackUri) {
-        return loginURL(callbackUri)+"&auth_type=reauthenticate";
+        return loginURL(callbackUri)+"&approval_prompt=force";
     }
 
     private String makeAbsolute(String uri) {
@@ -85,7 +88,8 @@ public class FacebookAuth {
                                       .scope("email")
                                       .build();
         Verifier verifier = new Verifier(code);
-        Token accessToken = service.getAccessToken(EMPTY_TOKEN, verifier);
+        //Token accessToken = service.getAccessToken(EMPTY_TOKEN, verifier);
+        Token accessToken = getAccessToken(verifier, makeAbsolute(callBackUrl));
         OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
         Response response = request.send();
@@ -111,4 +115,23 @@ public class FacebookAuth {
             LOG.severe("Can't load resource "+resourceName + ": " + e.getMessage());
         }
     }
+
+    /**
+     * This is hacked, as at the moment, the Scribe API hasn't moved up to Google's OAuth 2.0 implementation.
+     * @param verifier verifier
+     * @return  callback URL
+     */
+    public Token getAccessToken(Verifier verifier, String callbackUrl) {
+        GoogleApi20 api = new GoogleApi20();
+        OAuthRequest request = new OAuthRequest(Verb.GET, "https://accounts.google.com/o/oauth2/token");
+        request.addQuerystringParameter(OAuthConstants.CLIENT_ID, apiKey);
+        request.addQuerystringParameter(OAuthConstants.CLIENT_SECRET, apiSecret);
+        request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
+        request.addQuerystringParameter(OAuthConstants.REDIRECT_URI, callbackUrl);
+        request.addQuerystringParameter(OAuthConstants.SCOPE, SCOPE);
+        request.addQuerystringParameter("grant_type", "authorization_code"); // this is missing from Scribe
+        Response response = request.send();
+        return api.getAccessTokenExtractor().extract(response.getBody());
+    }
+
 }

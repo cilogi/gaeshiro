@@ -67,6 +67,7 @@ public class ServeLogic extends AbstractModule {
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
         bindString("fb.property.prefix", isDevelopmentServer() ? "fb.local" : "fb.live");
+        bindString("gg.property.prefix", isDevelopmentServer() ? "gg.local" : "gg.live");
     }
 
     private void bindString(String key, String value) {
