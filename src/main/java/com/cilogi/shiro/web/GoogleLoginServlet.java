@@ -86,8 +86,7 @@ public class GoogleLoginServlet extends BaseServlet {
                 String username = currentUser.getEmail();
                 if (!createShiroUser(username)) {
                     issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username
-                             + " as you have registered the same Email before, as a non-Google email, which we don't allow "
-                             + " so please log in with a password...", response);
+                             + " as you have registered the same Email before, as a non-Google email, which we don't allow", response);
                     return;
                 }
                 
@@ -105,7 +104,9 @@ public class GoogleLoginServlet extends BaseServlet {
                     issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
                 }
             } else {
-                createUserAsNeeded(userService, response);
+                // The idea is make sure that the user is logged in with the User Service
+                // before logging in for Shiro
+                ensureLoggedInToUserService(userService, request, response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
@@ -125,10 +126,22 @@ public class GoogleLoginServlet extends BaseServlet {
         return user.getUserAuthType() == UserAuthType.GOOGLE;
     }
 
-    private static void createUserAsNeeded(UserService userService,
-                                           HttpServletResponse response) throws IOException {
+    private static void ensureLoggedInToUserService(UserService userService,
+                                           HttpServletRequest request, HttpServletResponse response) throws IOException {
+        logoutGoogleIfLoggedIn(request, response, userService);
         String authUrl = userService.createLoginURL("/user/admin/googleLoginAuth");
         response.sendRedirect(response.encodeRedirectURL(authUrl));
     }
 
+    // make sure we're logged out before trying to log in.  Otherwise
+    // the login can be <em>silent</em>. This is problematic when (a) you'd like
+    // to log in as a different Google user, and (b) when we need to re-authorize when
+    // accessing sensite resources where <code>isRemembered</code> isn't enough (e.g. kids accessing financial accounts).
+    private static void logoutGoogleIfLoggedIn(HttpServletRequest request, HttpServletResponse response, UserService service) throws IOException{
+        User user = service.getCurrentUser();
+        if (user != null) {
+            String redirectUrl = request.getRequestURL().toString();
+            WebUtil.logoutGoogle(request, response, redirectUrl);
+        }
+    }
 }

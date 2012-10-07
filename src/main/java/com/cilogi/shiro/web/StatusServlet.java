@@ -54,18 +54,20 @@ public class StatusServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOG.info("status GET");
         try {
             Subject subject = SecurityUtils.getSubject();
             boolean isKnown = subject.isAuthenticated() || subject.isRemembered();
             if (isKnown) {
                 String name = subject.getPrincipal().toString();
-
+                LOG.info("status, known: " + name);
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "known",
                         "name", name,
                         "authenticated", Boolean.toString(subject.isAuthenticated()),
                         "admin", Boolean.toString(hasRole(subject, "admin")));
             } else {
+                LOG.info("status, unknown");
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "unknown",
                         "name", "",

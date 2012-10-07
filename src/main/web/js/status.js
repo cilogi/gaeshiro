@@ -47,7 +47,7 @@ shiro.status = (function(log) {
             log("Saved status");
             onSuccess(data, 'success');
         }  else {
-            log("Ajax status");
+            log("Ajax status: " + shiro.userBaseUrl + "/status");
             $.ajax(shiro.userBaseUrl+"/status", {
                 type: "GET",
                 dataType: "json",

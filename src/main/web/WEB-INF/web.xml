@@ -17,7 +17,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>UserSecurity</web-resource-name>
-            <url-pattern>/user/admin/*</url-pattern>
+            <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>

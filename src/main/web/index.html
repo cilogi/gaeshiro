@@ -163,7 +163,8 @@ body {
             <p>For convenience we allow users to log in with Google or Facebook accounts.  In each case we grab
                the Email address, but no registration is required.</p>
             <p>In practice all the URLs must run under <code>HTTPS</code>, since passwords are contained in the
-               HTTP requests. This demo does <em>not</em> use <code>HTTPS</code> so be warned!</p>
+               HTTP requests, and since we use Ajax calls where going from <code>HTTP</code> to <code>HTTPS</code>,
+               which is cross-domain, is not allowed. This demo uses <code>HTTPS</code> throughout.
         </div>
     </div>
 </section>

@@ -64,9 +64,9 @@ public class SocialLogoutFilter extends LogoutFilter {
         GaeUser gaeUser = findUser(principal);
         if (gaeUser != null) {
             switch (gaeUser.getUserAuthType()) {
-                case GOOGLE: logoutGoogle(request, response);
+                case GOOGLE: WebUtil.logoutGoogle(request, response, "/");
                     break;
-                case FACEBOOK: logoutFacebook(gaeUser, request, response);
+                case FACEBOOK: WebUtil.logoutFacebook(gaeUser, request, response);
                     break;
                 default:
             }
@@ -74,39 +74,6 @@ public class SocialLogoutFilter extends LogoutFilter {
             WebUtils.issueRedirect(request, response, "/");
         }
         return false;
-    }
-
-    private void logoutGoogle(ServletRequest request, ServletResponse response) throws IOException {
-        UserService service = UserServiceFactory.getUserService();
-        User user = service.getCurrentUser();
-        if (user != null) {
-            String logoutUrl = service.createLogoutURL("/");
-            WebUtils.issueRedirect(request, response, logoutUrl);
-        } else {
-            WebUtils.issueRedirect(request, response, "/");
-        }
-    }
-
-    private void logoutFacebook(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
-        String redirectHome = makeRoot(((HttpServletRequest)request).getRequestURL().toString());
-
-        String url = FacebookAuth.logoutUrl(redirectHome, user.getAccessToken(), request, response);
-
-        HttpServletResponse httpResponse = (HttpServletResponse)response;
-        httpResponse.sendRedirect(httpResponse.encodeRedirectURL(url));
-
-        user.setAccessToken(null);
-        UserDAOProvider.get().saveUser(user, false);
-    }
-
-    static String makeRoot(String fullURL) {
-        try {
-            URL url = new URL(fullURL);
-            String portString = (url.getPort() == -1) ? "" : ":" + url.getPort();
-            return url.getProtocol() + "://" + url.getHost() + portString + "/";
-        } catch (MalformedURLException e) {
-            return fullURL;
-        }
     }
 
     private static GaeUser findUser(String principal) {

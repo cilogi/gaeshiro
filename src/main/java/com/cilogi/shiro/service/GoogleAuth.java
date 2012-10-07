@@ -23,17 +23,12 @@ package com.cilogi.shiro.service;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FacebookApi;
-import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.*;
 import org.scribe.oauth.OAuthService;
-import org.scribe.utils.OAuthEncoder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
