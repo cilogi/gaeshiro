@@ -50,6 +50,7 @@ public class ServeModule extends ServletModule {
         filter("/*").through(ShiroFilter.class);
         filter("/*").through(AsyncCacheFilter.class);
         filter("/*").through(AppstatsFilter.class, map("calculateRpcCosts", "true"));
+        /*
         serve("*.ftl").with(ShiroFreemarkerServlet.class, map(
                 "TemplatePath", "/WEB-INF/classes/ftl",
                 "NoCache", "true",
@@ -58,6 +59,8 @@ public class ServeModule extends ServletModule {
                 "default_encoding", "UTF-8",
                 "number_format", "0.###"
         ));
+        */
+        serve("*.ftl").with(FreemarkerServlet.class);
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
         serve(userBaseUrl + "/fbLogin").with(FacebookLoginServlet.class);
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);

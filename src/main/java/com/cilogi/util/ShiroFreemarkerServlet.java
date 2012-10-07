@@ -33,12 +33,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Here so we can add common parameters to all the Freemarker files.
  */
 @Singleton
 public class ShiroFreemarkerServlet extends FreemarkerServlet {
+    static final Logger LOG = Logger.getLogger(ShiroFreemarkerServlet.class.getName());
 
     // The base URL for user admin commands, variable so we can
     // decide where we want it to be.
@@ -52,6 +54,19 @@ public class ShiroFreemarkerServlet extends FreemarkerServlet {
         this.userBaseUrl = userBaseUrl;
         this.staticBaseUrl = staticBaseUrl;
     }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOG.info("Freemarker with uri " + request.getRequestURI());
+        super.doGet(request, response);
+        /*
+        response.setContentType("text/plain");
+        response.setStatus(200);
+        response.getWriter().println("This works OK");
+        */
+        LOG.info("here");
+    }
+
 
     @Override
     protected boolean preTemplateProcess(
