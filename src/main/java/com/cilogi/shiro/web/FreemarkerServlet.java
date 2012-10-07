@@ -20,7 +20,10 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.GaeUser;
+import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
+import com.google.common.collect.Maps;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -29,6 +32,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -44,7 +48,19 @@ public class FreemarkerServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
-        showView(response, uri);
+        showView(response, uri, mapping());
+    }
+
+    private Map<String,Object> mapping() {
+        Map<String,Object> map = Maps.newHashMap();
+        GaeUser user = getCurrentGaeUser();
+        if (user != null) {
+            map.put("userName", user.getName());
+            map.put("userType", user.getUserAuthType().name());
+        } else {
+            map.put("userType", UserAuthType.CILOGI.name());
+        }
+        return map;
     }
 
 }

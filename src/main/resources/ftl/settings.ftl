@@ -27,48 +27,56 @@
             <div class="page-header">
                 <h1>Change <small>your password</small></h1>
             </div>
-            <div class="row">
-               <div class="span12">
-                    <form id="settingsForm" action="${userBaseUrl}/settings" method="post">
-                        <fieldset>
-                            <legend>Change your password</legend>
-                            <div class="clearfix">
-                                <label for="username">Email Address</label>
+            <#if userType == "CILOGI">
+                <div class="row">
+                   <div class="span12">
+                        <form id="settingsForm" action="${userBaseUrl}/settings" method="post">
+                            <fieldset>
+                                <legend>Change your password</legend>
+                                <div class="clearfix">
+                                    <label for="username">Email Address</label>
 
-                                <div class="input">
-                                    <input class="xlarge" id="username" name="username"
-                                           size="30" type="text" disabled/>
+                                    <div class="input">
+                                        <input class="xlarge" id="username" name="username"
+                                               size="30" type="text" disabled/>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- /clearfix -->
-                            <div class="clearfix">
-                                <label for="password">Password</label>
+                                <!-- /clearfix -->
+                                <div class="clearfix">
+                                    <label for="password">Password</label>
 
-                                <div class="input">
-                                    <input class="required xlarge" id="password" name="password" size="30" type="password"/>
+                                    <div class="input">
+                                        <input class="required xlarge" id="password" name="password" size="30" type="password"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- /clearfix -->
-                            <div class="clearfix">
-                                <label for="checkPassword">Retype Password</label>
-                                <div class="input">
-                                    <input class="xlarge" id="checkPassword" name="checkPassword" size="30"
-                                           type="password"/>
+                                <!-- /clearfix -->
+                                <div class="clearfix">
+                                    <label for="checkPassword">Retype Password</label>
+                                    <div class="input">
+                                        <input class="xlarge" id="checkPassword" name="checkPassword" size="30"
+                                               type="password"/>
+                                    </div>
                                 </div>
+                                <!-- /clearfix -->
+                            </fieldset>
+                            <div class="actions">
+                                <button type="submit" class="btn primary">Update</button>
                             </div>
-                            <!-- /clearfix -->
-                        </fieldset>
-                        <div class="actions">
-                            <button type="submit" class="btn primary">Update</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row" id="stage3" style="display:none">
-                <div class="span12">
-                  <p>Your settings have been saved</p>
+                <div class="row" id="stage3" style="display:none">
+                    <div class="span12">
+                      <p>Your settings have been saved</p>
+                    </div>
                 </div>
-            </div>
+            <#else>
+                <div class="row">
+                    <div class="span12">
+                        <p class="lead">You can't set a password for Social logins (Facebook, Google) only for Cilogi.</p>
+                    </div>
+                </div>
+            </#if>
 
         </section>
     </div>

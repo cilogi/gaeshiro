@@ -68,7 +68,7 @@ body {
                 <li><a href="#guice">Guice</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.html">Settings</a></li>
+                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Settings</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
 <ul class="nav secondary-nav shiro-guest">
@@ -674,17 +674,20 @@ fb.live.host=http://gaeshiro.appspot.com
         $("#settings").click(function(e) {
             if (!$("html").hasClass("shiro-authenticated-active")) {
                 e.preventDefault();
+                shiro.spin.start($("#spinner"));
                 shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                    window.location.assign("settings.html");
+                    window.location.assign("settings.ftl");
                 });
                 return false;
             }
         });
         $("#admin").click(function(e) {
+            shiro.spin.start($("#spinner"));
             e.preventDefault();
             if ($("html").hasClass("shiro-user-active")) {
                 window.location.assign("listUsers.ftl");
             } else {
+                shiro.spin.stop();
                 alert("You need user privileges to view the user list.")
             }
             return false;

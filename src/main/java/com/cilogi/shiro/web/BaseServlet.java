@@ -21,6 +21,7 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
@@ -91,9 +92,13 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     }
 
     protected void showView(HttpServletResponse response, String templateName, Object... args) throws IOException {
-        String html =  create.createDocumentString(templateName, CreateDoc.map(args));
-        issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+        showView(response, templateName, CreateDoc.map(args));
     }
+
+    protected void showView(HttpServletResponse response, String templateName, Map<String,Object> args) throws IOException {
+         String html =  create.createDocumentString(templateName, args);
+         issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+     }
 
     protected String view(String templateName, Object... args) {
         return create.createDocumentString(templateName, CreateDoc.map(args));
@@ -139,5 +144,18 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
         Subject subject = SecurityUtils.getSubject();
         return subject.hasRole("admin");
     }
+
+    @SuppressWarnings({"unchecked"})
+    protected GaeUser getCurrentGaeUser() {
+        Subject subject = SecurityUtils.getSubject();
+        String email = (String)subject.getPrincipal();
+        if (email == null) {
+            return null;
+        } else {
+            UserDAO dao = daoProvider.get();
+            return dao.findUser(email);
+        }
+    }
+
 
 }
