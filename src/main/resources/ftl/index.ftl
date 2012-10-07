@@ -290,7 +290,7 @@
             <p>We're only considering services which provide a user email, on the principle that if some problem occurs
                with the provider we can still service these users by registering them in the normal way.  Of course people
                change their Emails, but in this case its one at a time, not a whole class at once, and for our applications
-               not a huge issue. Its a problem that is always with us.</p>
+               not a huge issue.</p>
         </div>
     </div>
 </section>
@@ -315,10 +315,10 @@
             <p>There are a couple of ways to go when interfacing a system such as Shiro with Guice. We can
                 do the minimum necessary to interface Guice and Shiro or we can try a deeper integration where
                 Shiro can be fully configured inside Guice.</p>
-            <p>Shiro 1.2 will include a Guice module which goes down the second of these routes. I may be
+            <p>Shiro 1.2 includes a Guice module which goes down the second of these routes. I may be
                 missing something but I don't see much advantage to this, and the minimal approach where we
                 do as much configuration as possible from the <code>shiro.ini</code> resource file does
-                everything we need, which is three main functions.</p>
+                everything we need (for this application at least), which is three main functions.</p>
                 <ol>
                     <li>Be unobtrusive so that I don't have to think about security when I'm coding the logic of
                         my application.
@@ -429,7 +429,7 @@ user = browse:*
                     In either case
                     we post or get to the <code>/confirm</code> URL with the code as a parameter.
                 <li>This checks the validity of the code, and if its valid
-                    adds a confirmation message to the current page. The user is logged in on hte server and
+                    adds a confirmation message to the current page. The user is logged in on the server and
                     we are done.
                 </li>
             </ol>
@@ -487,6 +487,20 @@ user = browse:*
                dependency could be removed with a little effort, Objectify somewhat more.</p>
             <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
                I18N for strings, but the logic is re-usable.</p>
+            <h3>Secrets</h3>
+            <p>Note that to use Facebook you need to register a Web App with Facebook and put the keys in
+               <code>src/main/resources/social.properties</code>.  The file will look something like this:</p>
+<pre class="prettyprint" lang-java>
+fb.local.apiKey=*your key here*
+fb.local.apiSecret=*your secret here*
+fb.local.host=http://localhost:8080
+
+fb.live.apiKey=*your key here*
+fb.live.apiSecret=*your secret here*
+fb.live.host=http://gaeshiro.appspot.com
+</pre>
+            <p>We find it useful to register two apps, one to run locally in the dev server, and one to
+               run in production. Hence the <em>local</em> and <em>live</em> keys.</p>
             <p>The image of the lock is by 
                <a href="http://www.flickr.com/photos/renaissancechambara/">renaissancechambara</a></p>
 
