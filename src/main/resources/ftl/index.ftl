@@ -521,7 +521,7 @@ fb.live.host=http://gaeshiro.appspot.com
 
         shiro.status.runStatus({
             success: function(data, status) {
-                spin.stop();
+                shiro.spin.stop();
                 if (status == 'success') {
                     $("html").removeClass("shiro-none-active");
                     if (data.message == "known") {
@@ -541,7 +541,7 @@ fb.live.host=http://gaeshiro.appspot.com
                 }
             },
             error: function(xhr) {
-                spin.stop();
+                shiro.spin.stop();
                 alert("can't find status: " + xhr.responseText);
             }
         });
@@ -578,16 +578,19 @@ fb.live.host=http://gaeshiro.appspot.com
         $("#google").click(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
+            shiro.spin.start($("#spinner"));
         });
 
         $("#facebook").submit(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
+            shiro.spin.start($("#spinner"));
         });
 
 
         $("#logout").click(function(e) {
             shiro.status.clearStatus();
+            shiro.spin.start($("#spinner"));
         });
     });
 </script>
