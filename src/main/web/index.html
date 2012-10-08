@@ -315,25 +315,32 @@ body {
 
             <p>You can log in with Google or Facebook</p>
 
-            <p>Google uses GAE's user service, which may be a mistake</p>
 
-            <p>Facebook uses OAuth and even does re-authentication.</p>
+            <p>We use OAuth 2 for both Google and Facebook authentication.  Google not so hot, Facebook better.
+               Facebook even does re-authentication.</p>
         </div>
         <div class="span9">
             <p>Its a lot easier for users if they don't have to go through the hassle of registration, and remember
                a password for yet another application. So, we've set things up to allow Google and Facebook login. The
-               Facebook implementation is reasonably generic and could easily be extended to other providers, such as
+               implementation is reasonably generic and can easily be extended to other providers, such as
                Yahoo!, LinkedIn and so on.  There is work involved I'm afraid as one needs to get credentials from each
                provider.  Also, you are restricted as to the website on which you can use any particular set of credentials.</p>
 
-            <p>Google login is implemented by taking advantage of App Engine's user service.  This is convenient, as
-               you don't need extra libraries, but has some problems, which don't occur if an OAuth solution were used.
-               In particular if you're already logged in with the browser, you will find that you don't get the opportunity
+            <p>With Google  if you're already logged in with the browser, you will find that you don't get the opportunity
                to choose the account you want to use -- you're logged in immediately with the account you came with.
-               Similarly there is no way to force re-authentication.  Both of these problems go away if OAuth is used...</p>
+               Similarly there is no way to force re-authentication.</p>
 
-            <p>Facebook login, which uses OAuth, words much better. You always get to see the initial screen asking for permission,
+            <p>We tried Google authentication with the built-in user service.  This didn't work very well either -- same
+               problems, so it makes sense to use OAUth.  If you only need Google then we've left the code present and
+               you wouldn't need to load the <code>scribe</code> library and hte OAuth adaption code.</p>
+
+            <p>Facebook login, which uses OAuth, words  better. You always get to see the initial screen asking for permission,
                and you can force re-authentication.</p>
+
+            <p>We had to make some additions to get
+               <code>scribe</code> to work with Google and OAuth2, so some work may be necessary for other providers. The
+               parameters you need are not the same in each case, and the return JSON is not uniform so has to be adapted
+               for each provider.</p>
 
             <p>We're only considering services which provide a user email, on the principle that if some problem occurs
                with the provider we can still service these users by registering them in the normal way.  Of course people
