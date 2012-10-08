@@ -32,6 +32,7 @@ import org.scribe.oauth.OAuthService;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -126,7 +127,7 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
 
     public static String logoutUrl(String accessToken) throws IOException {
         String logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
-        return logoutUrl;
+        return URLEncoder.encode(logoutUrl, "UTF-8");
     }
 
 

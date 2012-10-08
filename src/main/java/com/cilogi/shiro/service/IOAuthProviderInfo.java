@@ -26,9 +26,32 @@ import com.cilogi.shiro.gae.oauth.OAuthInfo;
 import java.io.IOException;
 
 public interface IOAuthProviderInfo {
+    /**
+     * Which type of authorization is being used?  Each one is handled somewhat differently.
+     * @return  The enum type
+     */
     public UserAuthType getUserAuthType();
+
+    /**
+     * The URL to call on login, to get a code.
+     * @param callbackUri  Where to go afterwards.
+     * @return
+     */
     public String loginURL(String callbackUri);
+    /**
+     * The URL to call on re-authentication, to get a code.
+     * @param callbackUri  Where to go afterwards.
+     * @return
+     */
     public String reAuthenticateURL(String callbackUri);
+
+    /**
+     * Information about the user.  At the moment its pretty-much just the
+     * email address.
+     * @param code The auth token
+     * @param callBackUrl Where to go afterwards
+     * @return The info.
+     */
     public OAuthInfo getUserInfo(String code, String callBackUrl);
     public void setState(String state);
 }
