@@ -102,7 +102,7 @@ public class OAuthLoginServlet extends BaseServlet {
                     dao.saveUser(user, true);
                 } else {
                     if (user.getUserAuthType() != auth.getUserAuthType()) {
-                        issue("text/plain", 400, "You can't log in with Facebook if you're already registered via " + user.getUserAuthType(), response);
+                        issue("text/plain", 400, "You can't log in with " + auth.getUserAuthType() + " if you're already registered via " + user.getUserAuthType(), response);
                         return;
                     }
                     user.setAccessToken(info.getToken());
