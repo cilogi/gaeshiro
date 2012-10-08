@@ -27,6 +27,7 @@ import org.scribe.model.OAuthConfig;
 import org.scribe.model.Verb;
 import org.scribe.utils.OAuthEncoder;
 
+// Here because scribe doesn't (yet) do OAuth 2 for Google
 public class GoogleApi20 extends DefaultApi20 {
 
 	private static final String AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/auth?scope=%s&redirect_uri=%s&response_type=code&client_id=%s";

@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+// here because the Scribe token extractor has an incorrect REGEX
 class JsonTokenExtractor implements AccessTokenExtractor {
     static final Logger LOG = Logger.getLogger(JsonTokenExtractor.class.getName());
 
@@ -44,7 +44,7 @@ class JsonTokenExtractor implements AccessTokenExtractor {
         if (matcher.find()) {
             return new Token(matcher.group(1), "", response);
         } else {
-            throw new OAuthException("Cannot extract an acces token. Response was: " + response);
+            throw new OAuthException("Cannot extract an access token. Response was: " + response);
         }
     }
 
