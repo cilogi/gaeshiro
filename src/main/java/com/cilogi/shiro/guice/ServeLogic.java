@@ -23,6 +23,8 @@ package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
+import com.cilogi.shiro.service.FacebookAuth;
+import com.cilogi.shiro.service.IOAuthProviderInfo;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
@@ -57,6 +59,7 @@ public class ServeLogic extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(IOAuthProviderInfo.class).to(FacebookAuth.class);
         bind(CreateDoc.class).toInstance(createDoc());
         bind(ShiroFilter.class).in(Scopes.SINGLETON);
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);

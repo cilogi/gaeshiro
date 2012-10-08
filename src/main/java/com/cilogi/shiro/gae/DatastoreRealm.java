@@ -118,11 +118,7 @@ public class DatastoreRealm extends AuthorizingRealm {
             case GOOGLE:
                 User googleUser = UserServiceFactory.getUserService().getCurrentUser();
                 return !user.getName().equals(googleUser.getEmail());
-            case FACEBOOK:
-                Subject subject = SecurityUtils.getSubject();
-                Session session = subject.getSession();
-                return !"true".equals(session.getAttribute("cilogi_logged_in" + user.getName()));
-            default: return false;
+            default: return true; // we should never get here, as we're another type of social user who is handled by another realm
 
         }
     }

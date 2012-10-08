@@ -23,7 +23,10 @@ package com.cilogi.shiro.web;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.oauth.OAuthAuthenticationToken;
+import com.cilogi.shiro.gae.oauth.OAuthInfo;
 import com.cilogi.shiro.service.FacebookAuth;
+import com.cilogi.shiro.service.IOAuthProviderInfo;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -42,14 +45,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+// This is set up so that its possible to user other types of OAuth provider rather easily
 @Singleton
 public class FacebookLoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(FacebookLoginServlet.class.getName());
 
-    private final FacebookAuth auth;
+    private final IOAuthProviderInfo auth;
 
     @Inject
-    public FacebookLoginServlet(Provider<UserDAO> daoProvider, FacebookAuth auth) {
+    public FacebookLoginServlet(Provider<UserDAO> daoProvider, IOAuthProviderInfo auth) {
         super(daoProvider);
         this.auth = auth;
     }
@@ -77,50 +81,40 @@ public class FacebookLoginServlet extends BaseServlet {
         String code = WebUtils.getCleanParam(request, "code");
         String currentUri = WebUtils.getRequestUri(request);
         try {
-            JSONObject info = auth.getUserInfo(code, currentUri);
-            if (info.has("error")) {
-                String message = info.getJSONObject("error").getString("message");
-                issue("text/plain", 400, "Couldn't get Facebook permission: " + message, response);
+            OAuthInfo info = auth.getUserInfo(code, currentUri);
+            if (info.isError()) {
+                String message = info.getErrorString();
+                issue("text/plain", 400, "Couldn't get " + info.getUserAuthType() + " permission: " + message, response);
             } else {
-                String email = info.getString("email");
+                String email = info.getEmail();
                 UserDAO dao = daoProvider.get();
                 GaeUser user = dao.findUser(email);
                 if (user == null) {
-                    user = new GaeUser(email, "password", Sets.newHashSet("user"), Sets.<String>newHashSet());
-                    user.setUserAuthType(UserAuthType.FACEBOOK);
-                    user.register();
+                    user = new GaeUser(email, info.getUserAuthType(), Sets.newHashSet("user"), Sets.<String>newHashSet());
+                    user.setAccessToken(info.getToken());
+                    dao.saveUser(user, true);
+                } else {
+                    if (user.getUserAuthType() != auth.getUserAuthType()) {
+                        issue("text/plain", 400, "You can't log in with Facebook if you're already registered via " + user.getUserAuthType(), response);
+                        return;
+                    }
+                    user.setAccessToken(info.getToken());
+                    dao.saveUser(user, false);
                 }
 
-                user.setAccessToken(info.getString("access_token"));
-                dao.saveUser(user, true);
-
-                if (user.getUserAuthType() != UserAuthType.FACEBOOK) {
-                    issue("text/plain", 400, "You can't log in with Facebook if you're already registered via " + user.getUserAuthType(), response);
-                    return;
-                }
-                recordPassForUser(email);
-
-                boolean rememberMe = true;
-                String host = request.getRemoteHost();
-                UsernamePasswordToken token = new UsernamePasswordToken(email, "password", rememberMe, host);
+                OAuthAuthenticationToken token = new OAuthAuthenticationToken(info.getToken(), info.getUserAuthType(), email, request.getRemoteHost());
 
                 Subject subject = SecurityUtils.getSubject();
-                loginWithNewSession(token, subject);
+                subject.login(token);
 
+                // redirect to wherever you were going, or to home
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             }
-            // redirect to wherever you were going, or to home
         } catch (Exception e) {
             issue("text/plain", 500, "Something unexpected went wrong: " + e.getMessage(), response);
         }
-    }
-
-    private void recordPassForUser(String email) {
-        Subject subject = SecurityUtils.getSubject();
-        Session session = subject.getSession();
-        session.setAttribute("cilogi_logged_in_" + email, "true");
     }
 
     private boolean isReAuthenticate() {

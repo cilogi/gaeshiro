@@ -83,6 +83,15 @@ public class GaeUser implements Serializable {
     GaeUser(String name, String password) {
         this(name, password, new HashSet<String>(), new HashSet<String>());
     }
+
+    public GaeUser(String name, UserAuthType userAuthType, Set<String> roles, Set<String> permissions) {
+        this.name = name;
+        this.userAuthType = userAuthType;
+        this.roles = Collections.unmodifiableSet(roles);
+        this.permissions = Collections.unmodifiableSet(permissions);
+        this.dateRegistered = new Date();
+        this.isSuspended = false;
+    }
     
     public GaeUser(String name, String password, Set<String> roles, Set<String> permissions) {
         this(name, password, roles, permissions, false);

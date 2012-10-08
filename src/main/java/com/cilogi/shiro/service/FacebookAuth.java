@@ -20,6 +20,8 @@
 
 package com.cilogi.shiro.service;
 
+import com.cilogi.shiro.gae.UserAuthType;
+import com.cilogi.shiro.gae.oauth.OAuthInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
@@ -37,7 +39,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class FacebookAuth {
+public class FacebookAuth implements IOAuthProviderInfo {
     static final Logger LOG = Logger.getLogger(FacebookAuth.class.getName());
 
     private static final String PROTECTED_RESOURCE_URL = "https://graph.facebook.com/me";
@@ -57,6 +59,12 @@ public class FacebookAuth {
         host = props.getProperty(prefix + ".host");
     }
 
+    @Override
+    public UserAuthType getUserAuthType() {
+        return UserAuthType.FACEBOOK;
+    }
+
+    @Override
     public String loginURL(String callbackUri) {
         OAuthService service = new ServiceBuilder()
                                       .provider(FacebookApi.class)
@@ -68,15 +76,22 @@ public class FacebookAuth {
         return service.getAuthorizationUrl(EMPTY_TOKEN);
     }
 
+    @Override
     public String reAuthenticateURL(String callbackUri) {
         return loginURL(callbackUri)+"&auth_type=reauthenticate";
     }
 
-    private String makeAbsolute(String uri) {
-        return uri.startsWith("/") ? host + uri : uri;
+    @Override
+    public OAuthInfo getUserInfo(String code, String callBackUrl) {
+        JSONObject obj = getUserInfoJSON(code, callBackUrl);
+        return new OAuthInfo.Builder(UserAuthType.FACEBOOK)
+                .errorString(errorString(obj))
+                .email(obj.optString("email"))
+                .token(obj.optString("access_token"))
+                .build();
     }
 
-    public JSONObject getUserInfo(String code, String callBackUrl) {
+    private JSONObject getUserInfoJSON(String code, String callBackUrl) {
         OAuthService service = new ServiceBuilder()
                                       .provider(FacebookApi.class)
                                       .apiKey(apiKey)
@@ -98,11 +113,13 @@ public class FacebookAuth {
         }
     }
 
-    public static String logoutUrl(String redirect, String accessToken, ServletRequest request, ServletResponse response) throws IOException {
+    public static String logoutUrl(String redirect, String accessToken) throws IOException {
         String redirectOK = OAuthEncoder.encode(redirect);
         String logoutUrl = "https://www.facebook.com/logout.php?next="+redirectOK+"&access_token=" + accessToken;
         return logoutUrl;
     }
+
+    //---------------------------------------------------------------------------------
 
     private void loadProperties(Properties props, String resourceName) {
         try {
@@ -111,4 +128,23 @@ public class FacebookAuth {
             LOG.severe("Can't load resource "+resourceName + ": " + e.getMessage());
         }
     }
+
+    private String makeAbsolute(String uri) {
+        return uri.startsWith("/") ? host + uri : uri;
+    }
+
+    private String errorString(JSONObject obj) {
+        if (obj.has("error")) {
+            try {
+                JSONObject errObj = obj.getJSONObject("error");
+                String message = errObj.getString("message");
+                return (message == null) ? "unknown JSON error, no message field found" : message;
+            } catch (JSONException e) {
+                return "Unknown error, JSON won't parse: " + obj.toString();
+            }
+        } else {
+            return null;
+        }
+    }
+
 }

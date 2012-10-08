@@ -58,7 +58,7 @@ class WebUtil {
     static  void logoutFacebook(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
         String redirectHome = makeRoot(((HttpServletRequest)request).getRequestURL().toString());
 
-        String url = FacebookAuth.logoutUrl(redirectHome, user.getAccessToken(), request, response);
+        String url = FacebookAuth.logoutUrl(redirectHome, user.getAccessToken());
 
         HttpServletResponse httpResponse = (HttpServletResponse)response;
         httpResponse.sendRedirect(httpResponse.encodeRedirectURL(url));
