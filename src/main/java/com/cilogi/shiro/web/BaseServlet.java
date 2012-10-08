@@ -23,6 +23,7 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -44,7 +45,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
+public class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
     protected final String MESSAGE = "message";
@@ -120,7 +121,7 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
      * @param token
      * @param subject
      */
-    static void loginWithNewSession(UsernamePasswordToken token, Subject subject) {
+    protected static void loginWithNewSession(UsernamePasswordToken token, Subject subject) {
         Session originalSession = subject.getSession();
 
         Map<Object, Object> attributes = Maps.newLinkedHashMap();

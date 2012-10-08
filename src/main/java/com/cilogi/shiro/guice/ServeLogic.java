@@ -23,8 +23,8 @@ package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
-import com.cilogi.shiro.service.FacebookAuth;
-import com.cilogi.shiro.service.IOAuthProviderInfo;
+import com.cilogi.shiro.oauth.provider.FacebookAuth;
+import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;

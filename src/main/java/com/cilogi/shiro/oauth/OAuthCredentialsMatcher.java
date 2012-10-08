@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.gae.oauth;
+package com.cilogi.shiro.oauth;
 
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationInfo;

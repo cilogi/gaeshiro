@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.shiro.oauth.provider;
 
 import org.scribe.builder.api.DefaultApi20;
 import org.scribe.extractors.AccessTokenExtractor;

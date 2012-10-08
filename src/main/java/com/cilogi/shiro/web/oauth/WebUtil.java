@@ -18,11 +18,11 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAOProvider;
-import com.cilogi.shiro.service.FacebookAuth;
+import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;

@@ -18,10 +18,10 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.shiro.oauth.provider;
 
 import com.cilogi.shiro.gae.UserAuthType;
-import com.cilogi.shiro.gae.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.OAuthInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;

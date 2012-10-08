@@ -22,6 +22,9 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.web.*;
+import com.cilogi.shiro.web.oauth.GoogleLoginServlet;
+import com.cilogi.shiro.web.oauth.OAuthLoginServlet;
+import com.cilogi.shiro.web.user.*;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Preconditions;
@@ -49,22 +52,11 @@ public class ServeModule extends ServletModule {
         filter("/*").through(ShiroFilter.class);
         filter("/*").through(AsyncCacheFilter.class);
         filter("/*").through(AppstatsFilter.class, map("calculateRpcCosts", "true"));
-        /*
-        serve("*.ftl").with(ShiroFreemarkerServlet.class, map(
-                "TemplatePath", "/WEB-INF/classes/ftl",
-                "NoCache", "true",
-                "ContentType", "text/html;charset=UTF-8",
-                "template_update_delay", "0",
-                "default_encoding", "UTF-8",
-                "number_format", "0.###"
-        ));
-        */
+
         serve("*.ftl").with(FreemarkerServlet.class);
+
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
-
-        serve(userBaseUrl + "/oauthLogin").with(OAuthLoginServlet.class);
-        serve("/oauth2callback").with(OAuthLoginServlet.class);
-
+        serve(userBaseUrl + "/socialLogin").with(OAuthLoginServlet.class);
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/googleLoginAuth").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/register").with(RegisterServlet.class);

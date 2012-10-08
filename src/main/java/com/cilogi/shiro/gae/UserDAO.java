@@ -29,6 +29,7 @@ import org.apache.shiro.cache.Cache;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserDAO extends DAOBase {
@@ -82,18 +83,19 @@ public class UserDAO extends DAOBase {
     }
 
     public GaeUser findUser(String userName) {
+        GaeUser user = null;
         try {
-            GaeUser user = userCache.get(userName);
+            user = userCache.get(userName);
             if (user == null) {
                 user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
                 if (user != null) {
                     userCache.put(userName, user);
                 }
             }
-            return user;
-        } catch (NullPointerException _) {
-            return null;
+        } catch (NullPointerException e) {
+            LOG.log(Level.INFO, "Can't put to cache", e);
         }
+        return user;
     }
 
     /**

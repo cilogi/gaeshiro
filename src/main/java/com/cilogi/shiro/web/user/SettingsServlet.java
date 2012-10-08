@@ -19,10 +19,11 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 

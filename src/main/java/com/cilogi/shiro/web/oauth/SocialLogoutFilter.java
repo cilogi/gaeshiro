@@ -17,15 +17,11 @@
 // effectively secure at all times.
 //
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
-import com.cilogi.shiro.service.FacebookAuth;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
@@ -35,11 +31,6 @@ import org.apache.shiro.web.util.WebUtils;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 //import static com.cilogi.shiro.gae.UserAuthType.*;

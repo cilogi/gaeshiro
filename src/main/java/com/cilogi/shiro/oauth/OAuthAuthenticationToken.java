@@ -18,11 +18,10 @@
 //
 
 
-package com.cilogi.shiro.gae.oauth;
+package com.cilogi.shiro.oauth;
 
 import com.cilogi.shiro.gae.UserAuthType;
 import com.google.common.base.Preconditions;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
 

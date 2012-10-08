@@ -18,17 +18,17 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.oauth.OAuthAuthenticationToken;
-import com.cilogi.shiro.gae.oauth.OAuthInfo;
-import com.cilogi.shiro.service.FacebookAuth;
-import com.cilogi.shiro.service.GoogleAuth;
-import com.cilogi.shiro.service.IOAuthProviderInfo;
-import com.google.appengine.repackaged.com.google.common.collect.Maps;
+import com.cilogi.shiro.oauth.OAuthAuthenticationToken;
+import com.cilogi.shiro.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.provider.FacebookAuth;
+import com.cilogi.shiro.oauth.provider.GoogleAuth;
+import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
+import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -41,11 +41,9 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Logger;
 
 // This is set up so that its possible to user other types of OAuth provider rather easily
@@ -78,7 +76,7 @@ public class OAuthLoginServlet extends BaseServlet {
             String url = isReAuthenticate() ? auth.reAuthenticateURL(currentUri) : auth.loginURL(currentUri);
             WebUtils.issueRedirect(request, response, url);
         } catch (Exception e) {
-            issue("text/plain", 500, "Something unexpected went wrong: " + e.getMessage(), response);
+            issue("text/plain", 500, "Something unexpected went wrong when posting: " + e.getMessage(), response);
         }
     }
 

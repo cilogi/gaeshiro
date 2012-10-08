@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.shiro.oauth.provider;
 
 import org.scribe.exceptions.OAuthException;
 import org.scribe.extractors.AccessTokenExtractor;
@@ -30,13 +30,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class JsonTokenExtractor implements AccessTokenExtractor {
+class JsonTokenExtractor implements AccessTokenExtractor {
     static final Logger LOG = Logger.getLogger(JsonTokenExtractor.class.getName());
 
     private static final Pattern accessTokenPattern = Pattern.compile("\"access_token\"\\s*:\\s*\"(\\S*?)\"");
 
-    public JsonTokenExtractor() {
-    }
+    JsonTokenExtractor() {}
 
     @Override
     public Token extract(String response) {

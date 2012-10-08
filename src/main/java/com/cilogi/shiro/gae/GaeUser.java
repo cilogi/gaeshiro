@@ -21,6 +21,7 @@
 
 package com.cilogi.shiro.gae;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Indexed;
@@ -189,8 +190,8 @@ public class GaeUser implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof GaeUser) {
             GaeUser u = (GaeUser)o;
-            return getName().equals(u.getName())
-                    && getPasswordHash().equals(u.getPasswordHash());
+            return Objects.equal(getName(), u.getName()) &&
+                   Objects.equal(getPasswordHash(), u.getPasswordHash());
         } else {
             return false;
         }
@@ -198,6 +199,6 @@ public class GaeUser implements Serializable {
 
     @Override
     public int hashCode() {
-        return name.hashCode() * 31 + passwordHash.hashCode();
+        return Objects.hashCode(name, passwordHash);
     }
 }

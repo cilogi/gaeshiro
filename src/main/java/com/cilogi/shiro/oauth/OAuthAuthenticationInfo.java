@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.gae.oauth;
+package com.cilogi.shiro.oauth;
 
 import com.cilogi.shiro.gae.UserAuthType;
 import org.apache.shiro.authc.AuthenticationInfo;

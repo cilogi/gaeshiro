@@ -18,9 +18,9 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.util;
 
-interface MimeTypes {
+public interface MimeTypes {
     String MIME_TEXT_PLAIN = "text/plain";
     String MIME_TEXT_HTML = "text/html";
     String MIME_APPLICATION_JSON = "application/json";

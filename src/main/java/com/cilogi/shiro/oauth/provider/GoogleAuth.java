@@ -18,10 +18,10 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.shiro.oauth.provider;
 
 import com.cilogi.shiro.gae.UserAuthType;
-import com.cilogi.shiro.gae.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.OAuthInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
@@ -86,7 +86,7 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
         JSONObject obj = getUserInfoJSON(code, callBackUrl);
         try {
             JSONObject data = obj.getJSONObject("data");
-            return new OAuthInfo.Builder(UserAuthType.FACEBOOK)
+            return new OAuthInfo.Builder(UserAuthType.GOOGLE)
                     .errorString(errorString(obj))
                     .email(data.optString("email"))
                     .token(obj.optString("access_token"))

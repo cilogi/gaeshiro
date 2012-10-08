@@ -18,12 +18,10 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.shiro.oauth.provider;
 
 import com.cilogi.shiro.gae.UserAuthType;
-import com.cilogi.shiro.gae.oauth.OAuthInfo;
-
-import java.io.IOException;
+import com.cilogi.shiro.oauth.OAuthInfo;
 
 public interface IOAuthProviderInfo {
     /**

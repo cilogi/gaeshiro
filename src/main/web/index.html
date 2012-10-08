@@ -58,17 +58,16 @@ body {
 <div class="topbar" data-scrollspy="scrollspy">
     <div class="topbar-inner">
         <div class="container">
-            <a class="brand" href="#">Shiro on GAE</a>
+            <a class="brand" href="#">GAEShiro</a>
             <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#what">What</a></li>
-                <li><a href="#motivation">Motivation</a></li>
-                <li><a href="#shiro">Shiro</a></li>
+                <li><a href="#motivation">Why</a></li>
+                <li><a href="#shiro">How</a></li>
                 <li><a href="#social">Social</a></li>
-                <li><a href="#guice">Guice</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Settings</a></li>
+                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
 <ul class="nav secondary-nav shiro-guest">
@@ -171,8 +170,8 @@ body {
 
 <section id="motivation">
     <div class="page-header">
-        <h1>Motivation
-            <small>why are we doing this?</small>
+        <h1>Why
+            <small>are we doing this?</small>
         </h1>
     </div>
     <div class="row">
@@ -245,8 +244,8 @@ body {
 </section>
 <section id="shiro">
     <div class="page-header">
-        <h1>Adapting Shiro
-            <small>what we had to do</small>
+        <h1>How
+            <small>we adapted Shiro</small>
         </h1>
     </div>
     <div class="row">
@@ -340,102 +339,6 @@ body {
                with the provider we can still service these users by registering them in the normal way.  Of course people
                change their Emails, but in this case its one at a time, not a whole class at once, and for our applications
                not a huge issue.</p>
-        </div>
-    </div>
-</section>
-
-<section id="guice">
-    <div class="page-header">
-        <h1>Guice
-            <small>setup and interface</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h2>The pith</h2>
-
-            <p>We have adapted realms and caches.</p>
-
-            <p>Objectify is used to interface to the datastore</p>
-
-            <p>In memory caches are combined with memcached to keep things fast and cheap.</p>
-        </div>
-        <div class="span9">
-            <p>There are a couple of ways to go when interfacing a system such as Shiro with Guice. We can
-                do the minimum necessary to interface Guice and Shiro or we can try a deeper integration where
-                Shiro can be fully configured inside Guice.</p>
-            <p>Shiro 1.2 includes a Guice module which goes down the second of these routes. I may be
-                missing something but I don't see much advantage to this, and the minimal approach where we
-                do as much configuration as possible from the <code>shiro.ini</code> resource file does
-                everything we need (for this application at least), which is three main functions.</p>
-                <ol>
-                    <li>Be unobtrusive so that I don't have to think about security when I'm coding the logic of
-                        my application.
-                    </li>
-                    <li>Let me specify, in as declarative a manner as possible, the security for the application</li>
-                    <li>Provide a simple mechanism whereby I can tailor web pages depending on who is logged in</li>
-                </ol>
-            <p>All of these concerns are met by the <em>standard</em> Shiro. The <code>shiro.ini</code> file
-                is great -- its simple and powerful.</p>
-            <p>My mind is open to persuasion on this point. I just haven't seen any reason for moving from the
-                minimalist position. Here is the <code>shiro.ini</code> I'm using.</p>
-<pre class="prettyprint">
-[main]
-gaeRealm = com.cilogi.shiro.gae.DatastoreRealm
-securityManager.realms = $iniRealm, $gaeRealm
-
-[users]
-zenith@acme.com = pass, user, admin
-nadir@acme.com = pass, user
-
-[roles]
-admin = *
-user = browse:*
-
-[urls]
-/login.jsp = authc
-/settings.html = authc, roles[user]
-/logout = logout
-...
-</pre>
-            <p>There are two ways in which we can tailor web pages. The first is to use templates and tags. The
-                built in JSP tags can be used from both JSP and FreeMarker (if not others). In Freemarker you
-                need the following invocation at the top of your web page:</p>
-<pre class="prettyprint">
-&lt;#assign shiro=JspTaglibs["META-INF/shiro.tld"]&gt;
-</pre>
-            with the location of the tag specification being the expression in brackets. You can then use
-            tags to include text, depending on the user's status, role or permissions. The second approach,
-            used on this page is to query the server, via Ajax, for your status, set class attributes depending
-            on the result and use CSS rules to decide what to show.</p>
-            <p>In order to configure Shiro with Guice the following was necessary (for Shiro 1.2, Shiro 1.1 will
-                be a little different).</p>
-            <ul>
-                <li>The Shiro listener should be added to <code>web.xml</code>
-<pre class="prettyprint" lang-xml linenums>
-    &lt;listener&gt;
-        &lt;listener-class>
-          org.apache.shiro.web.env.EnvironmentLoaderListener
-        &lt;/listener-class&gt;
-    &lt;/listener&gt;
-</pre>
-                </li>
-                <li>Inside the <code>configureServlets</code> method of your <code>ServletModule</code> you must
-                    serve the paths you want secured with the <code>ShiroFilter</code>.
-<pre class="prettyprint">
-    filter("/*").through(ShiroFilter.class);
-</pre>
-                </li>
-                <li>In your <code>configure</code> method you need to make sure that <code>ShiroFilter</code>
-                    is a singleton.
-<pre class="prettyprint">
-    bind(ShiroFilter.class).in(Scopes.SINGLETON);
-</pre>
-                </li>
-            </ul>
-            <p>That's all it takes to configure Shiro with Guice. If you want to use the AOP annotations then
-                you will need to include the Guice module <code>com.cilogi.shiro.aop.AopModule</code> which
-                provides bindings for all of Shiro's AOP annotations.</p>
         </div>
     </div>
 </section>
@@ -565,10 +468,10 @@ fb.live.host=http://gaeshiro.appspot.com
     <div class="modal-header">
         <a href="#" class="close">&times;</a>
         <h3>Please login <span class="loginReason"></span> or
-            <form id="google" action="/oauth2callback?provider=GOOGLE" method="POST" style="display:inline">
+            <form id="google" action="/user/admin/socialLogin?provider=GOOGLE" method="POST" style="display:inline">
                 <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
             </form>
-            <form id="facebook" action="/user/admin/oauthLogin?provider=FACEBOOK" method="POST" style="display:inline">
+            <form id="facebook" action="/user/admin/socialLogin?provider=FACEBOOK" method="POST" style="display:inline">
                 <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b> login</button>
             </form>
         </h3>

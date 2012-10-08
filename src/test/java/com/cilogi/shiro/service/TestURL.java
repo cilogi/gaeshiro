@@ -22,7 +22,6 @@ package com.cilogi.shiro.service;
 
 import junit.framework.TestCase;
 
-
 import java.net.URI;
 import java.net.URL;
 import java.util.logging.Logger;
