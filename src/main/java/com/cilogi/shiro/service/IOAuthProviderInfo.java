@@ -29,5 +29,6 @@ public interface IOAuthProviderInfo {
     public UserAuthType getUserAuthType();
     public String loginURL(String callbackUri);
     public String reAuthenticateURL(String callbackUri);
-    public OAuthInfo getUserInfo(String code, String callBackUrl);    
+    public OAuthInfo getUserInfo(String code, String callBackUrl);
+    public void setState(String state);
 }

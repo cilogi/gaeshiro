@@ -69,8 +69,7 @@ public class ServeLogic extends AbstractModule {
         bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
-        bindString("fb.property.prefix", isDevelopmentServer() ? "fb.local" : "fb.live");
-        bindString("gg.property.prefix", isDevelopmentServer() ? "gg.local" : "gg.live");
+        bindString("social.site", isDevelopmentServer() ? "local" : "live");
     }
 
     private void bindString(String key, String value) {

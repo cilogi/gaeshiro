@@ -32,14 +32,12 @@ import org.scribe.utils.OAuthEncoder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class FacebookAuth implements IOAuthProviderInfo {
+public class FacebookAuth extends AuthBase implements IOAuthProviderInfo {
     static final Logger LOG = Logger.getLogger(FacebookAuth.class.getName());
 
     private static final String PROTECTED_RESOURCE_URL = "https://graph.facebook.com/me";
@@ -50,8 +48,9 @@ public class FacebookAuth implements IOAuthProviderInfo {
     private final String host;
 
     @Inject
-    public FacebookAuth(@Named("fb.property.prefix") String prefix) {
-        LOG.info("prefix is " + prefix);
+    public FacebookAuth(@Named("social.site") String site) {
+        LOG.info("prefix is " + site);
+        String prefix = "fb." + site;
         Properties props = new Properties();
         loadProperties(props, "/social.properties");
         apiKey = props.getProperty(prefix + ".apiKey");
@@ -70,7 +69,7 @@ public class FacebookAuth implements IOAuthProviderInfo {
                                       .provider(FacebookApi.class)
                                       .apiKey(apiKey)
                                       .apiSecret(apiSecret)
-                                      .callback(makeAbsolute(callbackUri))
+                                      .callback(makeAbsolute(callbackUri, host))
                                       .scope("email")
                                       .build();
         return service.getAuthorizationUrl(EMPTY_TOKEN);
@@ -96,7 +95,7 @@ public class FacebookAuth implements IOAuthProviderInfo {
                                       .provider(FacebookApi.class)
                                       .apiKey(apiKey)
                                       .apiSecret(apiSecret)
-                                      .callback(makeAbsolute(callBackUrl))
+                                      .callback(makeAbsolute(callBackUrl, host))
                                       .scope("email")
                                       .build();
         Verifier verifier = new Verifier(code);
@@ -115,36 +114,7 @@ public class FacebookAuth implements IOAuthProviderInfo {
 
     public static String logoutUrl(String redirect, String accessToken) throws IOException {
         String redirectOK = OAuthEncoder.encode(redirect);
-        String logoutUrl = "https://www.facebook.com/logout.php?next="+redirectOK+"&access_token=" + accessToken;
-        return logoutUrl;
-    }
-
-    //---------------------------------------------------------------------------------
-
-    private void loadProperties(Properties props, String resourceName) {
-        try {
-            props.load(getClass().getResourceAsStream(resourceName));
-        } catch (IOException e) {
-            LOG.severe("Can't load resource "+resourceName + ": " + e.getMessage());
-        }
-    }
-
-    private String makeAbsolute(String uri) {
-        return uri.startsWith("/") ? host + uri : uri;
-    }
-
-    private String errorString(JSONObject obj) {
-        if (obj.has("error")) {
-            try {
-                JSONObject errObj = obj.getJSONObject("error");
-                String message = errObj.getString("message");
-                return (message == null) ? "unknown JSON error, no message field found" : message;
-            } catch (JSONException e) {
-                return "Unknown error, JSON won't parse: " + obj.toString();
-            }
-        } else {
-            return null;
-        }
+        return "https://www.facebook.com/logout.php?next="+redirectOK+"&access_token=" + accessToken;
     }
 
 }

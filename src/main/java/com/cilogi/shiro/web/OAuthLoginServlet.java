@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        FacebookLoginServlet.java  (05-Oct-2012)
+// File:        OAuthLoginServlet.java  (05-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -26,36 +26,39 @@ import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.oauth.OAuthAuthenticationToken;
 import com.cilogi.shiro.gae.oauth.OAuthInfo;
 import com.cilogi.shiro.service.FacebookAuth;
+import com.cilogi.shiro.service.GoogleAuth;
 import com.cilogi.shiro.service.IOAuthProviderInfo;
+import com.google.appengine.repackaged.com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
-import org.json.JSONObject;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 // This is set up so that its possible to user other types of OAuth provider rather easily
 @Singleton
-public class FacebookLoginServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(FacebookLoginServlet.class.getName());
+public class OAuthLoginServlet extends BaseServlet {
+    static final Logger LOG = Logger.getLogger(OAuthLoginServlet.class.getName());
 
-    private final IOAuthProviderInfo auth;
+    private final String site;
 
     @Inject
-    public FacebookLoginServlet(Provider<UserDAO> daoProvider, IOAuthProviderInfo auth) {
+    public OAuthLoginServlet(@Named("social.site") String site, Provider<UserDAO> daoProvider) {
         super(daoProvider);
-        this.auth = auth;
+        this.site = site;
     }
 
     /**
@@ -69,6 +72,9 @@ public class FacebookLoginServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String currentUri = WebUtils.getRequestUri(request);
+            IOAuthProviderInfo auth = getProvider(request);
+            putSessionData("userAuthType", auth.getUserAuthType().name());
+
             String url = isReAuthenticate() ? auth.reAuthenticateURL(currentUri) : auth.loginURL(currentUri);
             WebUtils.issueRedirect(request, response, url);
         } catch (Exception e) {
@@ -81,6 +87,7 @@ public class FacebookLoginServlet extends BaseServlet {
         String code = WebUtils.getCleanParam(request, "code");
         String currentUri = WebUtils.getRequestUri(request);
         try {
+            IOAuthProviderInfo auth = getProvider((String)getAndClearSessionData("userAuthType"));
             OAuthInfo info = auth.getUserInfo(code, currentUri);
             if (info.isError()) {
                 String message = info.getErrorString();
@@ -125,6 +132,48 @@ public class FacebookLoginServlet extends BaseServlet {
             return (user != null) && user.getAccessToken() != null;
         } else {
             return false;
+        }
+    }
+
+    private IOAuthProviderInfo getProvider(String authType) {
+        return getProvider(authType, site);
+    }
+
+    private IOAuthProviderInfo getProvider(HttpServletRequest request) {
+        String authType = request.getParameter("provider");
+        return getProvider(authType, site);
+    }
+
+    private static void putSessionData(String key, Object data) {
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        session.setAttribute(key, data);
+    }
+
+    private static Object getAndClearSessionData(String key) {
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        Object data = session.getAttribute(key);
+        session.removeAttribute(key);
+        return data;
+    }
+
+
+    private static IOAuthProviderInfo getProvider(String name, String site) {
+        try {
+            UserAuthType type = UserAuthType.valueOf(name);
+            switch (type) {
+                case GOOGLE:
+                    return new GoogleAuth(site);
+                case FACEBOOK:
+                    return new FacebookAuth(site);
+                default:
+                    LOG.warning("Auth type " + name + "isn't handled");
+                    return null;
+            }
+        } catch (Exception e) {
+            LOG.warning("Can't work out the auth type of " + name);
+            return null;
         }
     }
 

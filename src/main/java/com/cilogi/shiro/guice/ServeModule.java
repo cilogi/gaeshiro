@@ -22,7 +22,6 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.web.*;
-import com.cilogi.util.ShiroFreemarkerServlet;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Preconditions;
@@ -62,7 +61,10 @@ public class ServeModule extends ServletModule {
         */
         serve("*.ftl").with(FreemarkerServlet.class);
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
-        serve(userBaseUrl + "/fbLogin").with(FacebookLoginServlet.class);
+
+        serve(userBaseUrl + "/oauthLogin").with(OAuthLoginServlet.class);
+        serve("/oauth2callback").with(OAuthLoginServlet.class);
+
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/googleLoginAuth").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/register").with(RegisterServlet.class);

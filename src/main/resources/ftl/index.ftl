@@ -578,7 +578,7 @@ fb.live.host=http://gaeshiro.appspot.com
             return false;
         });
 
-        $("#google").click(function(e) {
+        $("#google").submit(function(e) {
             $("#modal-login").modal('hide');
             shiro.status.clearStatus();
             shiro.spin.start($("#spinner"));

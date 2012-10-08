@@ -27,8 +27,10 @@
             <div class="page-header">
                 <h1>Login
                     <small>or</small>
-                        <a id="google" class="btn-auth btn-google" href="${userBaseUrl}/googleLogin" style="vertical-align:middle"><b>Google</b> login</a>
-                        <form id="facebook" action="${userBaseUrl}/fbLogin" method="POST" style="display:inline;">
+                        <form id="google" action="/oauth2callback?provider=GOOGLE" method="POST" style="display:inline">
+                            <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
+                        </form>
+                        <form id="facebook" action="${userBaseUrl}/oauthLogin?provider=FACEBOOK" method="POST" style="display:inline;">
                             <button type="submit" class="btn-auth btn-facebook" style="vertical-align:middle;"><b>Facebook</b> login</button>
                         </form>
                 </h1>
@@ -55,7 +57,7 @@ $(document).ready(function() {
       }
     });
 
-    $("#google").click(function(e) {
+    $("#google").submit(function(e) {
         $("#modal-login").modal('hide');
         shiro.status.clearStatus();
     });

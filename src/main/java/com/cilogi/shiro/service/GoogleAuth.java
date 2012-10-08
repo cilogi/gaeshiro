@@ -20,6 +20,8 @@
 
 package com.cilogi.shiro.service;
 
+import com.cilogi.shiro.gae.UserAuthType;
+import com.cilogi.shiro.gae.oauth.OAuthInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
@@ -34,7 +36,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class GoogleAuth {
+public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
     static final Logger LOG = Logger.getLogger(GoogleAuth.class.getName());
 
     private static final String PROTECTED_RESOURCE_URL = "https://www.googleapis.com/userinfo/email?alt=json";
@@ -46,8 +48,9 @@ public class GoogleAuth {
     private final String host;
 
     @Inject
-    public GoogleAuth(@Named("gg.property.prefix") String prefix) {
-        LOG.info("prefix is " + prefix);
+    public GoogleAuth(@Named("social.site") String site) {
+        LOG.info("site is " + site);
+        String prefix = "gg." + site;
         Properties props = new Properties();
         loadProperties(props, "/social.properties");
         apiKey = props.getProperty(prefix + ".apiKey");
@@ -55,6 +58,12 @@ public class GoogleAuth {
         host = props.getProperty(prefix + ".host");
     }
 
+    @Override
+    public UserAuthType getUserAuthType() {
+        return UserAuthType.GOOGLE;
+    }
+
+    @Override
     public String loginURL(String callbackUri) {
         OAuthService service = new ServiceBuilder()
                                       .provider(GoogleApi20.class)
@@ -66,15 +75,33 @@ public class GoogleAuth {
         return service.getAuthorizationUrl(EMPTY_TOKEN);
     }
 
+    @Override
     public String reAuthenticateURL(String callbackUri) {
         return loginURL(callbackUri)+"&approval_prompt=force";
     }
+
+    @Override
+    public OAuthInfo getUserInfo(String code, String callBackUrl) {
+        JSONObject obj = getUserInfoJSON(code, callBackUrl);
+        try {
+            JSONObject data = obj.getJSONObject("data");
+            return new OAuthInfo.Builder(UserAuthType.FACEBOOK)
+                    .errorString(errorString(obj))
+                    .email(data.optString("email"))
+                    .token(obj.optString("access_token"))
+                    .build();
+        } catch (JSONException e) {
+            LOG.warning("Can't parse Google's return info: " + obj.toString());
+            return null;
+        }
+    }
+
 
     private String makeAbsolute(String uri) {
         return uri.startsWith("/") ? host + uri : uri;
     }
 
-    public JSONObject getUserInfo(String code, String callBackUrl) {
+    private JSONObject getUserInfoJSON(String code, String callBackUrl) {
         OAuthService service = new ServiceBuilder()
                                       .provider(FacebookApi.class)
                                       .apiKey(apiKey)
@@ -102,30 +129,23 @@ public class GoogleAuth {
         return logoutUrl;
     }
 
-    private void loadProperties(Properties props, String resourceName) {
-        try {
-            props.load(getClass().getResourceAsStream(resourceName));
-        } catch (IOException e) {
-            LOG.severe("Can't load resource "+resourceName + ": " + e.getMessage());
-        }
-    }
 
     /**
      * This is hacked, as at the moment, the Scribe API hasn't moved up to Google's OAuth 2.0 implementation.
      * @param verifier verifier
+     * @param callbackUrl callback
      * @return  callback URL
      */
     public Token getAccessToken(Verifier verifier, String callbackUrl) {
-        GoogleApi20 api = new GoogleApi20();
-        OAuthRequest request = new OAuthRequest(Verb.GET, "https://accounts.google.com/o/oauth2/token");
-        request.addQuerystringParameter(OAuthConstants.CLIENT_ID, apiKey);
-        request.addQuerystringParameter(OAuthConstants.CLIENT_SECRET, apiSecret);
-        request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
-        request.addQuerystringParameter(OAuthConstants.REDIRECT_URI, callbackUrl);
-        request.addQuerystringParameter(OAuthConstants.SCOPE, SCOPE);
-        request.addQuerystringParameter("grant_type", "authorization_code"); // this is missing from Scribe
+        OAuthRequest request = new OAuthRequest(Verb.POST, "https://accounts.google.com/o/oauth2/token");
+        request.addBodyParameter(OAuthConstants.CLIENT_ID, apiKey);
+        request.addBodyParameter(OAuthConstants.CLIENT_SECRET, apiSecret);
+        request.addBodyParameter(OAuthConstants.CODE, verifier.getValue());
+        request.addBodyParameter(OAuthConstants.REDIRECT_URI, callbackUrl);
+        //request.addBodyParameter(OAuthConstants.SCOPE, SCOPE);
+        request.addBodyParameter("grant_type", "authorization_code"); // this is missing from Scribe
         Response response = request.send();
-        return api.getAccessTokenExtractor().extract(response.getBody());
+        return new JsonTokenExtractor().extract(response.getBody());
     }
 
 }
