@@ -142,7 +142,7 @@ public class GoogleLoginServlet extends BaseServlet {
         User user = service.getCurrentUser();
         if (user != null) {
             String redirectUrl = request.getRequestURL().toString();
-            WebUtil.logoutGoogle(request, response, redirectUrl);
+            WebUtil.logoutGoogleService(request, response, redirectUrl);
         }
     }
 }

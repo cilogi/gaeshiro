@@ -104,7 +104,7 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
 
     private JSONObject getUserInfoJSON(String code, String callBackUrl) {
         OAuthService service = new ServiceBuilder()
-                                      .provider(FacebookApi.class)
+                                      .provider(GoogleApi20.class)
                                       .apiKey(apiKey)
                                       .apiSecret(apiSecret)
                                       .callback(makeAbsolute(callBackUrl))
@@ -127,7 +127,7 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
 
     public static String logoutUrl(String accessToken) throws IOException {
         String logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
-        return URLEncoder.encode(logoutUrl, "UTF-8");
+        return logoutUrl;
     }
 
 

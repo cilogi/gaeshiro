@@ -55,7 +55,7 @@ public class SocialLogoutFilter extends LogoutFilter {
         GaeUser gaeUser = findUser(principal);
         if (gaeUser != null) {
             switch (gaeUser.getUserAuthType()) {
-                case GOOGLE: WebUtil.logoutGoogle(request, response, "/");
+                case GOOGLE: WebUtil.logoutGoogle(gaeUser, request, response);
                     break;
                 case FACEBOOK: WebUtil.logoutFacebook(gaeUser, request, response);
                     break;

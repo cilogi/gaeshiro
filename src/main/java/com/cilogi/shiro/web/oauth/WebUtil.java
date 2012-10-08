@@ -23,10 +23,14 @@ package com.cilogi.shiro.web.oauth;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
+import com.cilogi.shiro.oauth.provider.GoogleAuth;
+import com.google.appengine.api.urlfetch.*;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.common.base.Charsets;
 import org.apache.shiro.web.util.WebUtils;
+import org.json.JSONObject;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -44,7 +48,7 @@ class WebUtil {
     private WebUtil() {}
 
 
-    static void logoutGoogle(ServletRequest request, ServletResponse response, String redirectUrl) throws IOException {
+    static void logoutGoogleService(ServletRequest request, ServletResponse response, String redirectUrl) throws IOException {
         UserService service = UserServiceFactory.getUserService();
         User user = service.getCurrentUser();
         if (user != null) {
@@ -53,6 +57,18 @@ class WebUtil {
         } else {
             WebUtils.issueRedirect(request, response, redirectUrl);
         }
+    }
+
+    static void logoutGoogle(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
+        String redirectHome = makeRoot(((HttpServletRequest)request).getRequestURL().toString());
+        String url = GoogleAuth.logoutUrl(user.getAccessToken());
+        String reply = fetch(new URL(url));
+        if (reply != null) {
+            LOG.info("Failed to logout from Google: " + reply);
+        }
+        user.setAccessToken(null);
+        UserDAOProvider.get().saveUser(user, false);
+        WebUtils.issueRedirect(request, response, redirectHome);
     }
 
     static  void logoutFacebook(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
@@ -76,5 +92,22 @@ class WebUtil {
             return fullURL;
         }
     }
+
+    static String fetch(URL url) {
+        URLFetchService service = URLFetchServiceFactory.getURLFetchService();
+        try {
+            HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
+            HTTPResponse response = service.fetch(request);
+            if (response.getResponseCode() == 200) {
+                return null;
+            } else {
+                String s = new String(response.getContent(), Charsets.UTF_8);
+                return (s == null) ? "Unknown error with code " + response.getResponseCode() : s;
+            }
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+
 
 }
