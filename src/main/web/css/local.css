@@ -20,6 +20,10 @@
     opacity: 1;
 }
 
+#modal-login {
+    background-color: #EDE8DE;
+}
+
 #modal-login label.error {
     display: block;
     float: none;

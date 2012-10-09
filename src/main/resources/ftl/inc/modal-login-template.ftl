@@ -8,6 +8,7 @@
             <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST" style="display:inline">
                 <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b> login</button>
             </form>
+            <a href="/login-help.html">?</a>
         </h3>
     </div>
     <#include "login-template.ftl">

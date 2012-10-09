@@ -8,6 +8,7 @@ xsi:schemaLocation="http://appengine.google.com/ns/1.0 http://googleappengine.go
         <property name="java.util.logging.config.file" value="WEB-INF/classes/logging.properties"/>
     </system-properties>
 
+    <threadsafe>true</threadsafe>
     <sessions-enabled>true</sessions-enabled>
     <!--
         Changes to a session are put into the data store asynchronously, which produces some risk
