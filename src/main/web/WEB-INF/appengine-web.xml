@@ -23,7 +23,6 @@ xsi:schemaLocation="http://appengine.google.com/ns/1.0 http://googleappengine.go
         <include path="/images/*" expiration="10m"/>
         <include path="/**.css" expiration="10m"/>
         <include path="/**.js" expiration="10m"/>
-        <include path="/maven/**/*.*" expiration="10m"/>
     </static-files>
 
     <resource-files>
