@@ -71,7 +71,6 @@ public class UserListServlet extends BaseServlet {
 
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
-        gen();
         UserDAO dao = new UserDAO();
         long nUsers = dao.getCount();
         JSONObject obj = new JSONObject();
@@ -132,16 +131,5 @@ public class UserListServlet extends BaseServlet {
             had = true;
         }
         return out;
-    }
-
-    private void gen() {
-        UserDAO dao = new UserDAO();
-        GaeUser user = dao.findUser("user0@acme.com");
-        if (user == null) {
-            for (int i = 0; i < 100; i++) {
-                user = new GaeUser("user" + i + "@acme.com", "acme", Sets.newHashSet("user"), Sets.<String>newHashSet());
-                dao.saveUser(user, true);
-            }
-        }
     }
 }

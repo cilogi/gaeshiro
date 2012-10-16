@@ -1,4 +1,4 @@
-<#assign title="SIgn in Help">
+<#assign title="Sign in Help">
 <#assign style="substyle.css">
 
 <!DOCTYPE html>

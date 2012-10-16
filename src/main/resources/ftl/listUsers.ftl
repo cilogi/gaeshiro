@@ -138,9 +138,8 @@
 
             function success() {
             }
-
-
         }
+
         // When a checkbox is changed both suspend or unsuspend the relevant
         // user and invalidate the cache so we can see the change if we come back to this
         // page later.

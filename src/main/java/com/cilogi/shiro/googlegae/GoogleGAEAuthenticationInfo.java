@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthAuthenticationInfo.java  (07-Oct-2012)
+// File:        GoogleGAEAuthenticationInfo.java  (16-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,9 +18,8 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.googlegae;
 
-import com.cilogi.shiro.gae.UserAuthType;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -28,26 +27,23 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import java.util.logging.Logger;
 
 
-public class OAuthAuthenticationInfo implements AuthenticationInfo {
-    static final Logger LOG = Logger.getLogger(OAuthAuthenticationInfo.class.getName());
+public class GoogleGAEAuthenticationInfo implements AuthenticationInfo {
+    static final Logger LOG = Logger.getLogger(GoogleGAEAuthenticationInfo.class.getName());
 
-    public final String authToken;
     private final String principal;
-    private final UserAuthType authType;
 
-    public OAuthAuthenticationInfo(String authToken, String principal, UserAuthType authType) {
-        this.authToken = authToken;
+    public GoogleGAEAuthenticationInfo(String principal) {
         this.principal = principal;
-        this.authType = authType;
     }
 
     @Override
     public Object getCredentials() {
-        return authToken;
+        return null;
     }
 
     @Override
     public PrincipalCollection getPrincipals() {
-        return new SimplePrincipalCollection(principal, authType.name());
+        return new SimplePrincipalCollection(principal, "GoogleGAE");
     }
+
 }

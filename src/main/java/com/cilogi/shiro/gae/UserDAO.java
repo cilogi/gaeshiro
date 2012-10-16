@@ -49,6 +49,7 @@ public class UserDAO extends DAOBase {
         userCache = new MemcacheManager().getCache("GaeUser");
     }
 
+
     /**
      * Save user with authorization information
      * @param user  User

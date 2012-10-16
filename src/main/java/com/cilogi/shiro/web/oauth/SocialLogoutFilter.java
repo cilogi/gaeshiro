@@ -19,14 +19,10 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.UserDAOProvider;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
-import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
@@ -44,31 +40,13 @@ public class SocialLogoutFilter extends LogoutFilter {
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         Subject subject = SecurityUtils.getSubject();
-        String principal = (String)subject.getPrincipal();
 
         try {
             subject.logout();
         } catch (SessionException ise) {
             LOG.info("Encountered session exception during logout.  This can generally safely be ignored: " + ise.getMessage());
         }
-
-        GaeUser gaeUser = findUser(principal);
-        if (gaeUser != null) {
-            switch (gaeUser.getUserAuthType()) {
-                case GOOGLE: WebUtil.logoutGoogle(gaeUser, request, response);
-                    break;
-                case FACEBOOK: WebUtil.logoutFacebook(gaeUser, request, response);
-                    break;
-                default:
-            }
-        } else {
-            WebUtils.issueRedirect(request, response, "/");
-        }
+        WebUtil.logoutGoogleService(request, response, "/");
         return false;
-    }
-
-    private static GaeUser findUser(String principal) {
-        UserDAO dao = UserDAOProvider.get();
-        return (principal == null) ? null : dao.findUser(principal);
     }
 }

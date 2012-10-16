@@ -95,12 +95,9 @@ public class OAuthLoginServlet extends BaseServlet {
                 UserDAO dao = daoProvider.get();
                 GaeUser user = dao.findUser(email);
                 if (user == null) {
-                    user = new GaeUser(email, info.getUserAuthType(), Sets.newHashSet("user"), Sets.<String>newHashSet());
-                    user.setAccessToken(info.getToken());
+                    user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
                     dao.saveUser(user, true);
                 } else {
-                    user.setUserAuthType(auth.getUserAuthType());
-                    user.setAccessToken(info.getToken());
                     dao.saveUser(user, false);
                 }
 
@@ -112,7 +109,10 @@ public class OAuthLoginServlet extends BaseServlet {
                 // redirect to wherever you were going, or to home
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                // revoking the token immediately is (a) safe as the token can't float around anywhere, and (b) lets us re-suthenticate and logout properly.
+                // Just seems odd as the token is meant to last a long time...
+                auth.revokeToken(info.getToken(), request, response, redirectUrl);
+                //response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             }
         } catch (Exception e) {
             issue("text/plain", 500, "Something unexpected went wrong: " + e.getMessage(), response);
@@ -124,7 +124,7 @@ public class OAuthLoginServlet extends BaseServlet {
         String principal = (String)subject.getPrincipal();
         if (principal != null) {
             GaeUser user = daoProvider.get().findUser(principal);
-            return (user != null) && user.getAccessToken() != null;
+            return user != null;
         } else {
             return false;
         }

@@ -32,6 +32,10 @@ import org.scribe.utils.OAuthEncoder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -110,6 +114,14 @@ public class FacebookAuth extends AuthBase implements IOAuthProviderInfo {
         } catch (JSONException e) {
             return new JSONObject();
         }
+    }
+
+    public void revokeToken(String token, HttpServletRequest request, HttpServletResponse response,
+                            String redirectURL)  throws IOException {
+        String redirectHome = ProviderUtil.makeRoot(request.getRequestURL().toString(), redirectURL);
+
+        String url = logoutUrl(redirectHome, token);
+        response.sendRedirect(response.encodeRedirectURL(url));
     }
 
     public static String logoutUrl(String redirect, String accessToken) throws IOException {

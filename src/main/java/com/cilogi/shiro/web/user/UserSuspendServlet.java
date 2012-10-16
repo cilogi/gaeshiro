@@ -47,7 +47,7 @@ public class UserSuspendServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            UserDAO dao = new UserDAO();
+            UserDAO dao = daoProvider.get();
             GaeUser user = dao.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));

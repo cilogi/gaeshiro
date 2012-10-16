@@ -28,6 +28,7 @@ import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -121,7 +122,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
      * @param token
      * @param subject
      */
-    protected static void loginWithNewSession(UsernamePasswordToken token, Subject subject) {
+    protected static void loginWithNewSession(AuthenticationToken token, Subject subject) {
         Session originalSession = subject.getSession();
 
         Map<Object, Object> attributes = Maps.newLinkedHashMap();

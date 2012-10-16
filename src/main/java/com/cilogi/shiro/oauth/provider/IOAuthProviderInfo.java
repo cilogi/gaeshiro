@@ -23,6 +23,10 @@ package com.cilogi.shiro.oauth.provider;
 import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.oauth.OAuthInfo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public interface IOAuthProviderInfo {
     /**
      * Which type of authorization is being used?  Each one is handled somewhat differently.
@@ -51,5 +55,13 @@ public interface IOAuthProviderInfo {
      * @return The info.
      */
     public OAuthInfo getUserInfo(String code, String callBackUrl);
-    public void setState(String state);
+
+    /**
+     * Revoked a token whilst in a web session
+     * @param token The token to revoke
+     * @param request  Current request
+     * @param response Current response
+     * @param redirectURL Where you'd like to be redirected to
+     */
+    public void revokeToken(String token, HttpServletRequest request, HttpServletResponse response, String redirectURL) throws IOException;
 }

@@ -70,28 +70,23 @@ public class GaeUser implements Serializable {
 
     private boolean isSuspended;
 
-    private UserAuthType userAuthType;
-
-    private String accessToken;
-
     /** For objectify to create instances on retrieval */
     private GaeUser() {
         this.roles = new HashSet<String>();
         this.permissions = new HashSet<String>();
-        this.userAuthType = CILOGI;
     }
+
+    GaeUser(String name) {
+        this(name, null, new HashSet<String>(), new HashSet<String>());
+    }
+
     
     GaeUser(String name, String password) {
         this(name, password, new HashSet<String>(), new HashSet<String>());
     }
 
-    public GaeUser(String name, UserAuthType userAuthType, Set<String> roles, Set<String> permissions) {
-        this.name = name;
-        this.userAuthType = userAuthType;
-        this.roles = Collections.unmodifiableSet(roles);
-        this.permissions = Collections.unmodifiableSet(permissions);
-        this.dateRegistered = new Date();
-        this.isSuspended = false;
+    public GaeUser(String name, Set<String> roles, Set<String> permissions) {
+        this(name, null, roles, permissions);
     }
     
     public GaeUser(String name, String password, Set<String> roles, Set<String> permissions) {
@@ -100,7 +95,6 @@ public class GaeUser implements Serializable {
 
     GaeUser(String name, String password, Set<String> roles, Set<String> permissions, boolean isRegistered) {
         Preconditions.checkNotNull(name, "User name (email) can't be null");
-        Preconditions.checkNotNull(password, "User password can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
         this.name = name;
@@ -111,24 +105,6 @@ public class GaeUser implements Serializable {
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
         this.isSuspended = false;
-        this.userAuthType = CILOGI;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public UserAuthType getUserAuthType() {
-        return userAuthType;
-    }
-
-    public void setUserAuthType(UserAuthType userAuthType) {
-        Preconditions.checkNotNull(userAuthType, "The auth type of a user cannot be null");
-        this.userAuthType = userAuthType;
     }
 
     public boolean isSuspended() {
@@ -183,7 +159,7 @@ public class GaeUser implements Serializable {
     }
 
     private static String hash(String password, byte[] salt) {
-        return new Sha256Hash(password, new SimpleByteSource(salt), HASH_ITERATIONS).toHex();
+        return (password == null) ? null : new Sha256Hash(password, new SimpleByteSource(salt), HASH_ITERATIONS).toHex();
     }
 
     @Override

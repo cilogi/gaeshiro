@@ -42,7 +42,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 
-class WebUtil {
+public class WebUtil {
     static final Logger LOG = Logger.getLogger(WebUtil.class.getName());
 
     private WebUtil() {}
@@ -59,31 +59,26 @@ class WebUtil {
         }
     }
 
-    static void logoutGoogle(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
+    static void logoutGoogle(String token, ServletRequest request, ServletResponse response) throws IOException {
         String redirectHome = makeRoot(((HttpServletRequest)request).getRequestURL().toString());
-        String url = GoogleAuth.logoutUrl(user.getAccessToken());
+        String url = GoogleAuth.logoutUrl(token);
         String reply = fetch(new URL(url));
         if (reply != null) {
             LOG.info("Failed to logout from Google: " + reply);
         }
-        user.setAccessToken(null);
-        UserDAOProvider.get().saveUser(user, false);
         WebUtils.issueRedirect(request, response, redirectHome);
     }
 
-    static  void logoutFacebook(GaeUser user, ServletRequest request, ServletResponse response) throws IOException {
+    static  void logoutFacebook(String token, ServletRequest request, ServletResponse response) throws IOException {
         String redirectHome = makeRoot(((HttpServletRequest)request).getRequestURL().toString());
 
-        String url = FacebookAuth.logoutUrl(redirectHome, user.getAccessToken());
+        String url = FacebookAuth.logoutUrl(redirectHome, token);
 
         HttpServletResponse httpResponse = (HttpServletResponse)response;
         httpResponse.sendRedirect(httpResponse.encodeRedirectURL(url));
-
-        user.setAccessToken(null);
-        UserDAOProvider.get().saveUser(user, false);
     }
 
-    static String makeRoot(String fullURL) {
+    public static String makeRoot(String fullURL) {
         try {
             URL url = new URL(fullURL);
             String portString = (url.getPort() == -1) ? "" : ":" + url.getPort();

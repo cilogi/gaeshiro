@@ -22,6 +22,9 @@ package com.cilogi.shiro.oauth.provider;
 
 import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.oauth.OAuthInfo;
+import com.google.appengine.api.urlfetch.*;
+import com.google.common.base.Charsets;
+import org.apache.shiro.web.util.WebUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
@@ -31,7 +34,10 @@ import org.scribe.oauth.OAuthService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -130,6 +136,18 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
         return logoutUrl;
     }
 
+    @Override
+    public void revokeToken(String token, HttpServletRequest request, HttpServletResponse response,
+                            String redirectURL)  throws IOException {
+        String redirectHome = response.encodeRedirectURL(redirectURL);
+        String url = GoogleAuth.logoutUrl(token);
+        String reply = fetch(new URL(url));
+        if (reply != null) {
+            LOG.info("Failed to logout from Google: " + reply);
+        }
+        WebUtils.issueRedirect(request, response, redirectHome);
+    }
+
 
     /**
      * This is hacked, as at the moment, the Scribe API hasn't moved up to Google's OAuth 2.0 implementation.
@@ -147,6 +165,22 @@ public class GoogleAuth extends AuthBase implements IOAuthProviderInfo {
         request.addBodyParameter("grant_type", "authorization_code"); // this is missing from Scribe
         Response response = request.send();
         return new JsonTokenExtractor().extract(response.getBody());
+    }
+
+    private static String fetch(URL url) {
+        URLFetchService service = URLFetchServiceFactory.getURLFetchService();
+        try {
+            HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
+            HTTPResponse response = service.fetch(request);
+            if (response.getResponseCode() == 200) {
+                return null;
+            } else {
+                String s = new String(response.getContent(), Charsets.UTF_8);
+                return (s == null) ? "Unknown error with code " + response.getResponseCode() : s;
+            }
+        } catch (IOException e) {
+            return e.getMessage();
+        }
     }
 
 }

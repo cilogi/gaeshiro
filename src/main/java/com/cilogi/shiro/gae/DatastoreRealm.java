@@ -60,14 +60,8 @@ public class DatastoreRealm extends AuthorizingRealm {
         LOG.info("Finding authentication info for " + userName + " in DB");
         GaeUser user = dao().findUser(userName);
 
-        boolean isSocialUserFaking = false;
-        User googleUser = UserServiceFactory.getUserService().getCurrentUser();
-        if (user != null && googleUser != null && isSocialUserFaking(user)) {
-            LOG.warning("Google says " + googleUser.getEmail() + " and Shiro remembers " + user.getName());
-            isSocialUserFaking = true;
-        }
 
-        if (user == null || userIsNotQualified(user) || isSocialUserFaking) {
+        if (user == null || userIsNotQualified(user)) {
             LOG.info("Rejecting " + user.getName());
             return null;
         }
@@ -107,16 +101,5 @@ public class DatastoreRealm extends AuthorizingRealm {
 
     private static boolean userIsNotQualified(GaeUser user) {
         return !user.isRegistered() || user.isSuspended();
-    }
-
-    private boolean isSocialUserFaking(GaeUser user) {
-        switch (user.getUserAuthType()) {
-            case CILOGI: return false; // not a social user, so can't fake
-            case GOOGLE:
-                User googleUser = UserServiceFactory.getUserService().getCurrentUser();
-                return !user.getName().equals(googleUser.getEmail());
-            default: return true; // we should never get here, as we're another type of social user who is handled by another realm
-
-        }
     }
 }

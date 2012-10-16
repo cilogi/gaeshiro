@@ -27,9 +27,14 @@
             <div class="page-header">
                 <h1>Login
                     <small>or</small>
+                        <!--
                         <form id="google" action="${userBaseUrl}/socialLogin?provider=GOOGLE" method="POST" style="display:inline">
                             <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
                         </form>
+                        -->
+                    <form id="google" action="${userBaseUrl}/googleLogin" method="POST" style="display:inline">
+                        <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
+                    </form>
                         <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST" style="display:inline;">
                             <button type="submit" class="btn-auth btn-facebook" style="vertical-align:middle;"><b>Facebook</b> login</button>
                         </form>

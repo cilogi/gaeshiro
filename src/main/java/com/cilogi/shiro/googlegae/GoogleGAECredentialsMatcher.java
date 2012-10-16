@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthAuthenticationInfo.java  (07-Oct-2012)
+// File:        GoogleGAECredentialsMatcher.java  (16-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,36 +18,28 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.googlegae;
 
-import com.cilogi.shiro.gae.UserAuthType;
+import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 
 import java.util.logging.Logger;
 
 
-public class OAuthAuthenticationInfo implements AuthenticationInfo {
-    static final Logger LOG = Logger.getLogger(OAuthAuthenticationInfo.class.getName());
+public class GoogleGAECredentialsMatcher implements CredentialsMatcher {
+    static final Logger LOG = Logger.getLogger(GoogleGAECredentialsMatcher.class.getName());
 
-    public final String authToken;
-    private final String principal;
-    private final UserAuthType authType;
-
-    public OAuthAuthenticationInfo(String authToken, String principal, UserAuthType authType) {
-        this.authToken = authToken;
-        this.principal = principal;
-        this.authType = authType;
-    }
-
+    public GoogleGAECredentialsMatcher() {}
+    
     @Override
-    public Object getCredentials() {
-        return authToken;
+    public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
+        Preconditions.checkNotNull(info);
+        Preconditions.checkNotNull(token);
+
+        Object primary = info.getPrincipals().getPrimaryPrincipal();
+        return token instanceof GoogleGAEAuthenticationToken && token.getPrincipal().equals(primary);
     }
 
-    @Override
-    public PrincipalCollection getPrincipals() {
-        return new SimplePrincipalCollection(principal, authType.name());
-    }
 }

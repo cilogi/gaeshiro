@@ -56,11 +56,16 @@ public class FreemarkerServlet extends BaseServlet {
         GaeUser user = getCurrentGaeUser();
         if (user != null) {
             map.put("userName", user.getName());
-            map.put("userType", user.getUserAuthType().name());
+            map.put("userType", userType(user));
         } else {
-            map.put("userType", UserAuthType.CILOGI.name());
+            map.put("userType", "UNKNOWN");
         }
         return map;
+    }
+
+    private static String userType(GaeUser user) {
+        String hash = user.getPasswordHash();
+        return (hash == null) ? "SOCIAL" : UserAuthType.CILOGI.name();
     }
 
 }

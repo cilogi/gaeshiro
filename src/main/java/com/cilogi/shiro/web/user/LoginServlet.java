@@ -47,6 +47,12 @@ public class LoginServlet extends BaseServlet {
     LoginServlet(Provider<UserDAO> daoProvider) {
         super(daoProvider);
     }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        showView(response, "login.ftl");
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

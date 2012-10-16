@@ -23,6 +23,7 @@ package com.cilogi.shiro.web.oauth;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -72,72 +73,52 @@ public class GoogleLoginServlet extends BaseServlet {
         super(daoProvider);
     }
 
+
+    @Override
+    // this is called from login, and all that's required is to login via the Google URl with a return
+    // to this place, but with GET as the verb
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserService userService =  UserServiceFactory.getUserService();
+        String currentUri = WebUtils.getRequestUri(request);
+        String authUrl = userService.createLoginURL(currentUri);
+        try {
+            response.sendRedirect(response.encodeRedirectURL(authUrl));
+        } catch (Exception e) {
+            LOG.warning("Error trying to redirect to " + authUrl);
+            response.sendRedirect("/");
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService =  UserServiceFactory.getUserService();
         try {
-            String currentUri = WebUtils.getRequestUri(request);
-            if (currentUri.endsWith("googleLoginAuth")) {
-                User currentUser = userService.getCurrentUser();
-                if (currentUser == null) {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login for unknown reasons", response);
-                    return;
-                }
+            User currentUser = userService.getCurrentUser();
+            if (currentUser == null) {
+                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login as we can't find Google user", response);
+                return;
+            }
+            String username = currentUser.getEmail();
 
-                String username = currentUser.getEmail();
-                if (!createShiroUser(username)) {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username
-                             + " as you have registered the same Email before, as a non-Google email, which we don't allow", response);
-                    return;
-                }
-                
-                boolean rememberMe = true;
-                String host = request.getRemoteHost();
-                UsernamePasswordToken token = new UsernamePasswordToken(username, "password", rememberMe, host);
-                try {
-                    Subject subject = SecurityUtils.getSubject();
-                    loginWithNewSession(token, subject);
-                    // go back to where Shiro thought we should go or to home if that's not set
-                    SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
-                    String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                    response.sendRedirect(response.encodeRedirectURL(redirectUrl));
-                } catch (AuthenticationException e) {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
-                }
-            } else {
-                // The idea is make sure that the user is logged in with the User Service
-                // before logging in for Shiro
-                ensureLoggedInToUserService(userService, request, response);
+            String host = request.getRemoteHost();
+            GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(username,  host);
+            try {
+                Subject subject = SecurityUtils.getSubject();
+                loginWithNewSession(token, subject);
+
+                // go back to where Shiro thought we should go or to home if that's not set
+                SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+                String redirectUrl = (savedRequest == null) ? "/" : savedRequest.getRequestUrl();
+                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+            } catch (AuthenticationException e) {
+                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
 
-    private boolean createShiroUser(String userName) {
-        UserDAO dao = daoProvider.get();
-        GaeUser user = dao.findUser(userName);
-        if (user == null) {
-            user = new GaeUser(userName, "password", Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.setUserAuthType(UserAuthType.GOOGLE);
-            user.register();
-            dao.saveUser(user, true);
-            return true;
-        }
-        return user.getUserAuthType() == UserAuthType.GOOGLE;
-    }
 
-    private static void ensureLoggedInToUserService(UserService userService,
-                                           HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logoutGoogleIfLoggedIn(request, response, userService);
-        String authUrl = userService.createLoginURL("/user/admin/googleLoginAuth");
-        response.sendRedirect(response.encodeRedirectURL(authUrl));
-    }
-
-    // make sure we're logged out before trying to log in.  Otherwise
-    // the login can be <em>silent</em>. This is problematic when (a) you'd like
-    // to log in as a different Google user, and (b) when we need to re-authorize when
-    // accessing sensite resources where <code>isRemembered</code> isn't enough (e.g. kids accessing financial accounts).
     private static void logoutGoogleIfLoggedIn(HttpServletRequest request, HttpServletResponse response, UserService service) throws IOException{
         User user = service.getCurrentUser();
         if (user != null) {
