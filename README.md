@@ -8,3 +8,5 @@ Front end user registration and password management is  provided in as minimalis
 a fashion as we could manage.
 
 The demo, running on App Engine, can be found [here](http://gaeshiro.appspot.com).
+
+The License is MIT.
