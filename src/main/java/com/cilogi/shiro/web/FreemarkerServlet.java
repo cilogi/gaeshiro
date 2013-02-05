@@ -32,10 +32,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.logging.Logger;
 
-
+//
+//  I originally used FreemarkerServlet, but it didn't work with HTTPS for some reason.
+//
 @Singleton
 public class FreemarkerServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(FreemarkerServlet.class.getName());
@@ -48,10 +51,10 @@ public class FreemarkerServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
-        showView(response, uri, mapping());
+        showView(response, uri, mapping(request));
     }
 
-    private Map<String,Object> mapping() {
+    private Map<String,Object> mapping(HttpServletRequest request) {
         Map<String,Object> map = Maps.newHashMap();
         GaeUser user = getCurrentGaeUser();
         if (user != null) {
@@ -60,12 +63,22 @@ public class FreemarkerServlet extends BaseServlet {
         } else {
             map.put("userType", "UNKNOWN");
         }
+        map.put("RequestParameters", requestParameters(request));
         return map;
     }
 
     private static String userType(GaeUser user) {
         String hash = user.getPasswordHash();
         return (hash == null) ? "SOCIAL" : UserAuthType.CILOGI.name();
+    }
+
+    private static Map<String,String> requestParameters(HttpServletRequest request) {
+        Map<String,String> map = Maps.newHashMap();
+        for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
+            String key = (String)enumeration.nextElement();
+            map.put(key, request.getParameter(key));
+        }
+        return map;
     }
 
 }
