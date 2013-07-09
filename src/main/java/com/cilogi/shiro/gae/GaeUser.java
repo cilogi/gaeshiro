@@ -23,16 +23,16 @@ package com.cilogi.shiro.gae;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.googlecode.objectify.annotation.Cached;
-import com.googlecode.objectify.annotation.Indexed;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.util.SimpleByteSource;
 
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
@@ -40,10 +40,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.cilogi.shiro.gae.UserAuthType.CILOGI;
-
-@Cached
-@Unindexed
+@Cache
+@Entity
 public class GaeUser implements Serializable {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
@@ -65,7 +63,7 @@ public class GaeUser implements Serializable {
 
     private Set<String> permissions;
 
-    @Indexed
+    @Index
     private Date dateRegistered;
 
     private boolean isSuspended;

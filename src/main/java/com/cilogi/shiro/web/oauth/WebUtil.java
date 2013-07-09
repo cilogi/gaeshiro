@@ -20,8 +20,6 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.GoogleAuth;
 import com.google.appengine.api.urlfetch.*;
@@ -30,7 +28,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Charsets;
 import org.apache.shiro.web.util.WebUtils;
-import org.json.JSONObject;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

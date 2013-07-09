@@ -20,19 +20,11 @@
 
 package com.cilogi.shiro.oauth;
 
-import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.MemcacheManager;
-import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.UserDAOProvider;
-import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthenticatingRealm;
-import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.subject.PrincipalCollection;
 
 import java.util.logging.Logger;
 

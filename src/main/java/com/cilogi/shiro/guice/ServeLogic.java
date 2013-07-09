@@ -22,7 +22,6 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.util.doc.CreateDoc;
@@ -89,11 +88,6 @@ public class ServeLogic extends AbstractModule {
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Provides    
-    UserDAO provideUserDAO() {
-        return UserDAOProvider.get();
     }
 
     private static boolean isDevelopmentServer() {

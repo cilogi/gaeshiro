@@ -22,22 +22,16 @@
 package com.cilogi.shiro.gae;
 
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.util.DAOBase;
-import org.apache.shiro.cache.Cache;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UserDAO extends DAOBase {
+public class UserDAO extends BaseDAO<GaeUser> {
     static final Logger LOG = Logger.getLogger(UserDAO.class.getName());
     
     private static final long REGISTRATION_VALID_DAYS = 1;
-
-    private final Cache<String, GaeUser> userCache;
 
     static {
         ObjectifyService.register(GaeUser.class);
@@ -46,7 +40,7 @@ public class UserDAO extends DAOBase {
     }
 
     public UserDAO() {
-        userCache = new MemcacheManager().getCache("GaeUser");
+        super(GaeUser.class);
     }
 
 
@@ -57,8 +51,7 @@ public class UserDAO extends DAOBase {
      * @return the user, after changes
      */
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
-        ofy().put(user);
-        userCache.remove(user.getName());
+        super.put(user);
         if (changeCount) {
             changeCount(1L);
         }
@@ -66,37 +59,25 @@ public class UserDAO extends DAOBase {
     }
 
     public GaeUser deleteUser(GaeUser user) {
-        ofy().delete(user);
-        userCache.remove(user.getName());
+        super.delete(user.getName());
         changeCount(-1L);
         return user;
     }
 
     public RegistrationString saveRegistration(String registrationString, String userName) {
         RegistrationString reg = new RegistrationString(registrationString, userName, REGISTRATION_VALID_DAYS, TimeUnit.DAYS);
-        ofy().put(reg);
+        new RegistrationDAO().put(reg);
         return reg;
     }
 
     public String findUserNameFromValidCode(String code) {
-        RegistrationString reg = ofy().find(new Key<RegistrationString>(RegistrationString.class, code));
+        RegistrationDAO dao = new RegistrationDAO();
+        RegistrationString reg = dao.get(code);
         return (reg == null) ?  null : (reg.isValid() ? reg.getUsername() : null);
     }
 
     public GaeUser findUser(String userName) {
-        GaeUser user = null;
-        try {
-            user = userCache.get(userName);
-            if (user == null) {
-                user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
-                if (user != null) {
-                    userCache.put(userName, user);
-                }
-            }
-        } catch (NullPointerException e) {
-            LOG.log(Level.INFO, "Can't put to cache", e);
-        }
-        return user;
+        return get(userName);
     }
 
     /**
@@ -109,44 +90,38 @@ public class UserDAO extends DAOBase {
      * @param userName the user name for the code
      */
     public void register(final String code, final String userName) {
-        GaeUser user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
+        GaeUser user = get(userName);
         if (user != null) {
             user.register();
-            ofy().put(user);
-            userCache.remove(userName);
+            saveUser(user, true);
         }
-        RegistrationString reg = ofy().find(new Key<RegistrationString>(RegistrationString.class, code));
+        RegistrationDAO dao = new RegistrationDAO();
+        RegistrationString reg = dao.get(code);
         if (reg != null) {
-            ofy().delete(reg);
+            dao.delete(code);
         }
     }
 
     public long getCount() {
-        GaeUserCounter count = ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
+        GaeUserCounterDAO dao = new GaeUserCounterDAO();
+        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
         return (count == null) ? 0 : count.getCount();
     }
 
     public Date getCountLastModified() {
-        GaeUserCounter count = ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
+        GaeUserCounterDAO dao = new GaeUserCounterDAO();
+        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
         return (count == null) ? new Date(0L) : count.getLastModified();
     }
 
     /**
-     * Change the user count.  Wrapped in a transaction to make sure the
-     * count is accurate.
+     * Change the user count.
      * @param delta amount to change
      */
     private void changeCount(final long delta) {
-        TransactDAO.repeatInTransaction(new TransactDAO.Transactable() {
-            @Override
-            public void run(TransactDAO transactDAO) {
-                GaeUserCounter count = transactDAO.ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
-                if (count == null) {
-                    count = new GaeUserCounter();
-                }
-                count.delta(delta);
-                transactDAO.ofy().put(count);
-            }
-        });
+        GaeUserCounterDAO dao = new GaeUserCounterDAO();
+        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
+        count.delta(delta);
+        dao.put(count);
     }
 }

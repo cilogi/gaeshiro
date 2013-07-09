@@ -45,7 +45,7 @@ public class DatastoreRealm extends AuthorizingRealm {
     }
 
     private UserDAO dao() {
-        return UserDAOProvider.get();
+        return new UserDAO();
     }
 
     @Override

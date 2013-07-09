@@ -27,6 +27,7 @@ import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.googlecode.objectify.ObjectifyService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 @Singleton
 public class UserListServlet extends BaseServlet {
@@ -103,15 +106,11 @@ public class UserListServlet extends BaseServlet {
         if (sSearch != null && !"".equals(sSearch)) {
             return Lists.newArrayList(dao.findUser(sSearch));
         } else {
-            List<GaeUser> list =  Lists.newLinkedList();
-            QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
-                    .order("-dateRegistered")
+            List<GaeUser> list =  ofy().load().type(GaeUser.class)
                     .offset(start)
                     .limit(length)
-                    .fetch();
-            for (GaeUser aQuery : query) {
-                list.add(aQuery);
-            }
+                    .order("-dataRegistered")
+                    .list();
             LOG.info("Fresh load start " + start + " # " + length);
             return list;
         }

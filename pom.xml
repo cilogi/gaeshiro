@@ -13,88 +13,26 @@
     <description>Demo of Shiro on Google App Engine</description>
 
 
-    <repositories>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>objectify-appengine</id>
-            <url>http://objectify-appengine.googlecode.com/svn/maven</url>
-        </repository>
-        <repository>
-            <id>spy</id>
-            <name>Spy Repository</name>
-            <layout>default</layout>
-            <url>http://files.couchbase.com/maven2/</url>
-        </repository>
-        <repository>
-            <id>apache</id>
-            <url>http://repository.apache.org/snapshots</url>
-        </repository>
-
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven-gae-plugin-repo</id>
-            <name>Maven Google App Engine Repository</name>
-            <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <name>oss.sonatype.org</name>
-            <id>oss.sonatype.org</id>
-            <url>http://oss.sonatype.org/content/groups/public</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <!-- Specify hard-coded project properties here -->
     <properties>
+        <gae.version>1.8.1.1</gae.version>
         <downloadSources>true</downloadSources>
-        <gae.version>1.6.4</gae.version>
-        <appengine.sdk.root>C:/software/appengine-java-sdk-1.6.4</appengine.sdk.root>
-        <gae.application.version>test</gae.application.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
 
-        <!-- Google App Engine meta-package -->
         <dependency>
-            <groupId>net.kindleit</groupId>
-            <artifactId>gae-runtime</artifactId>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
             <version>${gae.version}</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jdo</groupId>
-                    <artifactId>jdo2-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-jpa</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.appengine.orm</groupId>
-                    <artifactId>datanucleus-appengine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
-
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_2.5_spec</artifactId>
-            <version>1.2</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-
 
         <!-- These dependencies are here just for enabling logging -->
         <dependency>
@@ -117,7 +55,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.5</version>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
 
@@ -145,13 +83,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>1.2</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
@@ -180,15 +111,12 @@
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
             <artifactId>objectify</artifactId>
-            <version>3.0</version>
+            <version>4.0rc1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <version>1.2.1</version>
-            <!--
-             <version>1.2.0-SNAPSHOT</version>
-             -->
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -237,95 +165,31 @@
             <artifactId>bsh</artifactId>
             <version>1.3.0</version>
         </dependency>
-
     </dependencies>
 
 
     <build>
         <plugins>
+            <plugin>
+               <groupId>com.google.appengine</groupId>
+               <artifactId>appengine-maven-plugin</artifactId>
+               <version>${gae.version}</version>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.3</version>
                 <configuration>
-                    <warSourceDirectory>${basedir}/src/main/web</warSourceDirectory>
-                    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
                     <archiveClasses>true</archiveClasses>
-                    <webResources>
-                        <!--
-                        <resource>
-                            <directory>src/main/web</directory>
-                            <filtering>true</filtering>
-                            <includes>
-                                <include>*.html</include>
-                                <include>*.properties</include>
-                                <include>cache.manifest</include>
-                                <include>favicon.ico</include>
-                                <include>**/*.xml</include>
-                                <include>**/*.tld</include>
-                                <include>**/*.ini</include>
-                                <include>css/**</include>
-                                <include>js/**</include>
-                                <include>images/**</include>
-                                <include>assets/**</include>
-                            </includes>
-                        </resource>
-                        -->
-                    </webResources>
                 </configuration>
             </plugin>
 
-            <!--
-                The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
-                gae:deploy" to upload to GAE.
-            -->
-            <plugin>
-                <groupId>net.kindleit</groupId>
-                <artifactId>maven-gae-plugin</artifactId>
-                <version>0.9.2</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.kindleit</groupId>
-                        <artifactId>gae-runtime</artifactId>
-                        <version>${gae.version}</version>
-                        <type>pom</type>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <serverId>appengine.google.com</serverId>
-                    <sdkDir>${appengine.sdk.root}</sdkDir>
-                    <appDir>${basedir}/target/gaeshiro-0.1</appDir>
-                </configuration>
-
-            </plugin>
-
-            <!--
-                Upload application to the appspot automatically, during
-                release:perform
-            -->
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <goals>gae:deploy</goals>
-                </configuration>
-            </plugin>
-
-            <!-- Java compiler version -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -360,7 +224,7 @@
                 </dependencies>
                 <configuration>
                     <cfgFile>src/main/resources/fmpp/config.fmpp</cfgFile>
-                    <outputDirectory>${basedir}/src/main/web</outputDirectory>
+                    <outputDirectory>${basedir}/src/main/webapp</outputDirectory>
                     <!--
                   <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
                   -->
@@ -379,56 +243,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/test</directory>
-                <includes>
-                    <include>**/*.cfg</include>
-                </includes>
-            </resource>
-
-        </resources>
     </build>
-
-
-    <profiles>
-        <!--
-            We can configure our integration server to activate this profile and
-            perform gae:deploy, thus uploading latest snapshot to the
-            http://1.latest.<applicationName>.appspot.com automatically
-        -->
-        <profile>
-            <id>integration-build</id>
-            <properties>
-                <gae.application.version>stage</gae.application.version>
-            </properties>
-        </profile>
-
-        <!--
-            This profile will activate automatically during release and upload
-            application to the http://2.latest.<applicationName>.appspot.com (We
-            might want to set the 2nd version as our applications Default version
-            to be accessible at http://<applicationName>.appspot.com)
-        -->
-        <profile>
-            <id>release-build</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-            <properties>
-                <!--
-                    During release, set application version in appengine-web.xml to 2
-                -->
-                <gae.application.version>release</gae.application.version>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

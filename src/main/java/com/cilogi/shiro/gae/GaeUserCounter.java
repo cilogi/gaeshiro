@@ -21,10 +21,10 @@
 
 package com.cilogi.shiro.gae;
 
-import com.googlecode.objectify.annotation.Cached;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 
-import javax.persistence.Id;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -36,22 +36,26 @@ import java.util.logging.Logger;
  * <p> This counter should be changed relatively rarely (less than once a second)
  * so doesn't need to be sharded.
  */
-@Cached
-@Unindexed
+@Cache
+@Entity
 class GaeUserCounter {
     static final Logger LOG = Logger.getLogger(GaeUserCounter.class.getName());
 
-    static final long COUNTER_ID = 1L;
+    static final String COUNTER_ID = "counterID";
 
     @Id
-    private long id;
+    private String id;
 
     private int count;
 
     private Date lastModified;
 
-    GaeUserCounter() {
-        id = COUNTER_ID;
+    private GaeUserCounter() {
+        this(COUNTER_ID);
+    }
+
+    GaeUserCounter(String id) {
+        this.id = id;
         lastModified = new Date(0L);
     }
 
