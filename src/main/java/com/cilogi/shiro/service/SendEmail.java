@@ -43,7 +43,6 @@ public class SendEmail {
     }
 
     public void send(String toAddress, String title, String htmlMessage) {
-        LOG.info("sending message to " + toAddress);
         MailService service = MailServiceFactory.getMailService();
         MailService.Message message = new MailService.Message();
         message.setSender(fromAddress);

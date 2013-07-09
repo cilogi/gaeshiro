@@ -70,6 +70,7 @@ public class ServeModule extends ServletModule {
             // Lets check mail to see when stuff bounces
         serve("/_ah/mail/*").with(MailReceiveServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
+        serve("/cron/wake").with(WakeServlet.class);
     }
 
     private static Map<String,String> map(String... params) {
