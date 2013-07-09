@@ -28,7 +28,6 @@ import org.apache.shiro.web.util.WebUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.FacebookApi;
 import org.scribe.model.*;
 import org.scribe.oauth.OAuthService;
 
@@ -38,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.logging.Logger;
 

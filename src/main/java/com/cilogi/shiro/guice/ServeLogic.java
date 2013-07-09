@@ -21,7 +21,6 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.util.doc.CreateDoc;
@@ -30,7 +29,6 @@ import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Charsets;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.cache.AsyncCacheFilter;

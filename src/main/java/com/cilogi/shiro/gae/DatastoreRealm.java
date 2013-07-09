@@ -19,8 +19,6 @@
 
 package com.cilogi.shiro.gae;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;

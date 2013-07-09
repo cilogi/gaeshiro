@@ -20,18 +20,14 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserAuthType;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;

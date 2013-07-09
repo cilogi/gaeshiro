@@ -32,8 +32,6 @@ import org.scribe.utils.OAuthEncoder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
