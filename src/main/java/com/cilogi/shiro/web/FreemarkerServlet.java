@@ -21,8 +21,8 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.gae.UserAuthType;
-import com.cilogi.shiro.gae.UserDAO;
 import com.google.common.collect.Maps;
 
 import javax.inject.Inject;
@@ -44,7 +44,7 @@ public class FreemarkerServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(FreemarkerServlet.class.getName());
 
     @Inject
-    public FreemarkerServlet(Provider<UserDAO> daoProvider) {
+    public FreemarkerServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 

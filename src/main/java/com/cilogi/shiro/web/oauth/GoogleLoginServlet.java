@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
@@ -65,7 +65,7 @@ public class GoogleLoginServlet extends BaseServlet {
 
 
     @Inject
-    public GoogleLoginServlet(Provider<UserDAO> daoProvider) {
+    public GoogleLoginServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 

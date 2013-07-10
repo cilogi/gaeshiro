@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -41,14 +41,14 @@ public class SettingsServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
     @Inject
-    SettingsServlet(Provider<UserDAO> daoProvider) {
+    SettingsServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            UserDAO dao = new UserDAO();
+            GaeUserDAO dao = new GaeUserDAO();
             String userName = request.getParameter(USERNAME);
             String password = request.getParameter(PASSWORD);
 

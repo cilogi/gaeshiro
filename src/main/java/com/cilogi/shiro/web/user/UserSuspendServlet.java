@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 
 import javax.inject.Inject;
@@ -39,7 +39,7 @@ public class UserSuspendServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
 
     @Inject
-    UserSuspendServlet(Provider<UserDAO> daoProvider) {
+    UserSuspendServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);    
     }
 
@@ -47,7 +47,7 @@ public class UserSuspendServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            UserDAO dao = daoProvider.get();
+            GaeUserDAO dao = daoProvider.get();
             GaeUser user = dao.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));

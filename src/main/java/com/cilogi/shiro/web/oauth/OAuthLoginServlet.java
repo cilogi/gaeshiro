@@ -22,7 +22,7 @@ package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserAuthType;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.oauth.OAuthAuthenticationToken;
 import com.cilogi.shiro.oauth.OAuthInfo;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
@@ -54,7 +54,7 @@ public class OAuthLoginServlet extends BaseServlet {
     private final String site;
 
     @Inject
-    public OAuthLoginServlet(@Named("social.site") String site, Provider<UserDAO> daoProvider) {
+    public OAuthLoginServlet(@Named("social.site") String site, Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
         this.site = site;
     }
@@ -92,7 +92,7 @@ public class OAuthLoginServlet extends BaseServlet {
                 issue("text/plain", 400, "Couldn't get " + info.getUserAuthType() + " permission: " + message, response);
             } else {
                 String email = info.getEmail();
-                UserDAO dao = daoProvider.get();
+                GaeUserDAO dao = daoProvider.get();
                 GaeUser user = dao.findUser(email);
                 if (user == null) {
                     user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());

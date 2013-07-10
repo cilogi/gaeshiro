@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Lists;
 import org.json.JSONArray;
@@ -49,7 +49,7 @@ public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
     @Inject
-    UserListServlet(Provider<UserDAO> daoProvider) {
+    UserListServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 
@@ -71,7 +71,7 @@ public class UserListServlet extends BaseServlet {
 
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
-        UserDAO dao = new UserDAO();
+        GaeUserDAO dao = new GaeUserDAO();
         long nUsers = dao.getCount();
         JSONObject obj = new JSONObject();
         obj.put("iTotalRecords", nUsers);
@@ -99,7 +99,7 @@ public class UserListServlet extends BaseServlet {
         issueJson(response, HTTP_STATUS_OK, obj);
     }
 
-    private List<GaeUser> users(UserDAO dao, String sSearch, int start, int length) {
+    private List<GaeUser> users(GaeUserDAO dao, String sSearch, int start, int length) {
         if (sSearch != null && !"".equals(sSearch)) {
             return Lists.newArrayList(dao.findUser(sSearch));
         } else {

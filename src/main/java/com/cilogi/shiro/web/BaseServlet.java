@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
@@ -58,9 +58,9 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
 
     private CreateDoc create;
 
-    protected Provider<UserDAO> daoProvider;
+    protected Provider<GaeUserDAO> daoProvider;
 
-    protected BaseServlet(Provider<UserDAO> daoProvider) {
+    protected BaseServlet(Provider<GaeUserDAO> daoProvider) {
         this.daoProvider = daoProvider;
     }
 
@@ -153,7 +153,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         if (email == null) {
             return null;
         } else {
-            UserDAO dao = daoProvider.get();
+            GaeUserDAO dao = daoProvider.get();
             return dao.findUser(email);
         }
     }

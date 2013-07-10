@@ -21,7 +21,7 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.service.SendEmail;
 
 import javax.inject.Inject;
@@ -49,7 +49,7 @@ public class MailQueueServlet extends BaseServlet {
     private final SendEmail sendEmail;
 
     @Inject
-    MailQueueServlet(Provider<UserDAO> daoProvider,  SendEmail sendEmail) {
+    MailQueueServlet(Provider<GaeUserDAO> daoProvider,  SendEmail sendEmail) {
         super(daoProvider);
         this.sendEmail = sendEmail;
     }

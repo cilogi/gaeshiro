@@ -21,7 +21,7 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
@@ -49,7 +49,7 @@ public class StatusServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(StatusServlet.class.getName());
 
     @Inject
-    StatusServlet(Provider<UserDAO> daoProvider) {
+    StatusServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 

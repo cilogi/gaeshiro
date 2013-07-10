@@ -42,8 +42,8 @@ public class DatastoreRealm extends AuthorizingRealm {
         LOG.fine("Creating a new instance of DatastoreRealm");
     }
 
-    private UserDAO dao() {
-        return new UserDAO();
+    private GaeUserDAO dao() {
+        return new GaeUserDAO();
     }
 
     @Override

@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        UserDAO.java  (01-Nov-2011)
+// File:        GaeUserDAO.java  (01-Nov-2011)
 // Author:      tim
 
 //
@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public class UserDAO extends BaseDAO<GaeUser> {
-    static final Logger LOG = Logger.getLogger(UserDAO.class.getName());
+public class GaeUserDAO extends BaseDAO<GaeUser> {
+    static final Logger LOG = Logger.getLogger(GaeUserDAO.class.getName());
     
     private static final long REGISTRATION_VALID_DAYS = 1;
 
@@ -39,7 +39,7 @@ public class UserDAO extends BaseDAO<GaeUser> {
         ObjectifyService.register(RegistrationString.class);
     }
 
-    public UserDAO() {
+    public GaeUserDAO() {
         super(GaeUser.class);
     }
 

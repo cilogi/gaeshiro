@@ -49,7 +49,7 @@ public class TestUserDAO extends TestCase {
     }
 
     public void testBase() {
-        UserDAO dao = new UserDAO();
+        GaeUserDAO dao = new GaeUserDAO();
         long startCount = dao.getCount();
         GaeUser user = new GaeUser("tim", "tim");
         user.register();

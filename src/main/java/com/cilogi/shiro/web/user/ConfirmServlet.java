@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
@@ -44,7 +44,7 @@ public class ConfirmServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(ConfirmServlet.class.getName());
 
     @Inject
-    ConfirmServlet(Provider<UserDAO> daoProvider) {
+    ConfirmServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 
@@ -56,7 +56,7 @@ public class ConfirmServlet extends BaseServlet {
             String password = request.getParameter(PASSWORD);
             boolean isChange = "true".equals(request.getParameter(FORGOT));
 
-            UserDAO dao = new UserDAO();
+            GaeUserDAO dao = new GaeUserDAO();
             String userNameFromCode = dao.findUserNameFromValidCode(code);
             if (userNameFromCode != null) {
                 // can't do this in a transaction as we need to update the counter, and I don't

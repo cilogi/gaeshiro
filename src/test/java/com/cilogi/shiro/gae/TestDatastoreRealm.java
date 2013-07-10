@@ -55,7 +55,7 @@ public class TestDatastoreRealm extends TestCase {
 
 
     public void testAuth() {
-        UserDAO dao = new UserDAO();
+        GaeUserDAO dao = new GaeUserDAO();
         GaeUser user = new GaeUser("tim", "tim");
         user.register();
         dao.saveUser(user, true);
