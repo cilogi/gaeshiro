@@ -46,7 +46,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-// This is set up so that its possible to user other types of OAuth provider rather easily
+// This is set up so that its possible to user other types of OAuth provider rather easily.
+// At present Facebook is the only provider.  Note that because we need an Email address
+// we can't use Twitter.
 @Singleton
 public class OAuthLoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(OAuthLoginServlet.class.getName());
@@ -91,26 +93,19 @@ public class OAuthLoginServlet extends BaseServlet {
                 String message = info.getErrorString();
                 issue("text/plain", 400, "Couldn't get " + info.getUserAuthType() + " permission: " + message, response);
             } else {
-                String email = info.getEmail();
-                GaeUserDAO dao = daoProvider.get();
-                GaeUser user = dao.findUser(email);
-                if (user == null) {
-                    user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
-                    dao.saveUser(user, true);
-                } else {
-                    dao.saveUser(user, false);
-                }
+                final String email = info.getEmail();
+                assert email != null : "Email can't be null in OAuthInfo";
+                daoProvider.get().ensureExists(email);
 
                 OAuthAuthenticationToken token = new OAuthAuthenticationToken(info.getToken(), info.getUserAuthType(), email, request.getRemoteHost());
 
-                Subject subject = SecurityUtils.getSubject();
-                subject.login(token);
+                loginWithNewSession(token, SecurityUtils.getSubject());
 
                 // redirect to wherever you were going, or to home
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
-                String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                // revoking the token immediately is (a) safe as the token can't float around anywhere, and (b) lets us re-suthenticate and logout properly.
-                // Just seems odd as the token is meant to last a long time...
+                String redirectUrl = (savedRequest == null) ? "/" : savedRequest.getRequestUrl();
+                // revoking the token immediately is (a) safe as the token can't float around anywhere, and (b) lets us re-authenticate and logout properly.
+                // Just _seems_ odd as the token is meant to last for more than a session...
                 auth.revokeToken(info.getToken(), request, response, redirectUrl);
                 //response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             }

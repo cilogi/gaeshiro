@@ -20,6 +20,7 @@
 
 package com.cilogi.shiro.gaeuser;
 
+import com.googlecode.objectify.ObjectifyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,10 @@ import java.util.Date;
 
 class UserCounterDAO extends BaseDAO<UserCounter> {
     static final Logger LOG = LoggerFactory.getLogger(UserCounterDAO.class);
+
+    static {
+        ObjectifyService.register(UserCounter.class);
+    }
 
     public UserCounterDAO() {
         super(UserCounter.class);

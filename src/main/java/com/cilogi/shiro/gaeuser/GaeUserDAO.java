@@ -22,6 +22,7 @@
 package com.cilogi.shiro.gaeuser;
 
 
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 
 import java.util.logging.Logger;
@@ -93,6 +94,18 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         RegistrationString reg = dao.get(code);
         if (reg != null) {
             dao.delete(code);
+        }
+    }
+
+    /**
+     * Make sure that there is a database entry for an email
+     * @param email The email for which the entry is required.
+     */
+    public void ensureExists(final String email) {
+        GaeUser user = findUser(email);
+        if (user == null) {
+            user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
+            saveUser(user, true);
         }
     }
 }

@@ -64,6 +64,9 @@ public class GaeUser implements Serializable {
     private Set<String> permissions;
 
     @Index
+    private String registrationString;
+
+    @Index
     private Date dateRegistered;
 
     private boolean isSuspended;
@@ -119,6 +122,7 @@ public class GaeUser implements Serializable {
         this.passwordHash = hash(password, salt);
     }
 
+
     public Date getDateRegistered() {
         return dateRegistered == null ? null : new Date(dateRegistered.getTime());
     }
@@ -164,8 +168,7 @@ public class GaeUser implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof GaeUser) {
             GaeUser u = (GaeUser)o;
-            return Objects.equal(getName(), u.getName()) &&
-                   Objects.equal(getPasswordHash(), u.getPasswordHash());
+            return Objects.equal(getName(), u.getName());
         } else {
             return false;
         }
@@ -173,6 +176,6 @@ public class GaeUser implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name, passwordHash);
+        return Objects.hashCode(name);
     }
 }

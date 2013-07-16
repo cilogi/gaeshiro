@@ -59,8 +59,16 @@ public class GaeUserRealm extends AuthorizingRealm {
         GaeUser user = dao().findUser(userName);
 
 
-        if (user == null || userIsNotQualified(user)) {
-            LOG.info("Rejecting " + user.getName());
+        if (user == null) {
+            LOG.info("Rejecting " + userName + " because there is no user with that id");
+            return null;
+        }
+        if (!user.isRegistered()) {
+            LOG.info("Rejecting " + userName + " because the  user isn't registered");
+            return null;
+        }
+        if (user.isSuspended()) {
+            LOG.info("Rejecting " + userName + " because the user is suspended");
             return null;
         }
         LOG.info("Found " + userName + " in DB");
@@ -81,16 +89,17 @@ public class GaeUserRealm extends AuthorizingRealm {
         }
         LOG.fine("Finding authorization info for " + userName + " in DB");
         GaeUser user = dao().findUser(userName);
-        if (user == null || userIsNotQualified(user)) {
+        if (user == null || !user.isRegistered() || user.isSuspended()) {
+            return null;
+        }
+        if (!user.isRegistered() || user.isSuspended()) {
+            LOG.info("Can't authorize as user " + (user.isSuspended() ? " is suspended" : " is not registered"));
             return null;
         }
         LOG.fine("Found " + userName + " in DB");
+
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
         info.setStringPermissions(user.getPermissions());
         return info;
-    }
-
-    private static boolean userIsNotQualified(GaeUser user) {
-        return !user.isRegistered() || user.isSuspended();
     }
 }
