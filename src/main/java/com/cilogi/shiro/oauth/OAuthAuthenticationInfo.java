@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.oauth;
 
-import com.cilogi.shiro.gae.UserAuthType;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;

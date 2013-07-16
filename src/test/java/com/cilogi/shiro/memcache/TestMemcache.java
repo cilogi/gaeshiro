@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.memcache;
 
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -48,8 +48,8 @@ public class TestMemcache extends TestCase {
     }
 
     public void testPutThenGet() {
-        Memcache<String,String> cacheCars = new Memcache<String,String>("cars");
-        Memcache<String,String> cachePlanes = new Memcache<String,String>("planes");
+        Memcache<String,String> cacheCars = new Memcache<>("cars");
+        Memcache<String,String> cachePlanes = new Memcache<>("planes");
 
         cacheCars.putSync("audi", "a4");
         assertEquals("a4", cacheCars.get("audi"));

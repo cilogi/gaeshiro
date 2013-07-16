@@ -18,9 +18,8 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.oauth;
 
-public enum
-        UserAuthType {
+public enum UserAuthType {
     CILOGI, GOOGLE, FACEBOOK;
 }

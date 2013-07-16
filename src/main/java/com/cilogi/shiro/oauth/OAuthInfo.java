@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.oauth;
 
-import com.cilogi.shiro.gae.UserAuthType;
 import com.google.common.base.Preconditions;
 
 import java.util.logging.Logger;

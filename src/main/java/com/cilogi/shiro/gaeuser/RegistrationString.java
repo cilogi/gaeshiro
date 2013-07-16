@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -49,10 +49,6 @@ class RegistrationString {
         this.username = username;
         this.dateCreated = new Date();
         this.validityMilliseconds = unit.toMillis(amount);
-    }
-
-    String getRegistrationString() {
-        return registrationString;
     }
 
     String getUsername() {

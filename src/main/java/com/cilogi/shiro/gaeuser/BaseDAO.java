@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -29,21 +29,17 @@ import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-public class BaseDAO<T> {
+class BaseDAO<T> {
     static final Logger LOG = Logger.getLogger(BaseDAO.class.getName());
 
     private final Class clazz;
 
-    public BaseDAO(Class clazz) {
+    BaseDAO(Class clazz) {
         this.clazz = clazz;
     }
 
-    public static ObjectifyFactory factory() {
-        return ObjectifyService.factory();
-    }
-
     @SuppressWarnings({"unchecked"})
-    public T get(String id) {
+    T get(String id) {
         if (id == null || "".equals(id)) {
             return null;
         }
@@ -71,12 +67,12 @@ public class BaseDAO<T> {
     }
 
 
-    public void put(T object) {
+    void put(T object) {
         ofy().save().entity(object).now();
     }
 
     @SuppressWarnings({"unchecked"})
-    public void delete(String id) {
+    void delete(String id) {
         ofy().delete().key(Key.create(clazz, id));
     }
 

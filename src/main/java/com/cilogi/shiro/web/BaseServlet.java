@@ -21,8 +21,8 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.GaeUser;
+import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;

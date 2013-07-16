@@ -21,8 +21,8 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.GaeUser;
+import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;

@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        DatastoreRealm.java  (25-Oct-2011)
+// File:        GaeUserRealm.java  (25-Oct-2011)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -17,12 +17,12 @@
 // effectively secure at all times.
 //
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
+import com.cilogi.shiro.memcache.MemcacheManager;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -32,14 +32,14 @@ import org.apache.shiro.util.SimpleByteSource;
 import java.util.logging.Logger;
 
 
-public class DatastoreRealm extends AuthorizingRealm {
-    private static final Logger LOG = Logger.getLogger(DatastoreRealm.class.getName());
+public class GaeUserRealm extends AuthorizingRealm {
+    private static final Logger LOG = Logger.getLogger(GaeUserRealm.class.getName());
 
 
-    public DatastoreRealm() {
-        super(new MemcacheManager(), theCredentials());
+    public GaeUserRealm() {
+        super(new MemcacheManager(), PasswordHash.createCredentials());
 
-        LOG.fine("Creating a new instance of DatastoreRealm");
+        LOG.fine("Creating a new instance of GaeUserRealm");
     }
 
     private GaeUserDAO dao() {
@@ -88,13 +88,6 @@ public class DatastoreRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
         info.setStringPermissions(user.getPermissions());
         return info;
-    }
-
-    private static CredentialsMatcher theCredentials() {
-        HashedCredentialsMatcher credentials = new HashedCredentialsMatcher(GaeUser.HASH_ALGORITHM);
-        credentials.setHashIterations(GaeUser.HASH_ITERATIONS);
-        credentials.setStoredCredentialsHexEncoded(true);
-        return credentials;
     }
 
     private static boolean userIsNotQualified(GaeUser user) {

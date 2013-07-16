@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gae.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * Once this is done, and you're definitely logged in there is a redirect to URL "googleLoginAuth".
  * You are logged in to the suer service when you get here, and if there is no GAEUser with your Email
  * we create one (tagged as a Google user).
- * <p>When the <code>DatastoreRealm</code> is queried about this user (with dummy password) it authenticates
+ * <p>When the <code>GaeUserRealm</code> is queried about this user (with dummy password) it authenticates
  * if the Google user has the same Email as the GAEUser.  This seems to be secure.
  * <p>One tiny fly in the ointment is that we really log you out on logout, which means that your browser
  * is logged out & you'll have to re-authenticate with other Google services.  I guess we could make this

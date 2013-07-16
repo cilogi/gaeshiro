@@ -19,30 +19,28 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 
 import com.googlecode.objectify.ObjectifyService;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class GaeUserDAO extends BaseDAO<GaeUser> {
     static final Logger LOG = Logger.getLogger(GaeUserDAO.class.getName());
     
-    private static final long REGISTRATION_VALID_DAYS = 1;
 
     static {
         ObjectifyService.register(GaeUser.class);
-        ObjectifyService.register(GaeUserCounter.class);
-        ObjectifyService.register(RegistrationString.class);
     }
 
     public GaeUserDAO() {
         super(GaeUser.class);
     }
 
+    public long getCount() {
+        return new UserCounterDAO().getCount();
+    }
 
     /**
      * Save user with authorization information
@@ -53,27 +51,23 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
         super.put(user);
         if (changeCount) {
-            changeCount(1L);
+            new UserCounterDAO().changeCount(1L);
         }
         return user;
     }
 
     public GaeUser deleteUser(GaeUser user) {
         super.delete(user.getName());
-        changeCount(-1L);
+        new UserCounterDAO().changeCount(-1L);
         return user;
     }
 
-    public RegistrationString saveRegistration(String registrationString, String userName) {
-        RegistrationString reg = new RegistrationString(registrationString, userName, REGISTRATION_VALID_DAYS, TimeUnit.DAYS);
-        new RegistrationDAO().put(reg);
-        return reg;
+    public void saveRegistration(String registrationString, String userName) {
+        new RegistrationStringDAO().saveRegistration(registrationString, userName);
     }
 
     public String findUserNameFromValidCode(String code) {
-        RegistrationDAO dao = new RegistrationDAO();
-        RegistrationString reg = dao.get(code);
-        return (reg == null) ?  null : (reg.isValid() ? reg.getUsername() : null);
+        return new RegistrationStringDAO().findUserNameFromValidCode(code);
     }
 
     public GaeUser findUser(String userName) {
@@ -95,33 +89,10 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
             user.register();
             saveUser(user, true);
         }
-        RegistrationDAO dao = new RegistrationDAO();
+        RegistrationStringDAO dao = new RegistrationStringDAO();
         RegistrationString reg = dao.get(code);
         if (reg != null) {
             dao.delete(code);
         }
-    }
-
-    public long getCount() {
-        GaeUserCounterDAO dao = new GaeUserCounterDAO();
-        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
-        return (count == null) ? 0 : count.getCount();
-    }
-
-    public Date getCountLastModified() {
-        GaeUserCounterDAO dao = new GaeUserCounterDAO();
-        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
-        return (count == null) ? new Date(0L) : count.getLastModified();
-    }
-
-    /**
-     * Change the user count.
-     * @param delta amount to change
-     */
-    private void changeCount(final long delta) {
-        GaeUserCounterDAO dao = new GaeUserCounterDAO();
-        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
-        count.delta(delta);
-        dao.put(count);
     }
 }

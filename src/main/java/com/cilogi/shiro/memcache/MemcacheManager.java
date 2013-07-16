@@ -1,4 +1,4 @@
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.memcache;
 
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;

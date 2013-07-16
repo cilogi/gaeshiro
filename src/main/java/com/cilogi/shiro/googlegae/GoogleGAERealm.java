@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.googlegae;
 
-import com.cilogi.shiro.gae.MemcacheManager;
+import com.cilogi.shiro.memcache.MemcacheManager;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

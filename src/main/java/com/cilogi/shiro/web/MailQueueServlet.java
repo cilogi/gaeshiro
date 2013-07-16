@@ -21,7 +21,7 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gae.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.service.SendEmail;
 
 import javax.inject.Inject;

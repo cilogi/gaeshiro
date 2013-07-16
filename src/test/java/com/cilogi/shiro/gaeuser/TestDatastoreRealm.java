@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        TestUserDAO.java  (02-Nov-2011)
+// File:        TestDatastoreRealm.java  (26-Oct-2011)
 // Author:      tim
 
 //
@@ -19,22 +19,27 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import junit.framework.TestCase;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 
 import java.util.logging.Logger;
 
-
-public class TestUserDAO extends TestCase {
-    static final Logger LOG = Logger.getLogger(TestUserDAO.class.getName());
+public class TestDatastoreRealm extends TestCase {
+    static final Logger LOG = Logger.getLogger(TestDatastoreRealm.class.getName());
 
     private final LocalServiceTestHelper helper =
         new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
-    public TestUserDAO(String nm) {
+    public TestDatastoreRealm(String nm) {
         super(nm);
     }
 
@@ -48,15 +53,27 @@ public class TestUserDAO extends TestCase {
         helper.tearDown();
     }
 
-    public void testBase() {
+
+    public void testAuth() {
         GaeUserDAO dao = new GaeUserDAO();
-        long startCount = dao.getCount();
         GaeUser user = new GaeUser("tim", "tim");
         user.register();
         dao.saveUser(user, true);
-        GaeUser back = dao.findUser("tim");
-        assertEquals(user, back);
-        assertEquals(1L + startCount, dao.getCount());
-    }
 
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:com/cilogi/shiro/gaeuser/shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+        Subject currentUser = SecurityUtils.getSubject();
+
+        // let's login the current user so we can check against roles and permissions:
+        if (!currentUser.isAuthenticated()) {
+            UsernamePasswordToken token = new UsernamePasswordToken("tim", "tim");
+            try {
+                currentUser.login(token);
+                assertTrue(currentUser.isAuthenticated());
+            } catch (Exception e) {
+                fail("There is no user with username of " + token.getPrincipal());
+            }
+        }
+    }
 }

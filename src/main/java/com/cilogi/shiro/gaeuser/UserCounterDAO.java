@@ -1,6 +1,6 @@
 // Copyright (c) 2013 Cilogi. All Rights Reserved.
 //
-// File:        RegistrationDAO.java  (09/07/13)
+// File:        UserCounterDAO.java  (09/07/13)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,16 +18,39 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 
-public class RegistrationDAO extends BaseDAO<RegistrationString> {
-    static final Logger LOG = LoggerFactory.getLogger(RegistrationDAO.class);
 
-    public RegistrationDAO() {
-        super(RegistrationString.class);
+class UserCounterDAO extends BaseDAO<UserCounter> {
+    static final Logger LOG = LoggerFactory.getLogger(UserCounterDAO.class);
+
+    public UserCounterDAO() {
+        super(UserCounter.class);
+    }
+
+
+    long getCount() {
+        UserCounter count = get(UserCounter.COUNTER_ID);
+        return (count == null) ? 0 : count.getCount();
+    }
+
+    Date getCountLastModified() {
+        UserCounter count = get(UserCounter.COUNTER_ID);
+        return (count == null) ? new Date(0L) : count.getLastModified();
+    }
+
+    /**
+     * Change the user count.
+     * @param delta amount to change
+     */
+    void changeCount(final long delta) {
+        UserCounter count = get(UserCounter.COUNTER_ID);
+        count.delta(delta);
+        put(count);
     }
 }

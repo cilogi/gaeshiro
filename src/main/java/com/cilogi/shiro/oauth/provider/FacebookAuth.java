@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.oauth.provider;
 
-import com.cilogi.shiro.gae.UserAuthType;
+import com.cilogi.shiro.oauth.UserAuthType;
 import com.cilogi.shiro.oauth.OAuthInfo;
 import org.json.JSONException;
 import org.json.JSONObject;

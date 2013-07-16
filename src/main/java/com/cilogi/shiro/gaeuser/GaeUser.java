@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -45,8 +45,8 @@ import java.util.logging.Logger;
 public class GaeUser implements Serializable {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
-    static final int HASH_ITERATIONS = 1;
-    static final String HASH_ALGORITHM = Sha256Hash.ALGORITHM_NAME;
+
+    private static final long serialVersionUID = 3118015798739037727L;
 
 
     @Id
@@ -157,7 +157,7 @@ public class GaeUser implements Serializable {
     }
 
     private static String hash(String password, byte[] salt) {
-        return (password == null) ? null : new Sha256Hash(password, new SimpleByteSource(salt), HASH_ITERATIONS).toHex();
+        return PasswordHash.hash(password, salt);
     }
 
     @Override

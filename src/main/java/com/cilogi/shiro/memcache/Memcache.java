@@ -1,4 +1,4 @@
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.memcache;
 
 import com.google.appengine.api.memcache.AsyncMemcacheService;
 import com.google.appengine.api.memcache.Expiration;
@@ -89,6 +89,7 @@ public class Memcache<K, V> implements Cache<K, V> {
 
     @SuppressWarnings({"UnusedDeclaration"})
     private static class Wrap<K> implements Serializable {
+        private static final long serialVersionUID = 5224252677313895235L;
         // note that keys will be lost if we change anything as we haven't set serialVersionUID (not necessary)
         private String name;
         private K wrapped;

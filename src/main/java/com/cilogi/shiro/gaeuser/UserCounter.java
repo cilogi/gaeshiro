@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        GaeUserCounter.java  (11-Nov-2011)
+// File:        UserCounter.java  (11-Nov-2011)
 // Author:      tim
 
 //
@@ -19,8 +19,9 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.gaeuser;
 
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -38,10 +39,14 @@ import java.util.logging.Logger;
  */
 @Cache
 @Entity
-class GaeUserCounter {
-    static final Logger LOG = Logger.getLogger(GaeUserCounter.class.getName());
+class UserCounter {
+    static final Logger LOG = Logger.getLogger(UserCounter.class.getName());
 
     static final String COUNTER_ID = "counterID";
+
+    static {
+        ObjectifyService.register(UserCounter.class);
+    }
 
     @Id
     private String id;
@@ -50,11 +55,11 @@ class GaeUserCounter {
 
     private Date lastModified;
 
-    private GaeUserCounter() {
+    private UserCounter() {
         this(COUNTER_ID);
     }
 
-    GaeUserCounter(String id) {
+    UserCounter(String id) {
         this.id = id;
         lastModified = new Date(0L);
     }
