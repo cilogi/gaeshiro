@@ -23,6 +23,7 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.RegistrationString;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -42,18 +43,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Singleton
 public class RegisterServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(RegisterServlet.class.getName());
 
+
     private final String userBaseUrl;
+    private final long registrationExpiryHours;
 
     @Inject
-    RegisterServlet(Provider<GaeUserDAO> daoProvider, @Named("userBaseUrl") String userBaseUrl) {
+    RegisterServlet(Provider<GaeUserDAO> daoProvider,
+                    @Named("userBaseUrl") String userBaseUrl,
+                    @Named("registrationExpiryHours") long registrationExpiryHours) {
         super(daoProvider);
         this.userBaseUrl = userBaseUrl;
+        this.registrationExpiryHours = registrationExpiryHours;
     }
 
     @Override
@@ -75,18 +82,21 @@ public class RegisterServlet extends BaseServlet {
                 issueJson(response, HTTP_STATUS_FORBIDDEN,
                         MESSAGE, userName + " is already registered");
             }  else {
-                // we override the user, any registration email should work though (as long as its valid)
-                String registrationString = registrationString(userName);
-                LOG.info("registration is " + registrationString);
+                if (user == null) {
+                    user = new GaeUser(userName);
+                }
 
-                dao.saveRegistration(registrationString, userName);
+                RegistrationString reg = new RegistrationString(userName, registrationExpiryHours, TimeUnit.HOURS);
+                LOG.info("registration is " + reg.getCode());
+                user.setRegistrationString(reg);
+                dao.saveUser(user, false);
 
                 Queue queue = QueueFactory.getDefaultQueue();
                 queue.add(TaskOptions.Builder
                         .withUrl(userBaseUrl + "/registermail")
                         .param(USERNAME, userName)
                         .param(FORGOT, Boolean.toString(isForgot))
-                        .param(REGISTRATION_STRING, registrationString));
+                        .param(REGISTRATION_STRING, reg.getCode()));
 
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "ok");
@@ -96,11 +106,5 @@ public class RegisterServlet extends BaseServlet {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Internal error: " + e.getMessage(), response);
         }
-    }
-
-    private String registrationString(String userName) {
-        RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-        ByteSource salt = rng.nextBytes();
-        return new Sha256Hash(userName, new SimpleByteSource(salt), 63).toHex().substring(0,10);
     }
 }

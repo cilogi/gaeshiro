@@ -21,8 +21,7 @@
 package com.cilogi.shiro.gaeuser;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
+
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;

@@ -51,7 +51,7 @@ public class TestUserDAO extends TestCase {
     public void testBase() {
         GaeUserDAO dao = new GaeUserDAO();
         long startCount = dao.getCount();
-        GaeUser user = new GaeUser("tim", "tim");
+        GaeUser user = new GaeUser("tim");
         user.register();
         dao.saveUser(user, true);
         GaeUser back = dao.findUser("tim");

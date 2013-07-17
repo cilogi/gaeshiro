@@ -23,6 +23,7 @@ package com.cilogi.shiro.gaeuser;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -63,8 +64,7 @@ public class GaeUser implements Serializable {
 
     private Set<String> permissions;
 
-    @Index
-    private String registrationString;
+    private RegistrationString registrationString;
 
     @Index
     private Date dateRegistered;
@@ -76,14 +76,9 @@ public class GaeUser implements Serializable {
         this.roles = new HashSet<String>();
         this.permissions = new HashSet<String>();
     }
-
-    GaeUser(String name) {
-        this(name, null, new HashSet<String>(), new HashSet<String>());
-    }
-
     
-    GaeUser(String name, String password) {
-        this(name, password, new HashSet<String>(), new HashSet<String>());
+    public GaeUser(String name) {
+        this(name, null, Sets.newHashSet("user"), new HashSet<String>());
     }
 
     public GaeUser(String name, Set<String> roles, Set<String> permissions) {
@@ -122,6 +117,13 @@ public class GaeUser implements Serializable {
         this.passwordHash = hash(password, salt);
     }
 
+    public RegistrationString getRegistrationString() {
+        return registrationString;
+    }
+
+    public void setRegistrationString(RegistrationString registrationString) {
+        this.registrationString = registrationString;
+    }
 
     public Date getDateRegistered() {
         return dateRegistered == null ? null : new Date(dateRegistered.getTime());

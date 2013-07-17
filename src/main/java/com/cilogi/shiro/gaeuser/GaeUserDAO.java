@@ -27,6 +27,8 @@ import com.googlecode.objectify.ObjectifyService;
 
 import java.util.logging.Logger;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 public class GaeUserDAO extends BaseDAO<GaeUser> {
     static final Logger LOG = Logger.getLogger(GaeUserDAO.class.getName());
     
@@ -63,12 +65,9 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         return user;
     }
 
-    public void saveRegistration(String registrationString, String userName) {
-        new RegistrationStringDAO().saveRegistration(registrationString, userName);
-    }
-
-    public String findUserNameFromValidCode(String code) {
-        return new RegistrationStringDAO().findUserNameFromValidCode(code);
+    public GaeUser findUserFromValidCode(String code) {
+        GaeUser user = ofy().load().type(GaeUser.class).filter("registrationString.code", code).first().now();
+        return user;
     }
 
     public GaeUser findUser(String userName) {
@@ -76,36 +75,29 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
     }
 
     /**
-     * Given a registration we have to retrieve it, and if its valid
-     * update the associated user and then delete the registration.  This isn't
-     * transactional and we may end up with a dangling RegistrationString, which
-     * I can't see as too much of a problem, although they will need to be cleaned up with
-     * a task on a regular basis (after they expire)..
-     * @param code  The registration code
-     * @param userName the user name for the code
+     * Register a user, clearing out the registration string (if any)
+     * @param user  The user
      */
-    public void register(final String code, final String userName) {
-        GaeUser user = get(userName);
+    public void register(GaeUser user) {
         if (user != null) {
             user.register();
+            user.setRegistrationString(null);
             saveUser(user, true);
-        }
-        RegistrationStringDAO dao = new RegistrationStringDAO();
-        RegistrationString reg = dao.get(code);
-        if (reg != null) {
-            dao.delete(code);
         }
     }
 
     /**
-     * Make sure that there is a database entry for an email
+     * Make sure that there is a database entry for an email address
+     * and register it, if it doesn't exist.
      * @param email The email for which the entry is required.
      */
-    public void ensureExists(final String email) {
+    public GaeUser ensureExists(final String email) {
         GaeUser user = findUser(email);
         if (user == null) {
             user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
+            user.register();
             saveUser(user, true);
         }
+        return user;
     }
 }

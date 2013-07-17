@@ -21,41 +21,44 @@
 
 package com.cilogi.shiro.gaeuser;
 
-import com.googlecode.objectify.annotation.Cache;
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.*;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.SimpleByteSource;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
-@Cache
-@Entity
-class RegistrationString {
-    static final Logger LOG = Logger.getLogger(RegistrationString.class.getName());
+@Embed
+public class RegistrationString {
 
-    @Id
-    private String registrationString;
+    @Index
+    private String code;
 
-    private String username;
-    private Date dateCreated;
-    private long validityMilliseconds;
+    private long expires;
 
     // for objectify
     private RegistrationString() {}
 
-    RegistrationString(String registrationString, String username, long amount, TimeUnit unit) {
-        this.registrationString = registrationString;
-        this.username = username;
-        this.dateCreated = new Date();
-        this.validityMilliseconds = unit.toMillis(amount);
+    public RegistrationString(String userName, long validity, TimeUnit unit) {
+        this.code = generate(userName);
+        long now = new Date().getTime();
+        this.expires = now + unit.toMillis(validity);
     }
 
-    String getUsername() {
-        return username;
+    public String getCode() {
+        return code;
     }
 
-    boolean isValid() {
-        return dateCreated.getTime() + validityMilliseconds > new Date().getTime();
+    public boolean isValid() {
+        return expires > new Date().getTime();
+    }
+
+    private static String generate(String userName) {
+        RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+        ByteSource salt = rng.nextBytes();
+        return new Sha256Hash(userName, new SimpleByteSource(salt), 63).toHex().substring(0,10);
     }
 }

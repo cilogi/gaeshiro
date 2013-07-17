@@ -94,10 +94,11 @@ public class GoogleLoginServlet extends BaseServlet {
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login as we can't find Google user", response);
                 return;
             }
-            String username = currentUser.getEmail();
-
+            String userName = currentUser.getEmail();
+            daoProvider.get().ensureExists(userName);
+            
             String host = request.getRemoteHost();
-            GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(username,  host);
+            GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(userName,  host);
             try {
                 Subject subject = SecurityUtils.getSubject();
                 loginWithNewSession(token, subject);
@@ -107,7 +108,7 @@ public class GoogleLoginServlet extends BaseServlet {
                 String redirectUrl = (savedRequest == null) ? "/" : savedRequest.getRequestUrl();
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             } catch (AuthenticationException e) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
+                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + userName + ": " + e.getMessage(), response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);

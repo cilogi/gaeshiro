@@ -23,6 +23,7 @@ package com.cilogi.shiro.gaeuser;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.common.collect.Sets;
 import junit.framework.TestCase;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -31,6 +32,7 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 public class TestDatastoreRealm extends TestCase {
@@ -56,7 +58,7 @@ public class TestDatastoreRealm extends TestCase {
 
     public void testAuth() {
         GaeUserDAO dao = new GaeUserDAO();
-        GaeUser user = new GaeUser("tim", "tim");
+        GaeUser user = new GaeUser("tim", "tim", Sets.<String>newHashSet("user"), new HashSet<String>());
         user.register();
         dao.saveUser(user, true);
 

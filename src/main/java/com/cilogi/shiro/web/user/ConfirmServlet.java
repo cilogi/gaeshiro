@@ -57,21 +57,16 @@ public class ConfirmServlet extends BaseServlet {
             boolean isChange = "true".equals(request.getParameter(FORGOT));
 
             GaeUserDAO dao = new GaeUserDAO();
-            String userNameFromCode = dao.findUserNameFromValidCode(code);
-            if (userNameFromCode != null) {
+            GaeUser user = dao.findUserFromValidCode(code);
+            if (user != null) {
                 // can't do this in a transaction as we need to update the counter, and I don't
                 // want to use the counter as the parent as it will not be efficient, and you
                 // can only transact a parent/child group in GAE.  Should be OK if a single person
                 // owns and transacts for a given user name.
-                GaeUser user = dao.findUser(userName);
-                if (user == null) {
-                    user = new GaeUser(userName, password, defaultRoles(), defaultPermissions());
-                    dao.saveUser(user, true);
-                } else {
-                    user.setPassword(password);
-                    dao.saveUser(user, false);
-                }
-                dao.register(code, userName);
+                user.setPassword(password);
+                dao.saveUser(user, false);
+
+                dao.register(user);
 
                 Subject sub = SecurityUtils.getSubject();
                 UsernamePasswordToken token = new UsernamePasswordToken(userName, password);

@@ -69,6 +69,9 @@ public class ServeLogic extends AbstractModule {
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
         bindString("social.site", isDevelopmentServer() ? "local" : "live");
+        // this value should be long enough for a user to get an email, but not so long that
+        // it hangs around for ever as a security problem
+        bindConstant().annotatedWith(Names.named("registrationExpiryHours")).to(12L);
     }
 
     private void bindString(String key, String value) {
