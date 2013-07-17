@@ -55,6 +55,9 @@ class UserCounterDAO extends BaseDAO<UserCounter> {
      */
     void changeCount(final long delta) {
         UserCounter count = get(UserCounter.COUNTER_ID);
+        if (count == null) {
+            count = new UserCounter(UserCounter.COUNTER_ID);
+        }
         count.delta(delta);
         put(count);
     }

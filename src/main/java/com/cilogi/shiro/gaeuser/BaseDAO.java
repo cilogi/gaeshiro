@@ -43,28 +43,8 @@ class BaseDAO<T> {
             return null;
         }
         T db = (T)ofy().load().key(Key.create(clazz, id)).now();
-        return (db == null) ? newInstance(id) : db;
+        return db;
     }
-
-    @SuppressWarnings({"unchecked"})
-    private T newInstance(String id) {
-        Constructor[] ctors = clazz.getDeclaredConstructors();
-        Constructor ctor = null;
-        for (int i = 0; i < ctors.length; i++) {
-            ctor = ctors[i];
-            if (ctor.getParameterTypes().length == 1 && ctor.getParameterTypes()[0].equals(String.class)) {
-                try {
-                    return (T)ctor.newInstance(id);
-                } catch (Exception e) {
-                    LOG.warning("Cannot construct instance of " + clazz.getName() + " with arg " + id + ": " + e.getMessage());
-                    return null;
-                }
-            }
-        }
-        LOG.warning("Cannot construct instance of " + clazz.getName() + " as there are no single-arg constructors");
-        return null;
-    }
-
 
     void put(T object) {
         ofy().save().entity(object).now();

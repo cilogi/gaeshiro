@@ -106,7 +106,7 @@ public class UserListServlet extends BaseServlet {
             List<GaeUser> list =  ofy().load().type(GaeUser.class)
                     .offset(start)
                     .limit(length)
-                    .order("-dataRegistered")
+                    .order("-dateRegistered")
                     .list();
             LOG.info("Fresh load start " + start + " # " + length);
             return list;
