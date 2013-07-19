@@ -21,6 +21,8 @@ package com.cilogi.shiro.gaeuser;
 
 import com.cilogi.shiro.memcache.MemcacheManager;
 import com.google.common.base.Preconditions;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -29,21 +31,26 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.SimpleByteSource;
 
+import javax.inject.Inject;
 import java.util.logging.Logger;
 
 
 public class GaeUserRealm extends AuthorizingRealm {
     private static final Logger LOG = Logger.getLogger(GaeUserRealm.class.getName());
 
+    private GaeUserDAO gaeUserDAO;
 
     public GaeUserRealm() {
         super(new MemcacheManager(), PasswordHash.createCredentials());
-
+        gaeUserDAO = new GaeUserDAO();
         LOG.fine("Creating a new instance of GaeUserRealm");
     }
 
-    private GaeUserDAO dao() {
-        return new GaeUserDAO();
+    @Inject
+    public GaeUserRealm(GaeUserDAO gaeUserDAO) {
+        super(new MemcacheManager(), PasswordHash.createCredentials());
+        this.gaeUserDAO = gaeUserDAO;
+        LOG.fine("Creating a new instance of GaeUserRealm with injected GaeUserDAO");
     }
 
     @Override
@@ -56,7 +63,7 @@ public class GaeUserRealm extends AuthorizingRealm {
         Preconditions.checkNotNull(userName, "User name can't be null");
 
         LOG.info("Finding authentication info for " + userName + " in DB");
-        GaeUser user = dao().findUser(userName);
+        GaeUser user = gaeUserDAO.findUser(userName);
 
 
         if (user == null) {
@@ -88,7 +95,7 @@ public class GaeUserRealm extends AuthorizingRealm {
             throw new NullPointerException("Can't find a principal in the collection");
         }
         LOG.fine("Finding authorization info for " + userName + " in DB");
-        GaeUser user = dao().findUser(userName);
+        GaeUser user = gaeUserDAO.findUser(userName);
         if (user == null || !user.isRegistered() || user.isSuspended()) {
             return null;
         }

@@ -42,6 +42,9 @@ public class ServeContextListener extends GuiceServletContextListener {
     // For debugging this can be overridden by local system property
     private String staticBaseUrl;
 
+    private ServletContext context;
+
+
     public ServeContextListener() {
         userBaseUrl = "";
         staticBaseUrl = "";
@@ -49,7 +52,7 @@ public class ServeContextListener extends GuiceServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent)  {
-        ServletContext context = servletContextEvent.getServletContext();
+        context = servletContextEvent.getServletContext();
         if (context != null) {
             if (context.getInitParameter("user-base-url") != null) {
                 userBaseUrl = context.getInitParameter("user-base-url");
@@ -64,7 +67,7 @@ public class ServeContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServeLogic(userBaseUrl, staticBaseUrl), new ServeModule(userBaseUrl));
+        return Guice.createInjector(new ServeLogic(userBaseUrl, staticBaseUrl), new ServeModule(userBaseUrl), new ShiroModule(context));
     }
     
 }

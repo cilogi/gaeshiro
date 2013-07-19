@@ -80,6 +80,7 @@
             bSort: false,
             bLengthChange: false,
             sPaginationType: "full_numbers",
+            //sPaginationType: "two_button",
             bProcessing: true,
             bServerSide: true,
             sAjaxSource: shiro.userBaseUrl + "/list",

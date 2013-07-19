@@ -18,27 +18,26 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.util.gae;
 
 import com.googlecode.objectify.Key;
 
 
-import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-class BaseDAO<T> {
+public class BaseDAO<T> {
     static final Logger LOG = Logger.getLogger(BaseDAO.class.getName());
 
     private final Class clazz;
 
-    BaseDAO(Class clazz) {
+    protected BaseDAO(Class clazz) {
         this.clazz = clazz;
     }
 
     @SuppressWarnings({"unchecked"})
-    T get(String id) {
+    protected T get(String id) {
         if (id == null || "".equals(id)) {
             return null;
         }
@@ -46,12 +45,12 @@ class BaseDAO<T> {
         return db;
     }
 
-    void put(T object) {
+    protected void put(T object) {
         ofy().save().entity(object).now();
     }
 
     @SuppressWarnings({"unchecked"})
-    void delete(String id) {
+    protected void delete(String id) {
         ofy().delete().key(Key.create(clazz, id));
     }
 

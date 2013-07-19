@@ -49,8 +49,8 @@ public class MailQueueServlet extends BaseServlet {
     private final SendEmail sendEmail;
 
     @Inject
-    MailQueueServlet(Provider<GaeUserDAO> daoProvider,  SendEmail sendEmail) {
-        super(daoProvider);
+    MailQueueServlet(GaeUserDAO gaeUserDAO,  SendEmail sendEmail) {
+        super(gaeUserDAO);
         this.sendEmail = sendEmail;
     }
 

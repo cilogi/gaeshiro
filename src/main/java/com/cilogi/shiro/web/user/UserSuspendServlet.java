@@ -26,7 +26,6 @@ import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,22 +38,21 @@ public class UserSuspendServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
 
     @Inject
-    UserSuspendServlet(Provider<GaeUserDAO> daoProvider) {
-        super(daoProvider);    
+    UserSuspendServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            GaeUserDAO dao = daoProvider.get();
-            GaeUser user = dao.findUser(userName);
+            GaeUser user = gaeUserDAO.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
                 if (isDelete) {
                     if (isCurrentUserAdmin()) {
-                        dao.deleteUser(user);
+                        gaeUserDAO.deleteUser(user);
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, "User " + userName + " is deleted");
                     } else {
@@ -64,7 +62,7 @@ public class UserSuspendServlet extends BaseServlet {
                 } else {
                     if (isCurrentUserAdmin()) {
                         user.setSuspended(isSuspend);
-                        dao.saveUser(user, false);
+                        gaeUserDAO.saveUser(user, false);
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, isSuspend
                                         ? "User " + userName + " is suspended"

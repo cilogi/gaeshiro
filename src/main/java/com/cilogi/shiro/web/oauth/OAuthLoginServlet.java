@@ -29,7 +29,6 @@ import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.GoogleAuth;
 import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.shiro.web.BaseServlet;
-import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -38,7 +37,6 @@ import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,8 +54,8 @@ public class OAuthLoginServlet extends BaseServlet {
     private final String site;
 
     @Inject
-    public OAuthLoginServlet(@Named("social.site") String site, Provider<GaeUserDAO> daoProvider) {
-        super(daoProvider);
+    public OAuthLoginServlet(@Named("social.site") String site, GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
         this.site = site;
     }
 
@@ -95,7 +93,7 @@ public class OAuthLoginServlet extends BaseServlet {
             } else {
                 final String email = info.getEmail();
                 assert email != null : "Email can't be null in OAuthInfo";
-                daoProvider.get().ensureExists(email);
+                gaeUserDAO.ensureExists(email);
 
                 OAuthAuthenticationToken token = new OAuthAuthenticationToken(info.getToken(), info.getUserAuthType(), email, request.getRemoteHost());
 
@@ -118,7 +116,7 @@ public class OAuthLoginServlet extends BaseServlet {
         Subject subject = SecurityUtils.getSubject();
         String principal = (String)subject.getPrincipal();
         if (principal != null) {
-            GaeUser user = daoProvider.get().findUser(principal);
+            GaeUser user = gaeUserDAO.findUser(principal);
             return user != null;
         } else {
             return false;

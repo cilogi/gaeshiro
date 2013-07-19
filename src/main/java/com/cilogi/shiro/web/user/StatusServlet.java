@@ -49,7 +49,7 @@ public class StatusServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(StatusServlet.class.getName());
 
     @Inject
-    StatusServlet(Provider<GaeUserDAO> daoProvider) {
+    StatusServlet(GaeUserDAO daoProvider) {
         super(daoProvider);
     }
 

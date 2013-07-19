@@ -49,7 +49,7 @@ public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
     @Inject
-    UserListServlet(Provider<GaeUserDAO> daoProvider) {
+    UserListServlet(GaeUserDAO daoProvider) {
         super(daoProvider);
     }
 

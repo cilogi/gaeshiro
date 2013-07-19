@@ -42,7 +42,7 @@ public class LoginJSPServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginJSPServlet.class.getName());
 
     @Inject
-    LoginJSPServlet(Provider<GaeUserDAO> daoProvider) {
+    LoginJSPServlet(GaeUserDAO daoProvider) {
         super(daoProvider);
     }
 

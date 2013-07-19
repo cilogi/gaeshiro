@@ -21,16 +21,19 @@
 
 package com.cilogi.shiro.guice;
 
+
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
+import com.cilogi.util.ICounter;
 import com.cilogi.util.doc.CreateDoc;
+import com.cilogi.util.gae.UserCounterDAO;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Charsets;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
+
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
@@ -58,6 +61,8 @@ public class ServeLogic extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(ICounter.class).to(UserCounterDAO.class).in(Scopes.SINGLETON);
+        bind(GaeUserDAO.class).in(Scopes.SINGLETON);
         bind(IOAuthProviderInfo.class).to(FacebookAuth.class);
         bind(CreateDoc.class).toInstance(createDoc());
         bind(ShiroFilter.class).in(Scopes.SINGLETON);
@@ -96,10 +101,5 @@ public class ServeLogic extends AbstractModule {
     private static boolean isDevelopmentServer() {
         SystemProperty.Environment.Value server = SystemProperty.environment.value();
         return server == SystemProperty.Environment.Value.Development;
-    }
-
-    @Provides
-    GaeUserDAO provideUserDAO() {
-        return new GaeUserDAO();
     }
 }

@@ -18,16 +18,18 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.util.gae;
 
+import com.cilogi.util.ICounter;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.VoidWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
-
-class UserCounterDAO extends BaseDAO<UserCounter> {
+public class UserCounterDAO extends BaseDAO<UserCounter> implements ICounter {
     static final Logger LOG = LoggerFactory.getLogger(UserCounterDAO.class);
 
     static {
@@ -38,27 +40,39 @@ class UserCounterDAO extends BaseDAO<UserCounter> {
         super(UserCounter.class);
     }
 
-
-    long getCount() {
+    @Override
+    public long getCount() {
         UserCounter count = get(UserCounter.COUNTER_ID);
         return (count == null) ? 0 : count.getCount();
     }
 
-    Date getCountLastModified() {
+    public void increment() {
+        changeCount(1L);
+    }
+    public void decrement() {
+        changeCount(-1L);
+    }
+
+    public Date getCountLastModified() {
         UserCounter count = get(UserCounter.COUNTER_ID);
         return (count == null) ? new Date(0L) : count.getLastModified();
     }
+
 
     /**
      * Change the user count.
      * @param delta amount to change
      */
-    void changeCount(final long delta) {
-        UserCounter count = get(UserCounter.COUNTER_ID);
-        if (count == null) {
-            count = new UserCounter(UserCounter.COUNTER_ID);
-        }
-        count.delta(delta);
-        put(count);
+    private void changeCount(final long delta) {
+        ofy().transact(new VoidWork() {
+            public void vrun() {
+                UserCounter count = get(UserCounter.COUNTER_ID);
+                if (count == null) {
+                    count = new UserCounter(UserCounter.COUNTER_ID);
+                }
+                count.delta(delta);
+                put(count);
+            }
+        });
     }
 }

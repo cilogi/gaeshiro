@@ -44,8 +44,8 @@ public class FreemarkerServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(FreemarkerServlet.class.getName());
 
     @Inject
-    public FreemarkerServlet(Provider<GaeUserDAO> daoProvider) {
-        super(daoProvider);
+    public FreemarkerServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override

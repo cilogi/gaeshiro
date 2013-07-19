@@ -22,9 +22,14 @@
 package com.cilogi.shiro.gaeuser;
 
 
+import com.cilogi.util.ICounter;
+import com.cilogi.util.gae.BaseDAO;
+import com.cilogi.util.gae.UserCounterDAO;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
+import lombok.Setter;
 
+import javax.inject.Inject;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -37,12 +42,21 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         ObjectifyService.register(GaeUser.class);
     }
 
+    private ICounter counter;
+
     public GaeUserDAO() {
         super(GaeUser.class);
+        counter = new UserCounterDAO();
+    }
+
+    @Inject
+    public GaeUserDAO(ICounter counter) {
+        super(GaeUser.class);
+        this.counter = counter;
     }
 
     public long getCount() {
-        return new UserCounterDAO().getCount();
+        return (counter == null) ? 0L : counter.getCount();
     }
 
     /**
@@ -53,15 +67,17 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
      */
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
         super.put(user);
-        if (changeCount) {
-            new UserCounterDAO().changeCount(1L);
+        if (changeCount && counter != null) {
+            counter.increment();
         }
         return user;
     }
 
     public GaeUser deleteUser(GaeUser user) {
         super.delete(user.getName());
-        new UserCounterDAO().changeCount(-1L);
+        if (counter != null) {
+            counter.decrement();
+        }
         return user;
     }
 

@@ -55,7 +55,7 @@ public class RegisterServlet extends BaseServlet {
     private final long registrationExpiryHours;
 
     @Inject
-    RegisterServlet(Provider<GaeUserDAO> daoProvider,
+    RegisterServlet(GaeUserDAO daoProvider,
                     @Named("userBaseUrl") String userBaseUrl,
                     @Named("registrationExpiryHours") long registrationExpiryHours) {
         super(daoProvider);

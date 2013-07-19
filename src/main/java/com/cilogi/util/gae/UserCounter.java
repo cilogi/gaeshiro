@@ -19,8 +19,9 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.util.gae;
 
+import com.cilogi.util.ICounter;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -39,7 +40,7 @@ import java.util.logging.Logger;
  */
 @Cache
 @Entity
-class UserCounter {
+class UserCounter implements ICounter {
     static final Logger LOG = Logger.getLogger(UserCounter.class.getName());
 
     static final String COUNTER_ID = "counterID";
@@ -51,7 +52,7 @@ class UserCounter {
     @Id
     private String id;
 
-    private int count;
+    private long count;
 
     private Date lastModified;
 
@@ -64,11 +65,22 @@ class UserCounter {
         lastModified = new Date(0L);
     }
 
-    public int getCount() {
+    @Override
+    public long getCount() {
         return count;
     }
 
-    public void delta(long delta) {
+    @Override
+    public void increment() {
+        delta(1L);
+    }
+
+    @Override
+    public void decrement() {
+        delta(-1L);
+    }
+
+    void delta(long delta) {
         this.count += delta;
         this.lastModified = new Date();
     }

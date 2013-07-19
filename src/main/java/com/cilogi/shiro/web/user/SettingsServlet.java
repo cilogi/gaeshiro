@@ -41,7 +41,7 @@ public class SettingsServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
     @Inject
-    SettingsServlet(Provider<GaeUserDAO> daoProvider) {
+    SettingsServlet(GaeUserDAO daoProvider) {
         super(daoProvider);
     }
 

@@ -44,7 +44,7 @@ public class ConfirmServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(ConfirmServlet.class.getName());
 
     @Inject
-    ConfirmServlet(Provider<GaeUserDAO> daoProvider) {
+    ConfirmServlet(GaeUserDAO daoProvider) {
         super(daoProvider);
     }
 

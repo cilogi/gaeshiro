@@ -33,7 +33,6 @@ import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -65,8 +64,8 @@ public class GoogleLoginServlet extends BaseServlet {
 
 
     @Inject
-    public GoogleLoginServlet(Provider<GaeUserDAO> daoProvider) {
-        super(daoProvider);
+    public GoogleLoginServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
 
@@ -95,7 +94,7 @@ public class GoogleLoginServlet extends BaseServlet {
                 return;
             }
             String userName = currentUser.getEmail();
-            daoProvider.get().ensureExists(userName);
+            gaeUserDAO.ensureExists(userName);
             
             String host = request.getRemoteHost();
             GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(userName,  host);
