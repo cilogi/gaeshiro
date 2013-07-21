@@ -34,6 +34,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.guice.web.ShiroWebModule;
+import org.apache.shiro.realm.text.IniRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +53,7 @@ public class ShiroModule extends ShiroWebModule{
     @SuppressWarnings("unchecked")
     protected void configureShiroWeb() {
         try {
-            bindRealm().toConstructor(InjectableIniRealm.class.getConstructor(CredentialsMatcher.class)).in(Scopes.SINGLETON);
-            //bindRealm().toConstructor(IniRealm.class.getConstructor(Ini.class)).in(Scopes.SINGLETON);
+            bindRealm().toConstructor(IniRealm.class.getConstructor()).in(Scopes.SINGLETON);
             bindRealm().to(GaeUserRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(OAuthRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(GoogleGAERealm.class).in(Scopes.SINGLETON);

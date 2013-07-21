@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        ServeLogic.java  (12-Oct-2011)
+// File:        BindingModule.java  (12-Oct-2011)
 // Author:      tim
 
 //
@@ -47,14 +47,14 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 
-public class ServeLogic extends AbstractModule {
-    static final Logger LOG = Logger.getLogger(ServeLogic.class.getName());
+public class BindingModule extends AbstractModule {
+    static final Logger LOG = Logger.getLogger(BindingModule.class.getName());
 
 
     private final String userBaseUrl;
     private final String staticBaseUrl;
 
-    public ServeLogic(String userBaseUrl, String staticBaseUrl) {
+    public BindingModule(String userBaseUrl, String staticBaseUrl) {
         this.userBaseUrl = userBaseUrl;
         this.staticBaseUrl = staticBaseUrl;
     }

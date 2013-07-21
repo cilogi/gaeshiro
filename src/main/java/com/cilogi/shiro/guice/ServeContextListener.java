@@ -38,10 +38,12 @@ public class ServeContextListener extends GuiceServletContextListener {
     private String userBaseUrl;
 
     // Prefix for the url from which static files are served. Empty string by default.
-    // On App Engine we'll use static.<appid>.appspot.com.
+    // On App Engine we'll use static.<appid>.appspot.com. This allows static files to be
+    // served without Cookies.
     // For debugging this can be overridden by local system property
     private String staticBaseUrl;
 
+    // Needed to initialize the Shiro context.
     private ServletContext context;
 
 
@@ -67,7 +69,9 @@ public class ServeContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServeLogic(userBaseUrl, staticBaseUrl), new ServeModule(userBaseUrl), new ShiroModule(context));
+        return Guice.createInjector(new BindingModule(userBaseUrl, staticBaseUrl),
+                                    new RouteModule(userBaseUrl),
+                                    new ShiroModule(context));
     }
     
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Tim Niblett All Rights Reserved.
 //
-// File:        ServeModule.java  (05-Oct-2010)
+// File:        RouteModule.java  (05-Oct-2010)
 // Author:      tim
 
 //
@@ -40,12 +40,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-public class ServeModule extends ServletModule {
-    static final Logger LOG = Logger.getLogger(ServeModule.class.getName());
+public class RouteModule extends ServletModule {
+    static final Logger LOG = Logger.getLogger(RouteModule.class.getName());
 
     private final String userBaseUrl;
     
-    public ServeModule(String userBaseUrl) {
+    public RouteModule(String userBaseUrl) {
         Preconditions.checkArgument(userBaseUrl != null && !userBaseUrl.endsWith("/"));
         this.userBaseUrl = userBaseUrl;
     }
