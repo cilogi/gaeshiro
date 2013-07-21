@@ -28,6 +28,8 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
@@ -50,26 +52,32 @@ public class GaeUser implements Serializable {
     private static final long serialVersionUID = 3118015798739037727L;
 
 
-    @Id
+    @Id @Getter
     private String name;
 
+    @Getter
     private String passwordHash;
 
     /** The salt, used to make sure that a dictionary attack is harder given a list of all the
      *  hashed passwords, as each salt will be different.
      */
+    @Getter
     private byte[] salt;
 
+    @Getter
     private Set<String> roles;
 
+    @Getter
     private Set<String> permissions;
 
+    @Setter @Getter
     private RegistrationString registrationString;
 
     @Index
     private Date dateRegistered;
 
-    private boolean isSuspended;
+    @Setter @Getter
+    private boolean suspended;
 
     /** For objectify to create instances on retrieval */
     private GaeUser() {
@@ -89,7 +97,7 @@ public class GaeUser implements Serializable {
         this(name, password, roles, permissions, false);
     }
 
-    GaeUser(String name, String password, Set<String> roles, Set<String> permissions, boolean isRegistered) {
+    private GaeUser(String name, String password, Set<String> roles, Set<String> permissions, boolean isRegistered) {
         Preconditions.checkNotNull(name, "User name (email) can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
@@ -100,29 +108,13 @@ public class GaeUser implements Serializable {
         this.roles = Collections.unmodifiableSet(roles);
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
-        this.isSuspended = false;
-    }
-
-    public boolean isSuspended() {
-        return isSuspended;
-    }
-
-    public void setSuspended(boolean suspended) {
-        isSuspended = suspended;
+        this.suspended = false;
     }
 
     public void setPassword(String password) {
         Preconditions.checkNotNull(password);
         this.salt = salt().getBytes();
         this.passwordHash = hash(password, salt);
-    }
-
-    public RegistrationString getRegistrationString() {
-        return registrationString;
-    }
-
-    public void setRegistrationString(RegistrationString registrationString) {
-        this.registrationString = registrationString;
     }
 
     public Date getDateRegistered() {
@@ -135,26 +127,6 @@ public class GaeUser implements Serializable {
 
     public void register() {
         dateRegistered = new Date();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public byte[] getSalt() {
-        return salt;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public Set<String> getPermissions() {
-        return permissions;
     }
 
     private static ByteSource salt() {
