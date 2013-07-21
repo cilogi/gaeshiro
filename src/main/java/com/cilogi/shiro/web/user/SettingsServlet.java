@@ -41,14 +41,14 @@ public class SettingsServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
     @Inject
-    SettingsServlet(GaeUserDAO daoProvider) {
-        super(daoProvider);
+    SettingsServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            GaeUserDAO dao = new GaeUserDAO();
+            GaeUserDAO dao = getGaeUserDAO();
             String userName = request.getParameter(USERNAME);
             String password = request.getParameter(PASSWORD);
 

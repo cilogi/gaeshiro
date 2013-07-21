@@ -55,10 +55,10 @@ public class RegisterServlet extends BaseServlet {
     private final long registrationExpiryHours;
 
     @Inject
-    RegisterServlet(GaeUserDAO daoProvider,
+    RegisterServlet(GaeUserDAO gaeUserDAO,
                     @Named("userBaseUrl") String userBaseUrl,
                     @Named("registrationExpiryHours") long registrationExpiryHours) {
-        super(daoProvider);
+        super(gaeUserDAO);
         this.userBaseUrl = userBaseUrl;
         this.registrationExpiryHours = registrationExpiryHours;
     }
@@ -71,7 +71,7 @@ public class RegisterServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            GaeUserDAO dao = new GaeUserDAO();
+            GaeUserDAO dao = getGaeUserDAO();
 
             String userName = WebUtils.getCleanParam(request, USERNAME);
             boolean isForgot = Boolean.parseBoolean(WebUtils.getCleanParam(request, FORGOT));

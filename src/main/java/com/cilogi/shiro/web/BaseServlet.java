@@ -27,6 +27,7 @@ import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.session.Session;
@@ -57,6 +58,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
 
     private CreateDoc create;
 
+    @Getter
     protected GaeUserDAO gaeUserDAO;
 
     protected BaseServlet(GaeUserDAO gaeUserDAO) {

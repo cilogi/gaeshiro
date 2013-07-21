@@ -49,8 +49,8 @@ public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
     @Inject
-    UserListServlet(GaeUserDAO daoProvider) {
-        super(daoProvider);
+    UserListServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
 
@@ -71,7 +71,7 @@ public class UserListServlet extends BaseServlet {
 
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
-        GaeUserDAO dao = new GaeUserDAO();
+        GaeUserDAO dao = getGaeUserDAO();
         long nUsers = dao.getCount();
         JSONObject obj = new JSONObject();
         obj.put("iTotalRecords", nUsers);

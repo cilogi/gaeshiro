@@ -44,8 +44,8 @@ public class ConfirmServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(ConfirmServlet.class.getName());
 
     @Inject
-    ConfirmServlet(GaeUserDAO daoProvider) {
-        super(daoProvider);
+    ConfirmServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ConfirmServlet extends BaseServlet {
             String password = request.getParameter(PASSWORD);
             boolean isChange = "true".equals(request.getParameter(FORGOT));
 
-            GaeUserDAO dao = new GaeUserDAO();
+            GaeUserDAO dao = getGaeUserDAO();
             GaeUser user = dao.findUserFromValidCode(code);
             if (user != null) {
                 // can't do this in a transaction as we need to update the counter, and I don't
