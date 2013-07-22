@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.oauth.provider;
+package com.cilogi.shiro.providers.oauth.provider;
 
 import org.scribe.exceptions.OAuthException;
 import org.scribe.extractors.AccessTokenExtractor;

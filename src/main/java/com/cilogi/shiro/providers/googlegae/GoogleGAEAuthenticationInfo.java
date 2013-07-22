@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        GoogleGAEAuthenticationToken.java  (16-Oct-2012)
+// File:        GoogleGAEAuthenticationInfo.java  (16-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,24 +18,22 @@
 //
 
 
-package com.cilogi.shiro.googlegae;
+package com.cilogi.shiro.providers.googlegae;
 
-import org.apache.shiro.authc.HostAuthenticationToken;
-import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 
-public class GoogleGAEAuthenticationToken implements HostAuthenticationToken, RememberMeAuthenticationToken {
+import java.util.logging.Logger;
+
+
+public class GoogleGAEAuthenticationInfo implements AuthenticationInfo {
+    static final Logger LOG = Logger.getLogger(GoogleGAEAuthenticationInfo.class.getName());
 
     private final String principal;
-    private final String host;
 
-    public GoogleGAEAuthenticationToken(String principal, String host) {
+    public GoogleGAEAuthenticationInfo(String principal) {
         this.principal = principal;
-        this.host = host;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return principal;
     }
 
     @Override
@@ -44,12 +42,8 @@ public class GoogleGAEAuthenticationToken implements HostAuthenticationToken, Re
     }
 
     @Override
-    public boolean isRememberMe() {
-        return true;
+    public PrincipalCollection getPrincipals() {
+        return new SimplePrincipalCollection(principal, "GoogleGAE");
     }
 
-    @Override
-    public String getHost() {
-        return host;
-    }
 }

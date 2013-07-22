@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.util.gae;
+package com.cilogi.util.gae.db;
 
 import com.cilogi.util.ICounter;
 import com.googlecode.objectify.ObjectifyService;

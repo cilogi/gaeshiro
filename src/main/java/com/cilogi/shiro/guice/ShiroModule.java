@@ -21,8 +21,8 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.gaeuser.GaeUserRealm;
-import com.cilogi.shiro.googlegae.GoogleGAERealm;
-import com.cilogi.shiro.oauth.OAuthRealm;
+import com.cilogi.shiro.providers.googlegae.GoogleGAERealm;
+import com.cilogi.shiro.providers.oauth.OAuthRealm;
 import com.cilogi.shiro.web.oauth.SocialLogoutFilter;
 import com.google.inject.Key;
 import com.google.inject.Provides;

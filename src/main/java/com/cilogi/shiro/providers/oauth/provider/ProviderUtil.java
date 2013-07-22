@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        GoogleGAECredentialsMatcher.java  (16-Oct-2012)
+// File:        ProviderUtil.java  (16-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,28 +18,28 @@
 //
 
 
-package com.cilogi.shiro.googlegae;
+package com.cilogi.shiro.providers.oauth.provider;
 
-import com.google.common.base.Preconditions;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
-
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 
-public class GoogleGAECredentialsMatcher implements CredentialsMatcher {
-    static final Logger LOG = Logger.getLogger(GoogleGAECredentialsMatcher.class.getName());
+class ProviderUtil {
+    static final Logger LOG = Logger.getLogger(ProviderUtil.class.getName());
 
-    public GoogleGAECredentialsMatcher() {}
-    
-    @Override
-    public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        Preconditions.checkNotNull(info);
-        Preconditions.checkNotNull(token);
+    private ProviderUtil() {
 
-        Object primary = info.getPrincipals().getPrimaryPrincipal();
-        return token instanceof GoogleGAEAuthenticationToken && token.getPrincipal().equals(primary);
     }
 
+    public static String makeRoot(String fullURL, String redirect) {
+        try {
+            URL url = new URL(fullURL);
+            String portString = (url.getPort() == -1) ? "" : ":" + url.getPort();
+            String absRedirect = redirect.startsWith("/") ? redirect : "/" + redirect;
+            return url.getProtocol() + "://" + url.getHost() + portString + absRedirect;
+        } catch (MalformedURLException e) {
+            return fullURL;
+        }
+    }    
 }

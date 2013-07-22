@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthRealm.java  (07-Oct-2012)
+// File:        GoogleGAERealm.java  (16-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.providers.googlegae;
 
 import com.cilogi.shiro.memcache.MemcacheManager;
 import org.apache.shiro.authc.AuthenticationException;
@@ -29,19 +29,19 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import java.util.logging.Logger;
 
 
-public class OAuthRealm extends AuthenticatingRealm {
-    static final Logger LOG = Logger.getLogger(OAuthRealm.class.getName());
+public class GoogleGAERealm extends AuthenticatingRealm {
+    static final Logger LOG = Logger.getLogger(GoogleGAERealm.class.getName());
 
-    public OAuthRealm() {
-        super(new MemcacheManager(), new OAuthCredentialsMatcher());
-        setAuthenticationTokenClass(OAuthAuthenticationToken.class);        
+    public GoogleGAERealm() {
+        super(new MemcacheManager(), new GoogleGAECredentialsMatcher());
+        setAuthenticationTokenClass(GoogleGAEAuthenticationToken.class);
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        if (token != null && token instanceof OAuthAuthenticationToken) {
-            OAuthAuthenticationToken authToken = (OAuthAuthenticationToken)token;
-            return new OAuthAuthenticationInfo((String)authToken.getCredentials(), (String)authToken.getPrincipal(), authToken.getAuthType());
+        if (token != null && token instanceof GoogleGAEAuthenticationToken) {
+            GoogleGAEAuthenticationToken authToken = (GoogleGAEAuthenticationToken)token;
+            return new GoogleGAEAuthenticationInfo((String)authToken.getPrincipal());
         } else {
             return null;
         }

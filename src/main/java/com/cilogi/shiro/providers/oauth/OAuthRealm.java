@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthCredentialsMatcher.java  (07-Oct-2012)
+// File:        OAuthRealm.java  (07-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,27 +18,32 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.providers.oauth;
 
-import com.google.common.base.Preconditions;
+import com.cilogi.shiro.memcache.MemcacheManager;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
+import org.apache.shiro.realm.AuthenticatingRealm;
 
 import java.util.logging.Logger;
 
 
-public class OAuthCredentialsMatcher implements CredentialsMatcher {
-    static final Logger LOG = Logger.getLogger(OAuthCredentialsMatcher.class.getName());
+public class OAuthRealm extends AuthenticatingRealm {
+    static final Logger LOG = Logger.getLogger(OAuthRealm.class.getName());
 
-    public OAuthCredentialsMatcher() {}
+    public OAuthRealm() {
+        super(new MemcacheManager(), new OAuthCredentialsMatcher());
+        setAuthenticationTokenClass(OAuthAuthenticationToken.class);        
+    }
 
     @Override
-    public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        Preconditions.checkNotNull(info);
-        Preconditions.checkNotNull(token);
-
-        Object primary = info.getPrincipals().getPrimaryPrincipal();
-        return token instanceof OAuthAuthenticationToken && token.getCredentials() != null && token.getPrincipal().equals(primary);
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token != null && token instanceof OAuthAuthenticationToken) {
+            OAuthAuthenticationToken authToken = (OAuthAuthenticationToken)token;
+            return new OAuthAuthenticationInfo((String)authToken.getCredentials(), (String)authToken.getPrincipal(), authToken.getAuthType());
+        } else {
+            return null;
+        }
     }
 }

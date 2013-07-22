@@ -29,7 +29,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.logging.Logger;
 
-//import static com.cilogi.shiro.oauth.UserAuthType.*;
+//import static com.cilogi.shiro.providers.oauth.UserAuthType.*;
 
 public class SocialLogoutFilter extends LogoutFilter {
     static final Logger LOG = Logger.getLogger(SocialLogoutFilter.class.getName());

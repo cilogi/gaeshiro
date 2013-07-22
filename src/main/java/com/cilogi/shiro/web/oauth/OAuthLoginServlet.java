@@ -22,12 +22,12 @@ package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
-import com.cilogi.shiro.oauth.OAuthAuthenticationToken;
-import com.cilogi.shiro.oauth.OAuthInfo;
-import com.cilogi.shiro.oauth.UserAuthType;
-import com.cilogi.shiro.oauth.provider.FacebookAuth;
-import com.cilogi.shiro.oauth.provider.GoogleAuth;
-import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;
+import com.cilogi.shiro.providers.oauth.OAuthAuthenticationToken;
+import com.cilogi.shiro.providers.oauth.OAuthInfo;
+import com.cilogi.shiro.providers.oauth.UserAuthType;
+import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
+import com.cilogi.shiro.providers.oauth.provider.GoogleAuth;
+import com.cilogi.shiro.providers.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;

@@ -22,7 +22,7 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
-import com.cilogi.shiro.oauth.UserAuthType;
+import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.google.common.collect.Maps;
 
 import javax.inject.Inject;

@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.service;
+package com.cilogi.util.gae.service;
 
 import com.google.appengine.api.mail.MailService;
 import com.google.appengine.api.mail.MailServiceFactory;

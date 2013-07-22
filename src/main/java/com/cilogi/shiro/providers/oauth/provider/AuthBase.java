@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.oauth.provider;
+package com.cilogi.shiro.providers.oauth.provider;
 
 import org.json.JSONException;
 import org.json.JSONObject;

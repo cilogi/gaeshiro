@@ -20,8 +20,8 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.oauth.provider.FacebookAuth;
-import com.cilogi.shiro.oauth.provider.GoogleAuth;
+import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
+import com.cilogi.shiro.providers.oauth.provider.GoogleAuth;
 import com.google.appengine.api.urlfetch.*;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;

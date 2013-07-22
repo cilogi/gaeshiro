@@ -22,7 +22,7 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
-import com.cilogi.shiro.service.SendEmail;
+import com.cilogi.util.gae.service.SendEmail;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

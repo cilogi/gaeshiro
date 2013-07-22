@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.providers.oauth;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;

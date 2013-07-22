@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.oauth;
+package com.cilogi.shiro.providers.oauth;
 
 public enum UserAuthType {
     CILOGI, GOOGLE, FACEBOOK;

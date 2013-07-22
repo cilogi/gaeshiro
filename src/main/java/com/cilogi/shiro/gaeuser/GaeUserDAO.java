@@ -23,8 +23,8 @@ package com.cilogi.shiro.gaeuser;
 
 
 import com.cilogi.util.ICounter;
-import com.cilogi.util.gae.BaseDAO;
-import com.cilogi.util.gae.UserCounterDAO;
+import com.cilogi.util.gae.db.BaseDAO;
+import com.cilogi.util.gae.db.UserCounterDAO;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 

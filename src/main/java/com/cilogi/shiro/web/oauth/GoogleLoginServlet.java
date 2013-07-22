@@ -21,7 +21,7 @@
 package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
-import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
+import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
