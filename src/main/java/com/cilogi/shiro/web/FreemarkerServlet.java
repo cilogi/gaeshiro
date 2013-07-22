@@ -26,7 +26,6 @@ import com.cilogi.shiro.oauth.UserAuthType;
 import com.google.common.collect.Maps;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

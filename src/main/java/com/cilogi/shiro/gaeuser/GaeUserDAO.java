@@ -27,7 +27,6 @@ import com.cilogi.util.gae.BaseDAO;
 import com.cilogi.util.gae.UserCounterDAO;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
-import lombok.Setter;
 
 import javax.inject.Inject;
 import java.util.logging.Logger;

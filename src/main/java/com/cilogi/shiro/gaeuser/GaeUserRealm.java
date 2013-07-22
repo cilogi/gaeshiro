@@ -21,10 +21,7 @@ package com.cilogi.shiro.gaeuser;
 
 import com.cilogi.shiro.memcache.MemcacheManager;
 import com.google.common.base.Preconditions;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;

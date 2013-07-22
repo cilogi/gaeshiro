@@ -20,8 +20,8 @@
 
 package com.cilogi.shiro.oauth.provider;
 
-import com.cilogi.shiro.oauth.UserAuthType;
 import com.cilogi.shiro.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.UserAuthType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

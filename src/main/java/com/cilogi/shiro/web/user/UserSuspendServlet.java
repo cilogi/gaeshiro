@@ -24,6 +24,7 @@ package com.cilogi.shiro.web.user;
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
+import lombok.extern.java.Log;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,11 +32,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @Singleton
+@Log
 public class UserSuspendServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
+
+    private static final long serialVersionUID = 6663353833251862992L;
 
     @Inject
     UserSuspendServlet(GaeUserDAO gaeUserDAO) {
@@ -74,12 +76,12 @@ public class UserSuspendServlet extends BaseServlet {
                     }
                 }
             } else {
-                LOG.warning("Can't find user " + userName);
+                log.warning("Can't find user " + userName);
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
                       "Can't find user " + userName, response);
             }
         } catch (Exception e) {
-            LOG.severe("Suspend failure: " + e.getMessage());
+            log.severe("Suspend failure: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Error generating JSON: " + e.getMessage(), response);
         }

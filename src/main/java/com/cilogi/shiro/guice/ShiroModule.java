@@ -24,8 +24,6 @@ import com.cilogi.shiro.gaeuser.GaeUserRealm;
 import com.cilogi.shiro.googlegae.GoogleGAERealm;
 import com.cilogi.shiro.oauth.OAuthRealm;
 import com.cilogi.shiro.web.oauth.SocialLogoutFilter;
-import com.cilogi.util.ICounter;
-import com.cilogi.util.gae.UserCounterDAO;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -39,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
-
 
 public class ShiroModule extends ShiroWebModule{
     static final Logger LOG = LoggerFactory.getLogger(ShiroModule.class);

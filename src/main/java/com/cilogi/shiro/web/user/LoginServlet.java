@@ -30,7 +30,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +43,8 @@ public class LoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
     @Inject
-    LoginServlet(GaeUserDAO daoProvider) {
-        super(daoProvider);
+    LoginServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
     
     @Override

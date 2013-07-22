@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class UserCounterDAO extends BaseDAO<UserCounter> implements ICounter {

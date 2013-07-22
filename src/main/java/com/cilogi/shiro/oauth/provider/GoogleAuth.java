@@ -20,8 +20,8 @@
 
 package com.cilogi.shiro.oauth.provider;
 
-import com.cilogi.shiro.oauth.UserAuthType;
 import com.cilogi.shiro.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.UserAuthType;
 import com.google.appengine.api.urlfetch.*;
 import com.google.common.base.Charsets;
 import org.apache.shiro.web.util.WebUtils;

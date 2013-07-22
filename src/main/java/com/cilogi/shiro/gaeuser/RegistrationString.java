@@ -21,7 +21,8 @@
 
 package com.cilogi.shiro.gaeuser;
 
-import com.googlecode.objectify.annotation.*;
+import com.googlecode.objectify.annotation.Embed;
+import com.googlecode.objectify.annotation.Index;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;

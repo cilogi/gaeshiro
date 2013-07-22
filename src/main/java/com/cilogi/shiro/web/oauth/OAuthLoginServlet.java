@@ -21,10 +21,10 @@
 package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.oauth.UserAuthType;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.oauth.OAuthAuthenticationToken;
 import com.cilogi.shiro.oauth.OAuthInfo;
+import com.cilogi.shiro.oauth.UserAuthType;
 import com.cilogi.shiro.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.oauth.provider.GoogleAuth;
 import com.cilogi.shiro.oauth.provider.IOAuthProviderInfo;

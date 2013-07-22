@@ -28,7 +28,6 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,8 +48,8 @@ public class StatusServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(StatusServlet.class.getName());
 
     @Inject
-    StatusServlet(GaeUserDAO daoProvider) {
-        super(daoProvider);
+    StatusServlet(GaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override

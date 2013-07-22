@@ -25,7 +25,6 @@ import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.service.SendEmail;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

@@ -32,9 +32,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.util.ByteSource;
-import org.apache.shiro.util.SimpleByteSource;
 
 import java.io.Serializable;
 import java.util.Collections;

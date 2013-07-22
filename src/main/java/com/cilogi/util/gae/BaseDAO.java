@@ -22,7 +22,6 @@ package com.cilogi.util.gae;
 
 import com.googlecode.objectify.Key;
 
-
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
