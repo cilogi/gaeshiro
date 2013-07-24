@@ -30,8 +30,12 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.mgt.*;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,11 +46,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
-    static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
+
+    private static final long serialVersionUID = 7427222103993326328L;
 
     protected final String MESSAGE = "message";
     protected final String CODE = "code";
@@ -119,8 +123,8 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     /**
      * Login and make sure you then have a new session.  This helps prevent session fixation attacks.
      *
-     * @param token
-     * @param subject
+     * @param token  The token
+     * @param subject The subject
      */
     protected static void loginWithNewSession(AuthenticationToken token, Subject subject) {
         Session originalSession = subject.getSession();
@@ -159,4 +163,16 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     }
 
 
+    protected void setProviderInCookieComment(String provider) {
+        org.apache.shiro.mgt.SecurityManager man = SecurityUtils.getSecurityManager();
+        if (man != null && man instanceof DefaultWebSecurityManager) {
+            DefaultWebSecurityManager sm = (DefaultWebSecurityManager)man;
+            RememberMeManager rm = sm.getRememberMeManager();
+            if (rm instanceof CookieRememberMeManager) {
+                CookieRememberMeManager cm = (CookieRememberMeManager)rm;
+                Cookie cookie = cm.getCookie();
+                cookie.setComment(provider);
+            }
+        }
+    }
 }

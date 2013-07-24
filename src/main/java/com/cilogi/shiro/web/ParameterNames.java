@@ -41,4 +41,5 @@ interface ParameterNames {
     String REMEMBER_ME = "rememberMe";
     String SUSPEND = "suspend";
     String USERNAME = "username";
+    String PROVIDER = "provider";
 }

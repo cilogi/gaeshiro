@@ -22,6 +22,7 @@ package com.cilogi.shiro.web.oauth;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
+import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -100,6 +101,7 @@ public class GoogleLoginServlet extends BaseServlet {
             GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(userName,  host);
             try {
                 Subject subject = SecurityUtils.getSubject();
+                setProviderInCookieComment(UserAuthType.GOOGLE.name());
                 loginWithNewSession(token, subject);
 
                 // go back to where Shiro thought we should go or to home if that's not set

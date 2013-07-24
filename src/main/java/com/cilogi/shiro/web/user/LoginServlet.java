@@ -23,10 +23,16 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
+import lombok.NonNull;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
@@ -35,12 +41,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 
 @Singleton
 public class LoginServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
+
+    private static final long serialVersionUID = 8601949264310120320L;
 
     @Inject
     LoginServlet(GaeUserDAO gaeUserDAO) {
@@ -58,11 +64,14 @@ public class LoginServlet extends BaseServlet {
         try {
             String password = WebUtils.getCleanParam(request, PASSWORD);
             String username = WebUtils.getCleanParam(request, USERNAME);
+            String provider = WebUtils.getCleanParam(request, PROVIDER);
+
             boolean rememberMe = WebUtils.isTrue(request, REMEMBER_ME);
             String host = request.getRemoteHost();
             UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe, host);
             try {
                 Subject subject = SecurityUtils.getSubject();
+                setProviderInCookieComment(provider);
                 loginWithNewSession(token, subject);
                 //subject.login(token);
                 issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");

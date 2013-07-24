@@ -72,7 +72,6 @@ public class OAuthLoginServlet extends BaseServlet {
             String currentUri = WebUtils.getRequestUri(request);
             IOAuthProviderInfo auth = getProvider(request);
             putSessionData("userAuthType", auth.getUserAuthType().name());
-
             String url = isReAuthenticate() ? auth.reAuthenticateURL(currentUri) : auth.loginURL(currentUri);
             WebUtils.issueRedirect(request, response, url);
         } catch (Exception e) {
@@ -96,7 +95,7 @@ public class OAuthLoginServlet extends BaseServlet {
                 gaeUserDAO.ensureExists(email);
 
                 OAuthAuthenticationToken token = new OAuthAuthenticationToken(info.getToken(), info.getUserAuthType(), email, request.getRemoteHost());
-
+                setProviderInCookieComment(auth.getUserAuthType().name());
                 loginWithNewSession(token, SecurityUtils.getSubject());
 
                 // redirect to wherever you were going, or to home
