@@ -64,6 +64,7 @@ public class StatusServlet extends BaseServlet {
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "known",
                         "name", name,
+                        "provider", getProviderInCookieComment(),
                         "authenticated", Boolean.toString(subject.isAuthenticated()),
                         "admin", Boolean.toString(hasRole(subject, "admin")));
             } else {
@@ -71,6 +72,7 @@ public class StatusServlet extends BaseServlet {
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "unknown",
                         "name", "",
+                        "provider", "",
                         "authenticated", "false",
                         "admin", "false");
             }

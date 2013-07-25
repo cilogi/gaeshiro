@@ -31,6 +31,7 @@ import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.*;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -164,7 +165,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
 
 
     protected void setProviderInCookieComment(String provider) {
-        org.apache.shiro.mgt.SecurityManager man = SecurityUtils.getSecurityManager();
+        SecurityManager man = SecurityUtils.getSecurityManager();
         if (man != null && man instanceof DefaultWebSecurityManager) {
             DefaultWebSecurityManager sm = (DefaultWebSecurityManager)man;
             RememberMeManager rm = sm.getRememberMeManager();
@@ -174,5 +175,19 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
                 cookie.setComment(provider);
             }
         }
+    }
+
+    protected String getProviderInCookieComment() {
+        SecurityManager man = SecurityUtils.getSecurityManager();
+        if (man != null && man instanceof DefaultWebSecurityManager) {
+            DefaultWebSecurityManager sm = (DefaultWebSecurityManager)man;
+            RememberMeManager rm = sm.getRememberMeManager();
+            if (rm instanceof CookieRememberMeManager) {
+                CookieRememberMeManager cm = (CookieRememberMeManager)rm;
+                Cookie cookie = cm.getCookie();
+                return cookie.getComment();
+            }
+        }
+        return "";
     }
 }
