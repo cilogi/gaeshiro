@@ -4,8 +4,9 @@
 
 <meta charset="utf-8">
 <title>Shiro on GAE</title>
-<meta name="description" content="">
-<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Demo of Mozilla Persona and Shiro">
+<meta name="author" content="Tim Niblett">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
@@ -17,26 +18,32 @@
 
 <!-- Le styles -->
 <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="assets/css/docs.css" type="text/css" rel="stylesheet">
-<link href="css/login.css" type="text/css" rel="stylesheet">
-<link href="css/auth-buttons.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
+
+<link href="css/persona-buttons.css" type="text/css" rel="stylesheet">
 <link href="css/local.css" type="text/css" rel="stylesheet">
 <link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
-body {
-  padding-top: 60px;
-}
 
 #spinner {
  position: absolute; top: 90px; left: 50%;
 }
 
-    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest {
+.copyright {
+    margin-top: 6em;
+    color: lightgray;
+    font-size: 0.8em;
+    width: 100%;
+    text-align: center;
+}
+
+    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
 
-    .shiro-guest-active .shiro-user, .shiro-user-active .shiro-guest, .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
+    .shiro-guest-active .shiro-user,  .shiro-user-active .shiro-guest,
+    .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
 
@@ -55,27 +62,34 @@ body {
 <div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;">
 </div>
 
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
             <a class="brand" href="#">GAEShiro</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#what">What</a></li>
-                <li><a href="#motivation">Why</a></li>
-                <li><a href="#shiro">How</a></li>
-                <li><a href="#social">Social</a></li>
-                <li><a href="#management">Manage</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
-                <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
-            </ul>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#what">What</a></li>
+                    <li><a href="#motivation">Why</a></li>
+                    <li><a href="#shiro">How</a></li>
+                    <li><a href="#social">Social</a></li>
+                    <li><a href="#management">Manage</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
+                    <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
+                </ul>
 <ul class="nav secondary-nav shiro-guest">
     <li><a id="signIn" href="#">Sign In</a></li>
 </ul>
 <ul class="nav secondary-nav shiro-user">
    <li><a id="logout" href="/logout">Sign Out <span class="shiro-principal"></span></a></li>
 </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -521,28 +535,12 @@ fb.live.host=http://gaeshiro.appspot.com
   </div>
 </body>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-
-<script src="js/lib/jquery.tmpl.min.js"></script>
-<script src="js/lib/jquery.validate.min.js"></script>
-<script src="js/lib/spin.min.js"></script>
-<script src="js/lib/jquery.busy.min.js"></script>
-
-<script src="assets/js/google-code-prettify/prettify.js"></script>
-
-<script src="js/bootstrap/bootstrap-scrollspy.js"></script>
-<script src="js/bootstrap/bootstrap-modal.js"></script>
-
-<script src="js/init.js"></script>
-<script src="js/spin.js"></script>
-<script src="js/log.js"></script>
-<script src="js/status.js"></script>
-<script src="js/login.js"></script>
+<script data-main="js/main.js" src="js/lib/require.js"></script>
 
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27131467-1']);
+  _gaq.push(['_setAccount', 'UA-27131467-3']);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -553,87 +551,4 @@ fb.live.host=http://gaeshiro.appspot.com
 
 </script>
 
-<script>
-    $(document).ready(function() {
-        prettyPrint();
-        var spin = shiro.spin.start($("#spinner"));
-
-        shiro.status.runStatus({
-            success: function(data, status) {
-                shiro.spin.stop();
-                if (status == 'success') {
-                    $("html").removeClass("shiro-none-active");
-                    if (data.message == "known") {
-                        $("html").addClass("shiro-user-active");
-                        $("span.shiro-principal").text(data.name);
-                        if (data.authenticated == "true") {
-                            $("html").addClass("shiro-authenticated-active");
-                        }
-                        if (data.admin == "true") {
-                            $("html").addClass("shiro-admin-active");
-                        }
-                    } else {
-                        $("html").addClass("shiro-guest-active");
-                    }
-                } else {
-                    alert("status check failed: " + data.message);
-                }
-            },
-            error: function(xhr) {
-                shiro.spin.stop();
-                alert("can't find status: " + xhr.responseText);
-            }
-        });
-    });
-
-    $(document).ready(function() {
-        $("#settings").click(function(e) {
-            if (!$("html").hasClass("shiro-authenticated-active")) {
-                e.preventDefault();
-                shiro.spin.start($("#spinner"));
-                shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                    window.location.assign("settings.ftl");
-                });
-                return false;
-            }
-        });
-        $("#admin").click(function(e) {
-            shiro.spin.start($("#spinner"));
-            e.preventDefault();
-            if ($("html").hasClass("shiro-user-active")) {
-                window.location.assign("listUsers.ftl");
-            } else {
-                shiro.spin.stop();
-                alert("You need user privileges to view the user list.")
-            }
-            return false;
-        });
-
-        $("#signIn").click(function(e) {
-            e.preventDefault();
-            shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                window.location.reload();
-            });
-            return false;
-        });
-
-        $("#google").submit(function(e) {
-            $("#modal-login").modal('hide');
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-
-        $("#facebook").submit(function(e) {
-            $("#modal-login").modal('hide');
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-
-
-        $("#logout").click(function(e) {
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-    });
-</script>
 </html>

@@ -1,3 +1,21 @@
-var shiro = shiro || {}
+define([], function () {
+    var currentUser = null;
 
-shiro.userBaseUrl = "${userBaseUrl}";
+    function getCurrentUser() {
+        return currentUser;
+    }
+
+    function setCurrentUser(user) {
+        currentUser = user;
+    }
+
+    function getUserBaseUrl() {
+        return "${userBaseUrl}"
+    }
+
+    return {
+        getUserBaseUrl : getUserBaseUrl,
+        getCurrentUser : getCurrentUser,
+        setCurrentUser : setCurrentUser
+    }
+});

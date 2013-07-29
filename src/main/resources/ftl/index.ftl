@@ -11,22 +11,29 @@
 <div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;">
 </div>
 
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
             <a class="brand" href="#">GAEShiro</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#what">What</a></li>
-                <li><a href="#motivation">Why</a></li>
-                <li><a href="#shiro">How</a></li>
-                <li><a href="#social">Social</a></li>
-                <li><a href="#management">Manage</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
-                <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
-            </ul>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#what">What</a></li>
+                    <li><a href="#motivation">Why</a></li>
+                    <li><a href="#shiro">How</a></li>
+                    <li><a href="#social">Social</a></li>
+                    <li><a href="#management">Manage</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
+                    <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
+                </ul>
             <#include "inc/loginoutbutton.ftl">
+            </div>
         </div>
     </div>
 </div>
@@ -422,87 +429,4 @@ fb.live.host=http://gaeshiro.appspot.com
 <#include "inc/modal-login-template.ftl">
 </body>
 <#include "inc/_foot.ftl">
-<script>
-    $(document).ready(function() {
-        prettyPrint();
-        var spin = shiro.spin.start($("#spinner"));
-
-        shiro.status.runStatus({
-            success: function(data, status) {
-                shiro.spin.stop();
-                if (status == 'success') {
-                    $("html").removeClass("shiro-none-active");
-                    if (data.message == "known") {
-                        $("html").addClass("shiro-user-active");
-                        $("span.shiro-principal").text(data.name);
-                        if (data.authenticated == "true") {
-                            $("html").addClass("shiro-authenticated-active");
-                        }
-                        if (data.admin == "true") {
-                            $("html").addClass("shiro-admin-active");
-                        }
-                    } else {
-                        $("html").addClass("shiro-guest-active");
-                    }
-                } else {
-                    alert("status check failed: " + data.message);
-                }
-            },
-            error: function(xhr) {
-                shiro.spin.stop();
-                alert("can't find status: " + xhr.responseText);
-            }
-        });
-    });
-
-    $(document).ready(function() {
-        $("#settings").click(function(e) {
-            if (!$("html").hasClass("shiro-authenticated-active")) {
-                e.preventDefault();
-                shiro.spin.start($("#spinner"));
-                shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                    window.location.assign("settings.ftl");
-                });
-                return false;
-            }
-        });
-        $("#admin").click(function(e) {
-            shiro.spin.start($("#spinner"));
-            e.preventDefault();
-            if ($("html").hasClass("shiro-user-active")) {
-                window.location.assign("listUsers.ftl");
-            } else {
-                shiro.spin.stop();
-                alert("You need user privileges to view the user list.")
-            }
-            return false;
-        });
-
-        $("#signIn").click(function(e) {
-            e.preventDefault();
-            shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                window.location.reload();
-            });
-            return false;
-        });
-
-        $("#google").submit(function(e) {
-            $("#modal-login").modal('hide');
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-
-        $("#facebook").submit(function(e) {
-            $("#modal-login").modal('hide');
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-
-
-        $("#logout").click(function(e) {
-            shiro.status.clearStatus();
-            shiro.spin.start($("#spinner"));
-        });
-    });
-</script>
 </html>

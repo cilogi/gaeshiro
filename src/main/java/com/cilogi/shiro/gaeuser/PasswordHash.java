@@ -44,6 +44,4 @@ class PasswordHash {
         credentials.setStoredCredentialsHexEncoded(true);
         return credentials;
     }
-
-
 }
