@@ -59,11 +59,11 @@ public class StatusServlet extends BaseServlet {
             Subject subject = SecurityUtils.getSubject();
             boolean isKnown = subject.isAuthenticated() || subject.isRemembered();
             if (isKnown) {
-                String name = subject.getPrincipal().toString();
-                LOG.info("status, known: " + name);
+                String email = subject.getPrincipal().toString();
+                LOG.info("status, known: " + email);
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "known",
-                        "name", name,
+                        "email", email,
                         "provider", getProviderInCookieComment(),
                         "authenticated", Boolean.toString(subject.isAuthenticated()),
                         "admin", Boolean.toString(hasRole(subject, "admin")));
@@ -71,7 +71,7 @@ public class StatusServlet extends BaseServlet {
                 LOG.info("status, unknown");
                 issueJson(response, HTTP_STATUS_OK,
                         MESSAGE, "unknown",
-                        "name", "",
+                        "email", "",
                         "provider", "",
                         "authenticated", "false",
                         "admin", "false");

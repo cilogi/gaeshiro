@@ -21,6 +21,7 @@
 <link href="css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
 
 <link href="css/persona-buttons.css" type="text/css" rel="stylesheet">
+<link href="css/auth-buttons.css" type="text/css" rel="stylesheet">
 <link href="css/local.css" type="text/css" rel="stylesheet">
 <link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
@@ -486,53 +487,55 @@ fb.live.host=http://gaeshiro.appspot.com
   <div id="modal-login" class="modal hide fade" style="padding-bottom: 1em;">
     <div class="modal-header">
         <a href="#" class="close">&times;</a>
-        <h3>Please login <span class="loginReason"></span> or
-            <!--
-            <form id="google" action="/user/admin/socialLogin?provider=GOOGLE" method="POST" style="display:inline">
-                <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
+        <h3>
+            <form id="persona" action="/user/admin/personaLogin" method="POST" style="display:inline">
+                <!--
+                <a id="persona-submit"><img src="../images/plain_sign_in_red.png" alt="Sign in with Persona"></a>
+                -->
+                <button type="submit" class="btm-auth persona-button"><b>Persona</b></button>
             </form>
-            -->
             <form id="google" action="/user/admin/googleLogin" method="POST" style="display:inline">
-                <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
+                <button type="submit" class="btn-auth btn-google"><b>Google</b></button>
             </form>
             <form id="facebook" action="/user/admin/socialLogin?provider=FACEBOOK" method="POST" style="display:inline">
-                <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b> login</button>
+                <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b></button>
             </form>
             <a href="/login-help.html">?</a>
         </h3>
     </div>
-<form id="loginForm" method="POST" action="">
+<form id="loginForm" method="POST" action="" class="form-horizontal">
     <fieldset>
-        <div class="clearfix">
-            <label for="username">Email Address</label>
-            <div class="input">
+        <div class="control-group">
+            <label class="control-label" for="username">Email Address</label>
+            <div class="controls">
                 <input class="required email xlarge" id="username" name="username"
                        size="30" type="text"/>
             </div>
         </div>
-        <div class="clearfix">
-            <label for="password">Password</label>
+        <div class="control-group" style="margin-bottom:10px;">
+            <label class="control-label" for="password">Password</label>
 
-            <div class="input">
+            <div class="controls">
                 <input class="required xlarge" id="password" name="password" size="30" type="password"/>
+                <br/>
+                <a id="loginForgot" href="/register.ftl?forgot=true">Forgot your password?</a>
             </div>
-            <a id="loginForgot" style="margin-left:150px;" href="/register.ftl?forgot=true">Forgot your password?</a>
         </div>
       <!-- /clearfix -->
-        <div class="clearfix">
-            <label for="rememberMe" style="padding-top: 0;">Remember me</label>
-            <div class="input">
-                <input id="rememberMe" name="rememberMe" type="checkbox"/>
+        <div class="control-group" style="margin-bottom:10px;">
+            <label class="control-label" for="rememberMe" style="padding-top: 0;">Remember me</label>
+            <div class="controls">
+                <input id="rememberMe" name="rememberMe" type="checkbox" style="vertical-align:top;"/>
             </div>
         </div>
     </fieldset>
-    <div class="actions">
-        <button id="modalLogin" type="submit" class="btn primary">Login</button>
-</a>
+    <div class="control-group">
+        <div class="controls">
+            <button id="modalLogin" type="submit" class="btn primary">Login</button>
+        </div>
     </div>
 </form>
-<a id="loginRegister" href="/register.ftl" style="margin-left: 1em; margin-bottom: 1em;">Register</a>
-  </div>
+<a id="loginRegister" href="/register.ftl" style="margin-left: 1em; margin-bottom: 1em;">Register</a>  </div>
 </body>
 
 <script data-main="js/main.js" src="js/lib/require.js"></script>

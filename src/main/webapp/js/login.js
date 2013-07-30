@@ -1,4 +1,4 @@
-define(["jquery", 'spin', "jquery.validate"], function($, spin) {
+define(["jquery", 'spin', "init", "jquery.validate"], function($, spin, init) {
 
     $(document).ready(function() {
         $("#loginForm").validate({
@@ -8,7 +8,7 @@ define(["jquery", 'spin', "jquery.validate"], function($, spin) {
         });
     });
 
-    return function(action, onSuccess) {
+    return function() {
         var loginForm = $("#loginForm");
 
         $("#modal-login").modal('show');
@@ -21,7 +21,7 @@ define(["jquery", 'spin', "jquery.validate"], function($, spin) {
                 rememberMe = form.find("input[name='rememberMe']").is(":checked");
             if (form.valid()) {
                 var spin = spin.start($("#spinner"));
-                $.ajax(action, {
+                $.ajax(init.getUserbaseUrl() + "/ajaxLogin", {
                     type: "POST",
                     data : {
                         password: password,
@@ -32,7 +32,7 @@ define(["jquery", 'spin', "jquery.validate"], function($, spin) {
                     success: function(data, status) {
                         spin.stop();
                         if (status == 'success') {
-                            onSuccess();
+                            window.location.reload();
                         } else {
                             alert("login failed: " + data.message);
                         }

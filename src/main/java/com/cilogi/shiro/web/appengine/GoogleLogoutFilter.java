@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        SocialLogoutFilter.java  (04-Oct-2012)
+// File:        GoogleLogoutFilter.java  (04-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -17,25 +17,33 @@
 // effectively secure at all times.
 //
 
-package com.cilogi.shiro.web.oauth;
+package com.cilogi.shiro.web.appengine;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
+import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.io.IOException;
 import java.util.logging.Logger;
 
-//import static com.cilogi.shiro.providers.oauth.UserAuthType.*;
-
-public class SocialLogoutFilter extends LogoutFilter {
-    static final Logger LOG = Logger.getLogger(SocialLogoutFilter.class.getName());
+/**
+ * Log a user out of Google is we're using the built-in Google login.
+ * This isn't needed for OAuth as we invalidate the token right away, and
+ * its not needed for Persona as there is no server-side login trace.
+ */
+public class GoogleLogoutFilter extends LogoutFilter {
+    static final Logger LOG = Logger.getLogger(GoogleLogoutFilter.class.getName());
 
     @Inject
-    public SocialLogoutFilter() {}
+    public GoogleLogoutFilter() {}
 
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
@@ -46,7 +54,20 @@ public class SocialLogoutFilter extends LogoutFilter {
         } catch (SessionException ise) {
             LOG.info("Encountered session exception during logout.  This can generally safely be ignored: " + ise.getMessage());
         }
-        WebUtil.logoutGoogleService(request, response, "/");
+        logoutGoogleService(request, response, "/");
         return false;
     }
+
+    private static void logoutGoogleService(ServletRequest request, ServletResponse response, String redirectUrl) throws IOException {
+        UserService service = UserServiceFactory.getUserService();
+        User user = service.getCurrentUser();
+        if (user != null) {
+            String logoutUrl = service.createLogoutURL(redirectUrl);
+            WebUtils.issueRedirect(request, response, logoutUrl);
+        } else {
+            WebUtils.issueRedirect(request, response, redirectUrl);
+        }
+    }
+
+
 }

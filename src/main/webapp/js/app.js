@@ -71,6 +71,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
             e.preventDefault();
             startSpin();
             init.setCurrentUser(null);
+            login();
             return false;
         });
 
@@ -87,12 +88,4 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
 
     return initApp;
 
-});
-
-$("#signIn").click(function(e) {
-    e.preventDefault();
-    shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-        window.location.reload();
-    });
-    return false;
 });

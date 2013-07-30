@@ -23,7 +23,7 @@ package com.cilogi.shiro.guice;
 import com.cilogi.shiro.gaeuser.GaeUserRealm;
 import com.cilogi.shiro.providers.googlegae.GoogleGAERealm;
 import com.cilogi.shiro.providers.oauth.OAuthRealm;
-import com.cilogi.shiro.web.oauth.SocialLogoutFilter;
+import com.cilogi.shiro.web.appengine.GoogleLogoutFilter;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -41,7 +41,7 @@ import javax.servlet.ServletContext;
 public class ShiroModule extends ShiroWebModule{
     static final Logger LOG = LoggerFactory.getLogger(ShiroModule.class);
 
-    public static final Key<SocialLogoutFilter> SOCIAL_LOGOUT = Key.get(SocialLogoutFilter.class);
+    public static final Key<GoogleLogoutFilter> SOCIAL_LOGOUT = Key.get(GoogleLogoutFilter.class);
 
     public ShiroModule(ServletContext sc) {
         super(sc);

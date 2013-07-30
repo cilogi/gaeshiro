@@ -25,7 +25,7 @@ import com.cilogi.shiro.web.FreemarkerServlet;
 import com.cilogi.shiro.web.MailQueueServlet;
 import com.cilogi.shiro.web.MailReceiveServlet;
 import com.cilogi.shiro.web.WakeServlet;
-import com.cilogi.shiro.web.oauth.GoogleLoginServlet;
+import com.cilogi.shiro.web.appengine.GoogleLoginServlet;
 import com.cilogi.shiro.web.oauth.OAuthLoginServlet;
 import com.cilogi.shiro.web.user.*;
 import com.google.appengine.tools.appstats.AppstatsFilter;

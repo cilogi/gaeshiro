@@ -18,12 +18,13 @@
 //
 
 
-package com.cilogi.shiro.web.oauth;
+package com.cilogi.shiro.web.appengine;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.shiro.web.oauth.WebUtil;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -36,6 +37,8 @@ import org.apache.shiro.web.util.WebUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -113,15 +116,6 @@ public class GoogleLoginServlet extends BaseServlet {
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
-        }
-    }
-
-
-    private static void logoutGoogleIfLoggedIn(HttpServletRequest request, HttpServletResponse response, UserService service) throws IOException{
-        User user = service.getCurrentUser();
-        if (user != null) {
-            String redirectUrl = request.getRequestURL().toString();
-            WebUtil.logoutGoogleService(request, response, redirectUrl);
         }
     }
 }
