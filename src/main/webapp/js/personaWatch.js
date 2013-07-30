@@ -33,7 +33,7 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
     function postLogin(assertion, options) {
         $.ajax({
             type: 'POST',
-            url: "/login",
+            url: init.getUserBaseUrl() + "/personaLogin",
             data: {
                 password: assertion,
                 rememberMe: true

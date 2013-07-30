@@ -19,6 +19,8 @@
 
 package com.cilogi.shiro.gaeuser;
 
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.util.PasswordHash;
 import com.cilogi.shiro.memcache.MemcacheManager;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
@@ -55,19 +57,21 @@ public class GaeUserRealm extends AuthorizingRealm {
 
         LOG.info("Finding authentication info for " + userName + " in DB");
 
-        IGaeUser iUser = gaeUserDAO.findUser(userName);
-        if (!(iUser instanceof GaeUser)) {
-            throw new AuthenticationException("User " + iUser.getName() + " is not a GAe User so can't be authenticated");
-        }
-        GaeUser user = (GaeUser)iUser;
-
-        if (user == null) {
-            LOG.info("Rejecting " + userName + " because there is no user with that id");
+        IGaeRegisteredUser user;
+        try {
+            user = (IGaeRegisteredUser)gaeUserDAO.findUser(userName);
+        } catch (ClassCastException e) {
+            LOG.info("Rejecting " + userName + ": we need a GaeUser");
             return null;
         }
 
-        if (!user.isRegistered()) {
-            LOG.info("Rejecting " + userName + " because the  user isn't registered");
+        if (user == null) {
+            LOG.info("Rejecting " + userName + ": there is no user with that id");
+            return null;
+        }
+
+        if (user.getDateRegistered() == null) {
+            LOG.info("Rejecting " + userName + ": the  user isn't registered");
             return null;
         }
         if (user.isSuspended()) {
@@ -91,18 +95,23 @@ public class GaeUserRealm extends AuthorizingRealm {
             throw new NullPointerException("Can't find a principal in the collection");
         }
         LOG.fine("Finding authorization info for " + userName + " in DB");
-        GaeUser user = (GaeUser)gaeUserDAO.findUser(userName);
-        if (user == null || !user.isRegistered() || user.isSuspended()) {
-            return null;
-        }
-        if (!user.isRegistered() || user.isSuspended()) {
-            LOG.info("Can't authorize as user " + (user.isSuspended() ? " is suspended" : " is not registered"));
-            return null;
-        }
-        LOG.fine("Found " + userName + " in DB");
+        try {
+            IGaeRegisteredUser user = (IGaeRegisteredUser)gaeUserDAO.findUser(userName);
+            if (user == null || user.getDateRegistered() == null || user.isSuspended()) {
+                return null;
+            }
+            if (user.getDateRegistered() == null || user.isSuspended()) {
+                LOG.info("Can't authorize as user " + (user.isSuspended() ? " is suspended" : " is not registered"));
+                return null;
+            }
+            LOG.fine("Found " + userName + " in DB");
 
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
-        info.setStringPermissions(user.getPermissions());
-        return info;
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
+            info.setStringPermissions(user.getPermissions());
+            return info;
+        } catch (ClassCastException e) {
+            LOG.info("Can't get authorization info for " + userName + ": not a GaeUser");
+            return null;
+        }
     }
 }

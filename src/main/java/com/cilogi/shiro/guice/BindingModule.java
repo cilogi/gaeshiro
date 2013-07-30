@@ -22,7 +22,8 @@
 package com.cilogi.shiro.guice;
 
 
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.providers.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.util.ICounter;
@@ -61,6 +62,7 @@ public class BindingModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ICounter.class).to(UserCounterDAO.class).in(Scopes.SINGLETON);
+        bind(IGaeUserDAO.class).to(GaeUserDAO.class);
         bind(GaeUserDAO.class).in(Scopes.SINGLETON);
         bind(IOAuthProviderInfo.class).to(FacebookAuth.class);
         bind(CreateDoc.class).toInstance(createDoc());
@@ -76,6 +78,7 @@ public class BindingModule extends AbstractModule {
         // this value should be long enough for a user to get an email, but not so long that
         // it hangs around for ever as a security problem
         bindConstant().annotatedWith(Names.named("registrationExpiryHours")).to(12L);
+        bindString("host", isDevelopmentServer() ? "http://localhost:8080" : "http://gaeshiro.appspot.com:80");
     }
 
     private void bindString(String key, String value) {

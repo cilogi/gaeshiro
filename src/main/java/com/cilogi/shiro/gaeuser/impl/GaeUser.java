@@ -19,8 +19,10 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.shiro.gaeuser.impl;
 
+import com.cilogi.shiro.gaeuser.IGaeRegisteredUser;
+import com.cilogi.shiro.util.PasswordHash;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -39,11 +41,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Cache
 @Entity
-public class GaeUser implements Serializable, IGaeUser {
+public class GaeUser implements Serializable, IGaeRegisteredUser {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
 
@@ -68,7 +71,7 @@ public class GaeUser implements Serializable, IGaeUser {
     @Getter
     private Set<String> permissions;
 
-    @Setter @Getter
+    @Getter
     private RegistrationString registrationString;
 
     @Index
@@ -109,6 +112,13 @@ public class GaeUser implements Serializable, IGaeUser {
         this.suspended = false;
     }
 
+    public String setRegistrationString(long expiryHours) {
+        RegistrationString reg = new RegistrationString(getName(), expiryHours, TimeUnit.HOURS);
+        LOG.info("registration is " + reg.getCode());
+        this.registrationString = reg;
+        return reg.getCode();
+    }
+
     public void setPassword(String password) {
         Preconditions.checkNotNull(password);
         this.salt = salt().getBytes();
@@ -125,6 +135,7 @@ public class GaeUser implements Serializable, IGaeUser {
 
     public void register() {
         dateRegistered = new Date();
+        registrationString = null;
     }
 
     private static ByteSource salt() {

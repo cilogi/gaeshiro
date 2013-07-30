@@ -22,7 +22,8 @@
 package com.cilogi.shiro.web.user;
 
 
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 
 import javax.inject.Inject;
@@ -41,7 +42,7 @@ public class LoginJSPServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginJSPServlet.class.getName());
 
     @Inject
-    LoginJSPServlet(GaeUserDAO gaeUserDAO) {
+    LoginJSPServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
 

@@ -21,10 +21,8 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
-import com.cilogi.shiro.gaeuser.IGaeUser;
-import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.*;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Lists;
 import org.json.JSONArray;
@@ -50,7 +48,7 @@ public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
     @Inject
-    UserListServlet(GaeUserDAO gaeUserDAO) {
+    UserListServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
 
@@ -83,7 +81,7 @@ public class UserListServlet extends BaseServlet {
         JSONArray array = new JSONArray();
         int index = 0;
         for (IGaeUser iUser : users) {
-            GaeUser user = (GaeUser)iUser;
+            IGaeRegisteredUser user = (IGaeRegisteredUser)iUser;
             JSONArray arr = new JSONArray();
             arr.put(user.getName());
             arr.put(dateFrom(user.getDateRegistered()));

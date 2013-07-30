@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.shiro.gaeuser.impl;
 
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;

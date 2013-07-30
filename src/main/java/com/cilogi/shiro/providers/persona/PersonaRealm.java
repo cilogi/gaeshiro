@@ -32,11 +32,14 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import javax.inject.Inject;
+
 
 public class PersonaRealm extends AuthorizingRealm {
 
     private final IGaeUserDAO gaeUserDAO;
 
+    @Inject
     protected PersonaRealm(IGaeUserDAO gaeUserDAO, CacheManager cacheManager) {
         super(cacheManager, new PersonaCredentialsMatcher());
         this.gaeUserDAO = gaeUserDAO;

@@ -21,7 +21,8 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -43,7 +44,7 @@ public class LoginServlet extends BaseServlet {
     private static final long serialVersionUID = 8601949264310120320L;
 
     @Inject
-    LoginServlet(GaeUserDAO gaeUserDAO) {
+    LoginServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
     

@@ -21,8 +21,10 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.gaeuser.GaeUserRealm;
+import com.cilogi.shiro.memcache.MemcacheManager;
 import com.cilogi.shiro.providers.googlegae.GoogleGAERealm;
 import com.cilogi.shiro.providers.oauth.OAuthRealm;
+import com.cilogi.shiro.providers.persona.PersonaRealm;
 import com.cilogi.shiro.web.appengine.GoogleLogoutFilter;
 import com.google.inject.Key;
 import com.google.inject.Provides;
@@ -30,6 +32,7 @@ import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.PasswordMatcher;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.realm.text.IniRealm;
@@ -54,7 +57,9 @@ public class ShiroModule extends ShiroWebModule{
             bindRealm().to(GaeUserRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(OAuthRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(GoogleGAERealm.class).in(Scopes.SINGLETON);
+            bindRealm().to(PersonaRealm.class).in(Scopes.SINGLETON);
             bind(CredentialsMatcher.class).to(PasswordMatcher.class);
+            bind(CacheManager.class).to(MemcacheManager.class);
             bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to("/login");
         } catch (NoSuchMethodException e) {
             addError(e);

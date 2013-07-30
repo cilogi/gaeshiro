@@ -21,6 +21,8 @@
 
 package com.cilogi.shiro.gaeuser;
 
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.common.collect.Sets;

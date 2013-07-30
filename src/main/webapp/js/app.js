@@ -71,7 +71,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
             e.preventDefault();
             startSpin();
             init.setCurrentUser(null);
-            login();
+            login(setCSS);
             return false;
         });
 

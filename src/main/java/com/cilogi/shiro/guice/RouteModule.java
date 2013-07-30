@@ -27,6 +27,7 @@ import com.cilogi.shiro.web.MailReceiveServlet;
 import com.cilogi.shiro.web.WakeServlet;
 import com.cilogi.shiro.web.appengine.GoogleLoginServlet;
 import com.cilogi.shiro.web.oauth.OAuthLoginServlet;
+import com.cilogi.shiro.web.persona.PersonaLoginServlet;
 import com.cilogi.shiro.web.user.*;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
@@ -61,6 +62,7 @@ public class RouteModule extends ServletModule {
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
         serve(userBaseUrl + "/socialLogin").with(OAuthLoginServlet.class);
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);
+        serve(userBaseUrl + "/personaLogin").with(PersonaLoginServlet.class);
         serve(userBaseUrl + "/register").with(RegisterServlet.class);
         serve(userBaseUrl + "/registermail").with(MailQueueServlet.class);
         serve(userBaseUrl + "/confirm").with(ConfirmServlet.class);

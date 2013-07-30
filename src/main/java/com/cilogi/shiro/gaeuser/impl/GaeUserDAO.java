@@ -19,9 +19,11 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.shiro.gaeuser.impl;
 
 
+import com.cilogi.shiro.gaeuser.IGaeUser;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.util.ICounter;
 import com.cilogi.util.gae.db.BaseDAO;
 import com.cilogi.util.gae.db.UserCounterDAO;
@@ -96,7 +98,6 @@ public class GaeUserDAO extends BaseDAO<GaeUser> implements IGaeUserDAO {
     public void register(GaeUser user) {
         if (user != null) {
             user.register();
-            user.setRegistrationString(null);
             saveUser(user, true);
         }
     }

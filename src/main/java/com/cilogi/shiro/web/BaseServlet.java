@@ -81,12 +81,12 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         response.getWriter().println(output);
     }
 
-    protected void issueJson(HttpServletResponse response, int status, String... args) throws IOException {
+    protected void issueJson(HttpServletResponse response, int status, Object... args) throws IOException {
         Preconditions.checkArgument(args.length % 2 == 0, "There must be an even number of strings");
             try {
             JSONObject obj = new JSONObject();
             for (int i = 0; i < args.length; i += 2) {
-                obj.put(args[i], args[i+1]);
+                obj.put((String)args[i], args[i+1]);
             }
             issueJson(response, status, obj);
         } catch (JSONException e) {

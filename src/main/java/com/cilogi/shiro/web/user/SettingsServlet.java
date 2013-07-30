@@ -21,8 +21,9 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeRegisteredUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
@@ -41,7 +42,7 @@ public class SettingsServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
     @Inject
-    SettingsServlet(GaeUserDAO gaeUserDAO) {
+    SettingsServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
 
@@ -54,7 +55,7 @@ public class SettingsServlet extends BaseServlet {
 
             Subject subject = SecurityUtils.getSubject();
             String subjectID = (String)subject.getPrincipal();
-            GaeUser user = (GaeUser)dao.findUser(subjectID);
+            IGaeRegisteredUser user = (IGaeRegisteredUser)dao.findUser(subjectID);
             if (subject.isAuthenticated() && user != null) {
                 if (userName.equals(subjectID)) {
                     if (password != null) {

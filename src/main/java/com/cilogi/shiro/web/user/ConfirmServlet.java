@@ -21,8 +21,9 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
@@ -43,7 +44,7 @@ public class ConfirmServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(ConfirmServlet.class.getName());
 
     @Inject
-    ConfirmServlet(GaeUserDAO gaeUserDAO) {
+    ConfirmServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
 

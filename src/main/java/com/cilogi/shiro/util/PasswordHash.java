@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.gaeuser;
+package com.cilogi.shiro.util;
 
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -28,17 +28,17 @@ import org.apache.shiro.util.SimpleByteSource;
 /**
  * Details of the password hashing.  The number of iterations, algorithm, and so on.
  */
-class PasswordHash {
+public class PasswordHash {
     private PasswordHash() {}
 
     private static final int HASH_ITERATIONS = 1;
     private static final String HASH_ALGORITHM = Sha256Hash.ALGORITHM_NAME;
 
-    static String hash(String password, byte[] salt) {
+    public static String hash(String password, byte[] salt) {
         return (password == null) ? null : new Sha256Hash(password, new SimpleByteSource(salt), HASH_ITERATIONS).toHex();
     }
 
-    static CredentialsMatcher createCredentials() {
+    public static CredentialsMatcher createCredentials() {
         HashedCredentialsMatcher credentials = new HashedCredentialsMatcher(HASH_ALGORITHM);
         credentials.setHashIterations(HASH_ITERATIONS);
         credentials.setStoredCredentialsHexEncoded(true);

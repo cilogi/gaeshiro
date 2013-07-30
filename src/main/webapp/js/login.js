@@ -1,4 +1,4 @@
-define(["jquery", 'spin', "init", "jquery.validate"], function($, spin, init) {
+define(["jquery", 'spin', "init", "personaWatch", "jquery.validate"], function($, spin, init, personaWatch) {
 
     $(document).ready(function() {
         $("#loginForm").validate({
@@ -8,7 +8,7 @@ define(["jquery", 'spin', "init", "jquery.validate"], function($, spin, init) {
         });
     });
 
-    return function() {
+    return function(setCSS) {
         var loginForm = $("#loginForm");
 
         $("#modal-login").modal('show');
@@ -58,5 +58,18 @@ define(["jquery", 'spin', "init", "jquery.validate"], function($, spin, init) {
             $("#modal-login").modal('hide');
             spin.start($("#spinner"));
         });
+
+        $("#persona").submit(function (e) {
+            $("#modal-login").modal('hide');
+            e.preventDefault();
+            spin.start($("#spinner"));
+            init.setCurrentUser(null);
+            personaWatch.watch({setCSS: setCSS, finalize: spin.stop});
+            navigator.id.request({
+                siteName: "Cilogi"
+            });
+            return false;
+        });
+
     }
 });
