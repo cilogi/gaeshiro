@@ -23,6 +23,7 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -47,13 +48,13 @@ public class SettingsServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            GaeUserDAO dao = getGaeUserDAO();
+            IGaeUserDAO dao = getGaeUserDAO();
             String userName = request.getParameter(USERNAME);
             String password = request.getParameter(PASSWORD);
 
             Subject subject = SecurityUtils.getSubject();
             String subjectID = (String)subject.getPrincipal();
-            GaeUser user = dao.findUser(subjectID);
+            GaeUser user = (GaeUser)dao.findUser(subjectID);
             if (subject.isAuthenticated() && user != null) {
                 if (userName.equals(subjectID)) {
                     if (password != null) {

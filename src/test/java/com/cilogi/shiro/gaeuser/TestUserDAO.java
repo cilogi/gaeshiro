@@ -55,7 +55,7 @@ public class TestUserDAO extends TestCase {
         GaeUser user = new GaeUser("tim");
         user.register();
         dao.saveUser(user, true);
-        GaeUser back = dao.findUser("tim");
+        IGaeUser back = dao.findUser("tim");
         assertEquals(user, back);
         //assertEquals(1L + startCount, dao.getCount());
     }

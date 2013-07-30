@@ -23,16 +23,10 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
-import lombok.NonNull;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.mgt.CookieRememberMeManager;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;

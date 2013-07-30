@@ -37,12 +37,6 @@ public class GaeUserRealm extends AuthorizingRealm {
 
     private GaeUserDAO gaeUserDAO;
 
-    public GaeUserRealm() {
-        super(new MemcacheManager(), PasswordHash.createCredentials());
-        gaeUserDAO = new GaeUserDAO();
-        LOG.fine("Creating a new instance of GaeUserRealm");
-    }
-
     @Inject
     public GaeUserRealm(GaeUserDAO gaeUserDAO) {
         super(new MemcacheManager(), PasswordHash.createCredentials());
@@ -60,13 +54,18 @@ public class GaeUserRealm extends AuthorizingRealm {
         Preconditions.checkNotNull(userName, "User name can't be null");
 
         LOG.info("Finding authentication info for " + userName + " in DB");
-        GaeUser user = gaeUserDAO.findUser(userName);
 
+        IGaeUser iUser = gaeUserDAO.findUser(userName);
+        if (!(iUser instanceof GaeUser)) {
+            throw new AuthenticationException("User " + iUser.getName() + " is not a GAe User so can't be authenticated");
+        }
+        GaeUser user = (GaeUser)iUser;
 
         if (user == null) {
             LOG.info("Rejecting " + userName + " because there is no user with that id");
             return null;
         }
+
         if (!user.isRegistered()) {
             LOG.info("Rejecting " + userName + " because the  user isn't registered");
             return null;
@@ -92,7 +91,7 @@ public class GaeUserRealm extends AuthorizingRealm {
             throw new NullPointerException("Can't find a principal in the collection");
         }
         LOG.fine("Finding authorization info for " + userName + " in DB");
-        GaeUser user = gaeUserDAO.findUser(userName);
+        GaeUser user = (GaeUser)gaeUserDAO.findUser(userName);
         if (user == null || !user.isRegistered() || user.isSuspended()) {
             return null;
         }

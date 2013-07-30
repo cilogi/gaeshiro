@@ -48,13 +48,13 @@ public class UserSuspendServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            GaeUser user = gaeUserDAO.findUser(userName);
+            GaeUser user = (GaeUser)gaeUserDAO.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
                 if (isDelete) {
                     if (isCurrentUserAdmin()) {
-                        gaeUserDAO.deleteUser(user);
+                        gaeUserDAO.deleteUser(user.getName());
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, "User " + userName + " is deleted");
                     } else {

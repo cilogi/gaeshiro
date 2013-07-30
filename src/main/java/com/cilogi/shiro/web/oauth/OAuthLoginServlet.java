@@ -20,8 +20,8 @@
 
 package com.cilogi.shiro.web.oauth;
 
-import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUser;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.oauth.OAuthAuthenticationToken;
 import com.cilogi.shiro.providers.oauth.OAuthInfo;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
@@ -54,7 +54,7 @@ public class OAuthLoginServlet extends BaseServlet {
     private final String site;
 
     @Inject
-    public OAuthLoginServlet(@Named("social.site") String site, GaeUserDAO gaeUserDAO) {
+    public OAuthLoginServlet(@Named("social.site") String site, IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
         this.site = site;
     }
@@ -115,7 +115,7 @@ public class OAuthLoginServlet extends BaseServlet {
         Subject subject = SecurityUtils.getSubject();
         String principal = (String)subject.getPrincipal();
         if (principal != null) {
-            GaeUser user = gaeUserDAO.findUser(principal);
+            IGaeUser user = gaeUserDAO.findUser(principal);
             return user != null;
         } else {
             return false;

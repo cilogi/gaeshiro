@@ -23,6 +23,8 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUser;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.common.collect.Lists;
 import org.json.JSONArray;
@@ -70,17 +72,18 @@ public class UserListServlet extends BaseServlet {
 
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
-        GaeUserDAO dao = getGaeUserDAO();
+        IGaeUserDAO dao = getGaeUserDAO();
         long nUsers = dao.getCount();
         JSONObject obj = new JSONObject();
         obj.put("iTotalRecords", nUsers);
         obj.put("iTotalDisplayRecords", nUsers);
         obj.put("sEcho", echo);
 
-        List<GaeUser> users = users(dao, sSearch, start, length);
+        List<? extends IGaeUser> users = users(dao, sSearch, start, length);
         JSONArray array = new JSONArray();
         int index = 0;
-        for (GaeUser user : users) {
+        for (IGaeUser iUser : users) {
+            GaeUser user = (GaeUser)iUser;
             JSONArray arr = new JSONArray();
             arr.put(user.getName());
             arr.put(dateFrom(user.getDateRegistered()));
@@ -98,7 +101,7 @@ public class UserListServlet extends BaseServlet {
         issueJson(response, HTTP_STATUS_OK, obj);
     }
 
-    private List<GaeUser> users(GaeUserDAO dao, String sSearch, int start, int length) {
+    private List<? extends IGaeUser> users(IGaeUserDAO dao, String sSearch, int start, int length) {
         if (sSearch != null && !"".equals(sSearch)) {
             return Lists.newArrayList(dao.findUser(sSearch));
         } else {

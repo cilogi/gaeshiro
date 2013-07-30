@@ -55,7 +55,7 @@ public class ConfirmServlet extends BaseServlet {
             String password = request.getParameter(PASSWORD);
             boolean isChange = "true".equals(request.getParameter(FORGOT));
 
-            GaeUserDAO dao = getGaeUserDAO();
+            GaeUserDAO dao = (GaeUserDAO)getGaeUserDAO();
             GaeUser user = dao.findUserFromValidCode(code);
             if (user != null) {
                 // can't do this in a transaction as we need to update the counter, and I don't

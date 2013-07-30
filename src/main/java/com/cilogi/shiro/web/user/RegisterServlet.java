@@ -23,6 +23,7 @@ package com.cilogi.shiro.web.user;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.gaeuser.RegistrationString;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.taskqueue.Queue;
@@ -65,12 +66,12 @@ public class RegisterServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            GaeUserDAO dao = getGaeUserDAO();
+            IGaeUserDAO dao = getGaeUserDAO();
 
             String userName = WebUtils.getCleanParam(request, USERNAME);
             boolean isForgot = Boolean.parseBoolean(WebUtils.getCleanParam(request, FORGOT));
 
-            GaeUser user = dao.findUser(userName);
+            GaeUser user = (GaeUser)dao.findUser(userName);
             if (!isForgot && user != null && user.isRegistered()) {
                 // You can't add a user who's already registered
                 issueJson(response, HTTP_STATUS_FORBIDDEN,

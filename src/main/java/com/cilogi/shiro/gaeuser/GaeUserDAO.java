@@ -25,6 +25,7 @@ package com.cilogi.shiro.gaeuser;
 import com.cilogi.util.ICounter;
 import com.cilogi.util.gae.db.BaseDAO;
 import com.cilogi.util.gae.db.UserCounterDAO;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-public class GaeUserDAO extends BaseDAO<GaeUser> {
+public class GaeUserDAO extends BaseDAO<GaeUser> implements IGaeUserDAO {
     static final Logger LOG = Logger.getLogger(GaeUserDAO.class.getName());
     
 
@@ -54,6 +55,7 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         this.counter = counter;
     }
 
+    @Override
     public long getCount() {
         return (counter == null) ? 0L : counter.getCount();
     }
@@ -62,22 +64,20 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
      * Save user with authorization information
      * @param user  User
      * @param changeCount should the user count be incremented
-     * @return the user, after changes
      */
-    public GaeUser saveUser(GaeUser user, boolean changeCount) {
-        super.put(user);
+    public void saveUser(IGaeUser user, boolean changeCount) {
+        Preconditions.checkArgument(user instanceof GaeUser, "You have to have a GaeUser (not a " + user.getClass().getName() + ")");
+        super.put((GaeUser)user);
         if (changeCount && counter != null) {
             counter.increment();
         }
-        return user;
     }
 
-    public GaeUser deleteUser(GaeUser user) {
-        super.delete(user.getName());
+    public void deleteUser(String name) {
+        super.delete(name);
         if (counter != null) {
             counter.decrement();
         }
-        return user;
     }
 
     public GaeUser findUserFromValidCode(String code) {
@@ -85,7 +85,7 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         return user;
     }
 
-    public GaeUser findUser(String userName) {
+    public IGaeUser findUser(String userName) {
         return get(userName);
     }
 
@@ -104,13 +104,13 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
     /**
      * Make sure that there is a database entry for an email address
      * and register it, if it doesn't exist.
-     * @param email The email for which the entry is required.
+     * @param name The email for which the entry is required.
      */
-    public GaeUser ensureExists(final String email) {
-        GaeUser user = findUser(email);
+    public IGaeUser ensureExists(final String name) {
+        IGaeUser user = findUser(name);
         if (user == null) {
-            user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.register();
+            user = new GaeUser(name, Sets.newHashSet("user"), Sets.<String>newHashSet());
+            ((GaeUser)user).register();
             saveUser(user, true);
         }
         return user;

@@ -21,8 +21,8 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gaeuser.GaeUser;
-import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUser;
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
@@ -30,7 +30,7 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.mgt.*;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -64,9 +64,9 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     private CreateDoc create;
 
     @Getter
-    protected GaeUserDAO gaeUserDAO;
+    protected IGaeUserDAO gaeUserDAO;
 
-    protected BaseServlet(GaeUserDAO gaeUserDAO) {
+    protected BaseServlet(IGaeUserDAO gaeUserDAO) {
         this.gaeUserDAO = gaeUserDAO;
     }
 
@@ -153,7 +153,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     }
 
     @SuppressWarnings({"unchecked"})
-    protected GaeUser getCurrentGaeUser() {
+    protected IGaeUser getCurrentGaeUser() {
         Subject subject = SecurityUtils.getSubject();
         String email = (String)subject.getPrincipal();
         if (email == null) {

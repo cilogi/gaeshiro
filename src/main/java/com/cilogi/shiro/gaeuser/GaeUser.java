@@ -43,7 +43,7 @@ import java.util.logging.Logger;
 
 @Cache
 @Entity
-public class GaeUser implements Serializable {
+public class GaeUser implements Serializable, IGaeUser {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
 

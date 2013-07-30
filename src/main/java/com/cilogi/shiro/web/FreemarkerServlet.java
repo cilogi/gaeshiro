@@ -22,6 +22,7 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gaeuser.GaeUser;
 import com.cilogi.shiro.gaeuser.GaeUserDAO;
+import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.google.common.collect.Maps;
 
@@ -55,7 +56,7 @@ public class FreemarkerServlet extends BaseServlet {
 
     private Map<String,Object> mapping(HttpServletRequest request) {
         Map<String,Object> map = Maps.newHashMap();
-        GaeUser user = getCurrentGaeUser();
+        IGaeUser user = getCurrentGaeUser();
         if (user != null) {
             map.put("userName", user.getName());
             map.put("userType", userType(user));
@@ -66,9 +67,8 @@ public class FreemarkerServlet extends BaseServlet {
         return map;
     }
 
-    private static String userType(GaeUser user) {
-        String hash = user.getPasswordHash();
-        return (hash == null) ? "SOCIAL" : UserAuthType.CILOGI.name();
+    private static String userType(IGaeUser user) {
+        return (user instanceof GaeUser) ? UserAuthType.CILOGI.name() : "SOCIAL";
     }
 
     private static Map<String,String> requestParameters(HttpServletRequest request) {
