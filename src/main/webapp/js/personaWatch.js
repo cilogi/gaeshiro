@@ -43,10 +43,12 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
             success: function (data, status, xhr) {
                 options.setCSS(data);
                 options.finalize();
+                init.setCurrentUser(data.email);
             },
             error: function (res, status, xhr) {
                 options.finalize();
                 navigator.id.logout();
+                init.setCurrentUser("");
                 alert("login failure" + res);
             }
         });
@@ -59,11 +61,14 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
             success: function (res, status, xhr) {
                 options.setCSS({email: null});
                 options.finalize();
+                navigator.id.logout();
+                init.setCurrentUser("");
             },
             error: function (res, status, xhr) {
                 options.setCSS({email: null});
                 options.finalize();
                 navigator.id.logout();
+                init.setCurrentUser("");
                 log("logout failure" + res);
             }
         });

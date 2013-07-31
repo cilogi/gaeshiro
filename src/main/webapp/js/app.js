@@ -75,11 +75,11 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
             return false;
         });
 
-        $("#signOut").click(function (e) {
+        $("#logout").click(function (e) {
             e.preventDefault();
             startSpin();
             init.setCurrentUser(null);
-            personaWatch.watch();
+            personaWatch.watch({setCSS: setCSS, finalize: stopSpin});
             navigator.id.logout();
             return false;
         });
