@@ -5,13 +5,14 @@
   font-size: 14px;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
-  line-height: 1.1;
+  line-height: 21px;
   overflow: hidden;
   position: relative;
   text-decoration: none;
   text-shadow: 0 1px rgba(0,0,0,0.5), 0 0 2px rgba(0,0,0,0.2);
 
   background: #297dc3;
+    /*
   background: -moz-linear-gradient(top, #43a6e2, #287cc2);
   background: -ms-linear-gradient(top, #43a6e2, #287cc2);
   background: -o-linear-gradient(top, #43a6e2, #287cc2);
@@ -29,6 +30,8 @@
   -o-box-shadow:     0 1px 0 rgba(0,0,0,0.2);
   -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
   box-shadow:     0 1px 0 rgba(0,0,0,0.2);
+  */
+  border: 1px solid blue;
 }
 
 .persona-button:hover{
@@ -51,7 +54,7 @@
 
 .persona-button span{
   display: inline-block;
-  padding: 5px 10px 5px 40px;
+  padding: 0px 5px 0px 35px;
 }
 
 /* Icon */
@@ -141,7 +144,7 @@
   bottom: 0;
   right: 0;
   z-index: 10;
-
+/*
   -moz-border-radius:   3px;
   -ms-border-radius:     3px;
   -o-border-radius:     3px;
@@ -153,6 +156,7 @@
   -o-box-shadow:     inset 0 -1px 0 rgba(0,0,0,0.3);
   -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,0.3);
   box-shadow:     inset 0 -1px 0 rgba(0,0,0,0.3);
+*/
 }
 
 /* ========================================================

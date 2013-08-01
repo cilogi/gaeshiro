@@ -87,6 +87,7 @@
 <!-- /container -->
 
 <#include "inc/_foot.ftl">
+
 <script>
 $(document).ready(function() {
     
@@ -115,7 +116,7 @@ $(document).ready(function() {
             username = $("#username").val(),
             password = $("#password").val();
         if (form.valid()) {
-            $.ajax(shiro.userBaseUrl+"/settings", {
+            $.ajax("${userBaseUrl}/settings", {
                 type: "POST",
                 data: {
                     username : username,

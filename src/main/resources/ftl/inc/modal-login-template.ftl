@@ -6,7 +6,7 @@
                 <!--
                 <a id="persona-submit"><img src="../images/plain_sign_in_red.png" alt="Sign in with Persona"></a>
                 -->
-                <button type="submit" class="btm-auth persona-button"><b>Persona</b></button>
+                <button type="submit" class="btm-auth persona-button orange"><span>Persona</span></button>
             </form>
             <form id="google" action="${userBaseUrl}/googleLogin" method="POST" style="display:inline">
                 <button type="submit" class="btn-auth btn-google"><b>Google</b></button>
