@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>13.0.1</version>
+            <version>14.0.1</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -196,7 +196,7 @@
                 </configuration>
             </plugin>
 
-
+            <!-- Here as App Engine spins instances up faster with class files and resources wrapped in a JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
