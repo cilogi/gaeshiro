@@ -35,11 +35,11 @@ import java.util.Map;
 // Use 
 public class PersonaLogin {
 
-    private final IGaeUserDAO userDAO;
+    private final IGaeUserDAO gaeUserDAO;
 
     @Inject
     public PersonaLogin(IGaeUserDAO userDAO) {
-        this.userDAO = userDAO;
+        this.gaeUserDAO = userDAO;
     }
 
     public void login(PersonaAuthenticationToken personaToken) {
@@ -71,9 +71,9 @@ public class PersonaLogin {
         Preconditions.checkArgument(token.isValid(), "Token must be valid to allow user creation");
 
         String principal = (String)token.getPrincipal();
-        IGaeUser user = userDAO.findUser(principal);
+        IGaeUser user = gaeUserDAO.findUser(principal);
         if (user == null) {
-            userDAO.ensureExists(principal);
+            gaeUserDAO.ensureExists(principal);
         }
     }
 

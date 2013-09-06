@@ -22,8 +22,8 @@
 package com.cilogi.shiro.guice;
 
 
-import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.providers.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.util.ICounter;

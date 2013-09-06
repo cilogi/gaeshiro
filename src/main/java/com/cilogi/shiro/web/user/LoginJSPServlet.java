@@ -22,7 +22,6 @@
 package com.cilogi.shiro.web.user;
 
 
-import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 

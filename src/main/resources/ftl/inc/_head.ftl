@@ -14,13 +14,12 @@
 
 
 <!-- Le styles -->
-<link href="${staticBaseUrl}css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="${staticBaseUrl}css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/bootstrap/bootstrap.min.css" type="text/css" rel="stylesheet">
+<link href="${staticBaseUrl}css/bootstrap/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
 
 <link href="${staticBaseUrl}css/persona-buttons.css" type="text/css" rel="stylesheet">
 <link href="${staticBaseUrl}css/auth-buttons.css" type="text/css" rel="stylesheet">
 <link href="${staticBaseUrl}css/local.css" type="text/css" rel="stylesheet">
-<link href="${staticBaseUrl}assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
     <#include "${style}">

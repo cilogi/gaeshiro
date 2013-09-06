@@ -22,8 +22,6 @@
 package com.cilogi.shiro.guice;
 
 import com.cilogi.shiro.web.FreemarkerServlet;
-import com.cilogi.shiro.web.MailQueueServlet;
-import com.cilogi.shiro.web.MailReceiveServlet;
 import com.cilogi.shiro.web.WakeServlet;
 import com.cilogi.shiro.web.appengine.GoogleLoginServlet;
 import com.cilogi.shiro.web.oauth.OAuthLoginServlet;
@@ -59,21 +57,13 @@ public class RouteModule extends ServletModule {
 
         serve("*.ftl").with(FreemarkerServlet.class);
 
-        serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
         serve(userBaseUrl + "/socialLogin").with(OAuthLoginServlet.class);
         serve(userBaseUrl + "/googleLogin").with(GoogleLoginServlet.class);
         serve(userBaseUrl + "/personaLogin").with(PersonaLoginServlet.class);
-        serve(userBaseUrl + "/register").with(RegisterServlet.class);
-        serve(userBaseUrl + "/registermail").with(MailQueueServlet.class);
-        serve(userBaseUrl + "/confirm").with(ConfirmServlet.class);
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-        serve(userBaseUrl + "/settings").with(SettingsServlet.class);
-            // this one is here so that the default login filter works
-        serve("/login").with(LoginServlet.class);
             // Lets check mail to see when stuff bounces
-        serve("/_ah/mail/*").with(MailReceiveServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
         serve("/cron/wake").with(WakeServlet.class);
     }

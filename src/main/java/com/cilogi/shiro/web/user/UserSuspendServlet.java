@@ -21,10 +21,9 @@
 
 package com.cilogi.shiro.web.user;
 
-import com.cilogi.shiro.gaeuser.impl.GaeUser;
-import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
-import com.cilogi.shiro.gaeuser.IGaeRegisteredUser;
+import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
 import com.cilogi.shiro.web.BaseServlet;
 import lombok.extern.java.Log;
 
@@ -50,7 +49,7 @@ public class UserSuspendServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            IGaeRegisteredUser user = (IGaeRegisteredUser)gaeUserDAO.findUser(userName);
+            GaeUser user = (GaeUser)gaeUserDAO.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));

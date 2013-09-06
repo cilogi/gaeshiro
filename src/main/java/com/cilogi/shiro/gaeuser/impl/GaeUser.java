@@ -21,8 +21,7 @@
 
 package com.cilogi.shiro.gaeuser.impl;
 
-import com.cilogi.shiro.gaeuser.IGaeRegisteredUser;
-import com.cilogi.shiro.util.PasswordHash;
+import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -32,21 +31,17 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.util.ByteSource;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Cache
 @Entity
-public class GaeUser implements Serializable, IGaeRegisteredUser {
+public class GaeUser implements Serializable, IGaeUser {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
 
@@ -57,22 +52,11 @@ public class GaeUser implements Serializable, IGaeRegisteredUser {
     private String name;
 
     @Getter
-    private String passwordHash;
-
-    /** The salt, used to make sure that a dictionary attack is harder given a list of all the
-     *  hashed passwords, as each salt will be different.
-     */
-    @Getter
-    private byte[] salt;
-
-    @Getter
     private Set<String> roles;
 
     @Getter
     private Set<String> permissions;
 
-    @Getter
-    private RegistrationString registrationString;
 
     @Index
     private Date dateRegistered;
@@ -87,64 +71,33 @@ public class GaeUser implements Serializable, IGaeRegisteredUser {
     }
     
     public GaeUser(String name) {
-        this(name, null, Sets.newHashSet("user"), new HashSet<String>());
+        this(name, Sets.newHashSet("user"), new HashSet<String>());
     }
+
 
     public GaeUser(String name, Set<String> roles, Set<String> permissions) {
-        this(name, null, roles, permissions);
-    }
-    
-    public GaeUser(String name, String password, Set<String> roles, Set<String> permissions) {
-        this(name, password, roles, permissions, false);
+        this(name, roles, permissions, false);
     }
 
-    private GaeUser(String name, String password, Set<String> roles, Set<String> permissions, boolean isRegistered) {
+    private GaeUser(String name, Set<String> roles, Set<String> permissions, boolean isRegistered) {
         Preconditions.checkNotNull(name, "User name (email) can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
         this.name = name;
 
-        this.salt = salt().getBytes();
-        this.passwordHash = hash(password, salt);
         this.roles = Collections.unmodifiableSet(roles);
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
         this.suspended = false;
     }
 
-    public String setRegistrationString(long expiryHours) {
-        RegistrationString reg = new RegistrationString(getName(), expiryHours, TimeUnit.HOURS);
-        LOG.info("registration is " + reg.getCode());
-        this.registrationString = reg;
-        return reg.getCode();
-    }
-
-    public void setPassword(String password) {
-        Preconditions.checkNotNull(password);
-        this.salt = salt().getBytes();
-        this.passwordHash = hash(password, salt);
-    }
-
+    @Override
     public Date getDateRegistered() {
         return dateRegistered == null ? null : new Date(dateRegistered.getTime());
     }
 
-    public boolean isRegistered() {
-        return getDateRegistered() != null;
-    }
-
     public void register() {
         dateRegistered = new Date();
-        registrationString = null;
-    }
-
-    private static ByteSource salt() {
-        RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-        return rng.nextBytes();
-    }
-
-    private static String hash(String password, byte[] salt) {
-        return PasswordHash.hash(password, salt);
     }
 
     @Override

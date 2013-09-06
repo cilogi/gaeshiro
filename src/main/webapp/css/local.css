@@ -1,10 +1,15 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
 .hero-unitA {
     background-image: url(../images/grid.png);
     background-repeat: repeat;
     background-size: 3px 3px;
 }
 
-.hero-unit {
+.hero-unit, .jumbotron {
     background-image: url(../images/grid.png), url(../images/lock.jpg);
     background-repeat: repeat, no-repeat;
     background-size: 3px 3px, cover;
@@ -20,18 +25,6 @@
     opacity: 1;
 }
 
-#modal-login {
-    background-color: #EDE8DE;
-}
-
-#modal-login label.error {
-    display: block;
-    float: none;
-    padding: 0;
-    text-align: left;
-    color: red;
-    width: 270px;
-}
 
 .dataTables_filter {
     margin-bottom: 0.5em;

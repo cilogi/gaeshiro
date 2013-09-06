@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.web.appengine;
 
-import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
@@ -52,7 +51,7 @@ import java.util.logging.Logger;
  * <p>What happens is that a request to URL "googleLogin" is made.  This then logs you
  * in with GAE user service.
  * Once this is done, and you're definitely logged in there is a redirect to URL "googleLoginAuth".
- * You are logged in to the suer service when you get here, and if there is no GAEUser with your Email
+ * You are logged in to the user service when you get here, and if there is no GAEUser with your Email
  * we create one (tagged as a Google user).
  * <p>When the <code>GaeUserRealm</code> is queried about this user (with dummy password) it authenticates
  * if the Google user has the same Email as the GAEUser.  This seems to be secure.

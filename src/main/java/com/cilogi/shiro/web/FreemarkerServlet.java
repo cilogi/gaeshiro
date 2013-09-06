@@ -20,10 +20,9 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gaeuser.impl.GaeUser;
-import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.google.common.collect.Maps;
 

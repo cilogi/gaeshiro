@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.gaeuser.GaeUserRealm;
 import com.cilogi.shiro.memcache.MemcacheManager;
 import com.cilogi.shiro.providers.googlegae.GoogleGAERealm;
 import com.cilogi.shiro.providers.oauth.OAuthRealm;
@@ -54,7 +53,6 @@ public class ShiroModule extends ShiroWebModule{
     protected void configureShiroWeb() {
         try {
             bindRealm().toConstructor(IniRealm.class.getConstructor()).in(Scopes.SINGLETON);
-            bindRealm().to(GaeUserRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(OAuthRealm.class).in(Scopes.SINGLETON);
             bindRealm().to(GoogleGAERealm.class).in(Scopes.SINGLETON);
             bindRealm().to(PersonaRealm.class).in(Scopes.SINGLETON);

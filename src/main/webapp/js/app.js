@@ -84,6 +84,11 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
             return false;
         });
 
+        $("#modal-login .close").click(function(e) {
+            $("#modal-login").modal('hide');
+            e.preventDefault();
+        });
+
     };
 
     return initApp;

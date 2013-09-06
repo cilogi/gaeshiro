@@ -60,7 +60,7 @@ public class TestDatastoreRealm extends TestCase {
 
     public void testAuth() {
         GaeUserDAO dao = new GaeUserDAO();
-        GaeUser user = new GaeUser("tim", "tim", Sets.<String>newHashSet("user"), new HashSet<String>());
+        GaeUser user = new GaeUser("tim", Sets.<String>newHashSet("user"), new HashSet<String>());
         user.register();
         dao.saveUser(user, true);
 

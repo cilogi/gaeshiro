@@ -20,10 +20,13 @@
 
 package com.cilogi.shiro.gaeuser;
 
+import java.util.Date;
 import java.util.Set;
 
 public interface IGaeUser {
     public String getName();
     public Set<String> getRoles();
     public Set<String> getPermissions();
+    public Date getDateRegistered();
+    public boolean isSuspended();
 }

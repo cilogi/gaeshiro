@@ -33,6 +33,9 @@
     *overflow: visible;  /* 2 */
     *display: inline; /* 3 */
     *zoom: 1; /* 3 */
+
+    width:6em;
+    margin-bottom: 0.5em;
 }
 
 .btn-auth:hover,

@@ -8,7 +8,7 @@ require.config({
     // 3rd party script alias names (Easier to type "jquery" than "libs/jquery-1.8.2.min")
     paths: {
         "jquery": "lib/jquery-1.10.1.min",
-        'bootstrap':"bootstrap/bootstrap",
+        'bootstrap':"bootstrap/bootstrap.min",
         'jquery.blockUI' : 'lib/jquery.blockUI',
         'jquery.busy' : 'lib/jquery.busy.min',
         'jquery.dataTables' : 'lib/jquery.dataTables.min',
