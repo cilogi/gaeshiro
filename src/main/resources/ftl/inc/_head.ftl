@@ -22,8 +22,6 @@
 <link href="${staticBaseUrl}css/local.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
-    <#include "${style}">
-
     .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
@@ -32,7 +30,6 @@
     .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
-
 </style>
 
 

@@ -25,19 +25,6 @@
 <link href="css/local.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
-
-#spinner {
- position: absolute; top: 90px; left: 50%;
-}
-
-.copyright {
-    margin-top: 6em;
-    color: lightgray;
-    font-size: 0.8em;
-    width: 100%;
-    text-align: center;
-}
-
     .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
@@ -46,7 +33,6 @@
     .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
-
 </style>
 
 
@@ -57,12 +43,11 @@
 <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 </head>
 
-<body>
+<body data-spy="scroll" data-target="#navbar-collapse" data-offset="50px">
 
-<div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;">
-</div>
+<div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;"></div>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -70,16 +55,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Project name</a>
+            <a class="navbar-brand" href="#">GaeShiro</a>
         </div>
-        <div class="navbar-collapse collapse">
+        <div id="navbar-collapse" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#what">What</a></li>
-                <li><a href="#motivation">Why</a></li>
-                <li><a href="#shiro">How</a></li>
-                <li><a href="#social">Social</a></li>
-                <li><a href="#management">Manage</a></li>
+                <li><a href="#why">Why</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
 
@@ -91,7 +73,6 @@
    <li><a id="logout" href="/logout">Sign Out <span class="shiro-principal"></span></a></li>
 </ul>
         </div>
-        <!--/.navbar-collapse -->
     </div>
 </div>
 
@@ -111,20 +92,20 @@
 
 
 <div class="container">
-    <div class="row">
-        <div class="col-lg-4">
+    <div id="what" class="row anchor">
+        <div class="col-lg-8">
+            <h1>What <small>are we doing?</small></h1>
             <p>You can sign in from the link at the top right.
 
-            <p>To sign in with an Email account choose Persona.</p>
 
-            <p>You can also log in with Google or Facebook accounts. In each case we grab
+            <p>You can also log in with an Email address, Google or Facebook accounts. In each case we grab
                the Email address, but no registration is required.</p>
 
-            <p>The Google login uses the built in AppEngine account service. Facebook uses OAuth</p>
+            <p>Email-based login is handled with Mozilla Persona. The Google login uses the built in AppEngine account service.
+                Facebook uses OAuth</p>
 
              <p>Its straightforward to add other OAuth providers in addition to Facebook.
-                Note that the token is invalidated as soon as we've read the Email address.
-                This increases security, but its an odd use of OAuth.</p>
+                The OAuth token is invalidated as soon as we've read the Email address.</p>
 
             <p>All the URLs must run under <code>HTTPS</code>, since passwords are contained in the
                 HTTP requests, and since we use Ajax calls where going from <code>HTTP</code> to <code>HTTPS</code>,
@@ -133,8 +114,8 @@
     </div>
 
 
-    <div class="row">
-       <div class="col-lg-4">
+    <div id="why" class="row anchor">
+       <div class="col-lg-8">
             <h1>Why <small>are we doing this?</small></h1>
             <p>App Engine is a remarkable achievement. You can create a small free website and
                 scale it indefinitely with almost no ongoing administration required. A wide range
@@ -180,10 +161,10 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-4">
+    <div id="about" class="row anchor">
+        <div class="col-lg-8">
             <h1>About
-                <small>the other tools</small>
+                <small>the tools</small>
             </h1>
             <p>To provide a complete demo requires HTML pages. We're using Bootstrap as the CSS framework
                 (it actually uses <a href="http://lesscss.org/">less</a> to create CSS) which makes well laid out sites
@@ -194,10 +175,10 @@
                 spins up an instance. This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
                 the Freemarker pre-processor</p>
 
-            <p>OAuth for the social login is done with <code>scribe</code> which makes a complicated process incredibly
-                simple. Heartily recommended.</p>
+            <p>OAuth for the social login (Facebook) is done with the <code>scribe</code> library which makes a
+                complicated process incredibly simple. Heartily recommended.</p>
 
-            <p>All the administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax
+            <p>The administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax
                 features. This is intended to decouple the login from the presentation if we wish to produce
                 a mobile version of this demo, which will require different layouts. We also do some caching in
                 JavaScript to minimise round trips to the server to determine login status. This doesn't compromise the
@@ -248,7 +229,7 @@ fb.live.host=http://gaeshiro.appspot.com
             <div class="modal-body">
                 <div>
                     <form id="persona" action="/user/admin/personaLogin" method="POST">
-                        <button type="submit" class="btm-auth persona-button orange"><span>Persona</span></button>
+                        <button type="submit" class="btn-auth persona-button orange"><span>Email</span></button>
                     </form>
                     <form id="google" action="/user/admin/googleLogin" method="POST">
                         <button type="submit" class="btn-auth btn-google"><b>Google</b></button>

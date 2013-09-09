@@ -3,6 +3,22 @@ body {
     padding-bottom: 20px;
 }
 
+.anchor{
+    padding-top: 50px;
+}
+
+#spinner {
+ position: absolute; top: 90px; left: 50%;
+}
+
+.copyright {
+    margin-top: 6em;
+    color: lightgray;
+    font-size: 0.8em;
+    width: 100%;
+    text-align: center;
+}
+
 .hero-unitA {
     background-image: url(../images/grid.png);
     background-repeat: repeat;
