@@ -3,9 +3,23 @@ body {
     padding-bottom: 20px;
 }
 
+
 .anchor{
     padding-top: 50px;
 }
+
+.anchor h1 {
+    margin-top:0;
+}
+
+/*
+.anchor:before {
+  content:"";
+  display:block;
+  height:50px;
+  margin:-50px 0 0;
+}
+*/
 
 #spinner {
  position: absolute; top: 90px; left: 50%;

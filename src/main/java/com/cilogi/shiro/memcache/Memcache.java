@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
  * as it will get serialized.
  * <p> I'm using the asynchronous service as it will be a little faster on the puts.
  * <p> Memcache on GAE is pretty slow, so I don't think this will speed stuff up, but it
- * will save on Datastore accesses, which are expensive.
+ * will save on Datastore reads, which are expensive.
  * @param <K>  The raw key class
  * @param <V>  The value class
  */

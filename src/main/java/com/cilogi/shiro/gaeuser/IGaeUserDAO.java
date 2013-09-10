@@ -23,7 +23,7 @@ package com.cilogi.shiro.gaeuser;
 public interface IGaeUserDAO {
     public long getCount();
     public void saveUser(IGaeUser user, boolean changeCount);
-    public void deleteUser(String name);
+    public void deleteUser(String userName);
     public IGaeUser findUser(String userName);
-    public IGaeUser ensureExists(final String name);
+    public IGaeUser ensureExists(final String userName);
 }

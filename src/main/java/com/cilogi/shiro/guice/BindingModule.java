@@ -70,14 +70,12 @@ public class BindingModule extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
+
         bindString("tim", "tim");
         bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
         bindString("social.site", isDevelopmentServer() ? "local" : "live");
-        // this value should be long enough for a user to get an email, but not so long that
-        // it hangs around for ever as a security problem
-        bindConstant().annotatedWith(Names.named("registrationExpiryHours")).to(12L);
         bindString("host", isDevelopmentServer() ? "http://localhost:8080" : "http://gaeshiro.appspot.com:80");
     }
 

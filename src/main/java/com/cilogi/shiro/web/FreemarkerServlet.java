@@ -60,8 +60,11 @@ public class FreemarkerServlet extends BaseServlet {
         if (user != null) {
             map.put("userName", user.getName());
             map.put("userType", userType(user));
+            map.put("userCSS", "shiro-user-active");
         } else {
+            map.put("userName", "");
             map.put("userType", "UNKNOWN");
+            map.put("userCSS", "shiro-guest-active");
         }
         map.put("RequestParameters", requestParameters(request));
         return map;

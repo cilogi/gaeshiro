@@ -43,7 +43,7 @@ import javax.servlet.ServletContext;
 public class ShiroModule extends ShiroWebModule{
     static final Logger LOG = LoggerFactory.getLogger(ShiroModule.class);
 
-    public static final Key<GoogleLogoutFilter> SOCIAL_LOGOUT = Key.get(GoogleLogoutFilter.class);
+    public static final Key<GoogleLogoutFilter> GOOGLE_LOGOUT_FILTER = Key.get(GoogleLogoutFilter.class);
 
     public ShiroModule(ServletContext sc) {
         super(sc);
@@ -66,7 +66,7 @@ public class ShiroModule extends ShiroWebModule{
         addFilterChain("/login", AUTHC_BASIC);
         addFilterChain("/settings.ftl", AUTHC_BASIC);
         addFilterChain("/listUsers.ftl", AUTHC_BASIC, config(ROLES, "admin"));
-        addFilterChain("/logout", SOCIAL_LOGOUT);
+        addFilterChain("/logout", GOOGLE_LOGOUT_FILTER);
     }
 
     @Provides

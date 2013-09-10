@@ -1,11 +1,12 @@
 <#assign title="Shiro on GAE">
+<#assign userName="">
 <!DOCTYPE html>
 <html lang="en" class="shiro-none-active">
 <head>
 <#include "inc/_head.ftl">
 </head>
 
-<body data-spy="scroll" data-target="#navbar-collapse" data-offset="50px">
+<body data-spy="scroll" data-target="#navbar-collapse">
 
 <div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;"></div>
 
@@ -51,22 +52,23 @@
 <div class="container">
     <div id="what" class="row anchor">
         <div class="col-lg-8">
-            <h1>What <small>are we doing?</small></h1>
-            <p>You can sign in from the link at the top right.
+            <h1>What <small>can you do?</small></h1>
+            <ul>
+                <li>You can sign in from the link at the top right.</li>
 
+                <li>You can also log in with an Email address, Google or Facebook accounts. In each case we grab
+                   the Email address, but no registration is required.</li>
 
-            <p>You can also log in with an Email address, Google or Facebook accounts. In each case we grab
-               the Email address, but no registration is required.</p>
+                <li>Email-based login is handled with Mozilla Persona. The Google login uses the built in AppEngine account service.
+                    Facebook uses OAuth</li>
 
-            <p>Email-based login is handled with Mozilla Persona. The Google login uses the built in AppEngine account service.
-                Facebook uses OAuth</p>
+                 <li>Its straightforward to add other OAuth providers in addition to Facebook.
+                    The OAuth token is invalidated as soon as we've read the Email address.</li>
 
-             <p>Its straightforward to add other OAuth providers in addition to Facebook.
-                The OAuth token is invalidated as soon as we've read the Email address.</p>
-
-            <p>All the URLs must run under <code>HTTPS</code>, since passwords are contained in the
-                HTTP requests, and since we use Ajax calls where going from <code>HTTP</code> to <code>HTTPS</code>,
-                which is cross-domain, is not allowed. This demo uses <code>HTTPS</code> throughout.
+                <li>All the URLs must run under <code>HTTPS</code>, since passwords are contained in the
+                    HTTP requests, and since we use Ajax calls where going from <code>HTTP</code> to <code>HTTPS</code>,
+                    which is cross-domain, is not allowed. This demo uses <code>HTTPS</code> throughout.</li>
+            </ul>
         </div>
     </div>
 
@@ -114,7 +116,8 @@
                 as the home page and performing an Ajax call from Javascript to do the initialization. Some crufty
                 animation on load takes your attention away from the 5-10 second start-up delay! The startup page is
                 generated from FreeMarker templates, just as the other pages, but at compile time, rather than
-                runtime</p>
+                runtime.  Another trick uses a cron job, scheduled every minute, to spin up a new instance or keep an existing instance
+                running.</p>
         </div>
     </div>
 
@@ -127,12 +130,14 @@
                 (it actually uses <a href="http://lesscss.org/">less</a> to create CSS) which makes well laid out sites
                 easy for those of us with no layout skills.</p>
 
-            <p>The HTML pages are organised using the Freemarker templating language. The <code>index.html</code>
+            <p>The HTML pages are organised using the <a href="http://freemarker.org/">Freemarker</a> templating language.
+                The <code>index.html</code>
                 main page for example (this one) is pre-generated using Freemarker to avoid a wait while App Engine
                 spins up an instance. This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
                 the Freemarker pre-processor</p>
 
-            <p>OAuth for the social login (Facebook) is done with the <code>scribe</code> library which makes a
+            <p>OAuth for the social login (Facebook) is done with the
+                <a href="https://github.com/fernandezpablo85/scribe-java"><code>Scribe</code></a> library which makes a
                 complicated process incredibly simple. Heartily recommended.</p>
 
             <p>The administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax

@@ -16,7 +16,7 @@
                     <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST">
                         <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b></button>
                     </form>
-                    <a href="/login-help.html">?</a>
+                    <a href="/login-help.ftl">?</a>
                 </div>
             </div>
         </div>
