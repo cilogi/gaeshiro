@@ -47,12 +47,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 
 public class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
+    static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
     private static final long serialVersionUID = 7427222103993326328L;
 
@@ -65,6 +69,8 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     protected final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     private CreateDoc create;
+
+    private static Map<String,Object> FMPP_MAP = fmppMap();
 
     @Getter
     protected IGaeUserDAO gaeUserDAO;
@@ -196,6 +202,8 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
 
     protected Map<String,Object> mapping(HttpServletRequest request) {
         Map<String,Object> map = Maps.newHashMap();
+        map.putAll(FMPP_MAP);
+
         IGaeUser user = getCurrentGaeUser();
         if (user != null) {
             map.put("userName", user.getName());
@@ -219,6 +227,21 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
             String key = (String)enumeration.nextElement();
             map.put(key, request.getParameter(key));
+        }
+        return map;
+    }
+
+    private static Map<String,Object> fmppMap() {
+        final String PROP_FILE = "/ftl/data/const.properties";
+        Map<String,Object> map = Maps.newHashMap();
+        try (InputStream is = BaseServlet.class.getResourceAsStream(PROP_FILE)) {
+            Properties props = new Properties();
+            props.load(is);
+            for (Object key : props.keySet()) {
+                map.put((String)key, props.get(key));
+            }
+        } catch (IOException e) {
+            LOG.warning("Can't load fmpp properties, " + PROP_FILE + ": " + e.getMessage());
         }
         return map;
     }
