@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        LoginJSPServlet.java  (02-Nov-2011)
+// File:        LoginServlet.java  (31-Oct-2011)
 // Author:      tim
 
 //
@@ -21,7 +21,6 @@
 
 package com.cilogi.shiro.web.user;
 
-
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 
@@ -33,18 +32,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-/**
- * This is only here to avoid using JSP, which is slow to start up on App Engine apparently.
- */
+
 @Singleton
-public class LoginJSPServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(LoginJSPServlet.class.getName());
+public class LoginServlet extends BaseServlet {
+    static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
     @Inject
-    LoginJSPServlet(IGaeUserDAO gaeUserDAO) {
+    LoginServlet(IGaeUserDAO gaeUserDAO) {
         super(gaeUserDAO);
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         showView(response, "login.ftl", mapping(request));

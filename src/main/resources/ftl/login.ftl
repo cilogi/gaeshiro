@@ -1,10 +1,9 @@
 <#assign title="Shiro on GAE Login">
-<#assign style="substyle.css">
 
 <!DOCTYPE html>
 <html lang="en" class="${userCSS}">
 <head>
-    <#include "inc/_head.ftl">
+<#include "inc/_head.ftl">
 </head>
 
 <body>
@@ -32,49 +31,31 @@
 
     <div class="content">
         <section>
-            <div class="page-header">
-                <h1>Login
-                    <small>or</small>
-                    <form id="google" action="${userBaseUrl}/googleLogin" method="POST" style="display:inline">
+            <div>
+                <h1><button id="signIn" class="btn btn-primary">Sign In</button>
+<!--
+                    <form id="persona" action="${userBaseUrl}/personaLogin" method="POST">
+                        <button type="submit" class="btn-auth persona-button orange"><span>Email</span></button>
+                    </form>
+                    <form id="google" action="${userBaseUrl}/googleLogin" method="POST">
                         <button type="submit" class="btn-auth btn-google"><b>Google</b></button>
                     </form>
-                    <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-auth btn-facebook" style="vertical-align:middle;"><b>Facebook</b></button>
+                    <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST">
+                        <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b></button>
                     </form>
+                    -->
                 </h1>
-            </div>
-            <div class="row">
-               <div class="span12">
-                   <#include "inc/login-template.ftl">
-                </div>
+
             </div>
         </section>
     </div>
 
-<#include "inc/footer.ftl">
+    <#include "inc/footer.ftl">
 
 </div>
 
 <#include "inc/_foot.ftl">
 
-<script>
-$(document).ready(function() {
-    $("#login-form").validate({
-      errorPlacement: function(error, element) {
-           error.insertAfter(element);
-      }
-    });
-
-    $("#google").submit(function(e) {
-        $("#modal-login").modal('hide');
-    });
-
-    $("#facebook").submit(function(e) {
-        $("#modal-login").modal('hide');
-    });
-
-});
-</script>
-
+<#include "inc/modal-login-template.ftl">
 </body>
 </html>

@@ -53,34 +53,4 @@ public class FreemarkerServlet extends BaseServlet {
         String uri = request.getRequestURI();
         showView(response, uri, mapping(request));
     }
-
-    private Map<String,Object> mapping(HttpServletRequest request) {
-        Map<String,Object> map = Maps.newHashMap();
-        IGaeUser user = getCurrentGaeUser();
-        if (user != null) {
-            map.put("userName", user.getName());
-            map.put("userType", userType(user));
-            map.put("userCSS", "shiro-user-active");
-        } else {
-            map.put("userName", "");
-            map.put("userType", "UNKNOWN");
-            map.put("userCSS", "shiro-guest-active");
-        }
-        map.put("RequestParameters", requestParameters(request));
-        return map;
-    }
-
-    private static String userType(IGaeUser user) {
-        return (user instanceof GaeUser) ? UserAuthType.CILOGI.name() : "SOCIAL";
-    }
-
-    private static Map<String,String> requestParameters(HttpServletRequest request) {
-        Map<String,String> map = Maps.newHashMap();
-        for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
-            String key = (String)enumeration.nextElement();
-            map.put(key, request.getParameter(key));
-        }
-        return map;
-    }
-
 }

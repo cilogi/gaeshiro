@@ -63,7 +63,8 @@ public class RouteModule extends ServletModule {
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-            // Lets check mail to see when stuff bounces
+
+        serve("/login").with(LoginServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
         serve("/cron/wake").with(WakeServlet.class);
     }

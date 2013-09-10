@@ -23,6 +23,8 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUser;
+import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
@@ -46,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 
 
@@ -189,5 +192,34 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
             }
         }
         return "";
+    }
+
+    protected Map<String,Object> mapping(HttpServletRequest request) {
+        Map<String,Object> map = Maps.newHashMap();
+        IGaeUser user = getCurrentGaeUser();
+        if (user != null) {
+            map.put("userName", user.getName());
+            map.put("userType", userType(user));
+            map.put("userCSS", "shiro-user-active");
+        } else {
+            map.put("userName", "");
+            map.put("userType", "UNKNOWN");
+            map.put("userCSS", "shiro-guest-active");
+        }
+        map.put("RequestParameters", requestParameters(request));
+        return map;
+    }
+
+    private static String userType(IGaeUser user) {
+        return (user instanceof GaeUser) ? UserAuthType.CILOGI.name() : "SOCIAL";
+    }
+
+    private static Map<String,String> requestParameters(HttpServletRequest request) {
+        Map<String,String> map = Maps.newHashMap();
+        for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
+            String key = (String)enumeration.nextElement();
+            map.put(key, request.getParameter(key));
+        }
+        return map;
     }
 }
