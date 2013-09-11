@@ -69,7 +69,7 @@
     </welcome-file-list>
 
     <error-page>
-        <error-code>500</error-code>
+        <error-code>401</error-code>
         <location>/errors/401.html</location>
     </error-page>
 </web-app>
