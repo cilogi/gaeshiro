@@ -49,11 +49,11 @@
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
 
-    <!--
+
     <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
-    -->
+
 
     <listener>
         <listener-class>com.cilogi.shiro.guice.ServeContextListener</listener-class>

@@ -70,8 +70,7 @@ public class ServeContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
         return Guice.createInjector(new BindingModule(userBaseUrl, staticBaseUrl),
-                                    new RouteModule(userBaseUrl),
-                                    new ShiroModule(context));
+                                    new RouteModule(userBaseUrl));
     }
     
 }

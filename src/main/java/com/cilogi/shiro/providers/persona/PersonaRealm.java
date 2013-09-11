@@ -22,6 +22,8 @@ package com.cilogi.shiro.providers.persona;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
+import com.cilogi.shiro.memcache.MemcacheManager;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -38,6 +40,10 @@ import javax.inject.Inject;
 public class PersonaRealm extends AuthorizingRealm {
 
     private final IGaeUserDAO gaeUserDAO;
+
+    public PersonaRealm() {
+        this(new GaeUserDAO(), new MemcacheManager());
+    }
 
     @Inject
     protected PersonaRealm(IGaeUserDAO gaeUserDAO, CacheManager cacheManager) {
