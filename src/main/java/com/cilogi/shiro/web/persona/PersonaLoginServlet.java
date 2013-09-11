@@ -73,20 +73,18 @@ public class PersonaLoginServlet extends BaseServlet {
 
             PersonaAuthenticationToken personaToken = new PersonaAuthenticationToken(token, host, rememberMe);
             try {
+                // no redirect as persona login is done via Ajax
                 personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? null : savedRequest.getRequestUrl();
-                if (redirectUrl != null) {
-                    response.sendRedirect(response.encodeRedirectURL(redirectUrl));
-                }  else {
-                    Subject subject = SecurityUtils.getSubject();
-                    String principal = (String)subject.getPrincipal();
-                    issueJson(response, HTTP_STATUS_OK,
-                            MESSAGE, "known",
-                            "email", principal,
-                            "isAuthenticated", subject.isAuthenticated(),
-                            "isAdmin", hasRole(subject, "admin"));
-                }
+                Subject subject = SecurityUtils.getSubject();
+                String principal = (String)subject.getPrincipal();
+                issueJson(response, HTTP_STATUS_OK,
+                        MESSAGE, "known",
+                        "email", principal,
+                        "isAuthenticated", subject.isAuthenticated(),
+                        "redirect", redirectUrl,
+                        "isAdmin", hasRole(subject, "admin"));
             } catch (AuthenticationException e) {
                 LOG.info("Authorization failure: " + e.getMessage());
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize token: " + token, response);

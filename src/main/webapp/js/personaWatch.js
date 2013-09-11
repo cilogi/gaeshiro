@@ -41,9 +41,13 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
             dataType: "json",
             cache: false,
             success: function (data, status, xhr) {
-                options.setCSS(data);
-                options.finalize();
-                init.setCurrentUser(data.email);
+                if (data.redirect) {
+                    window.location = data.redirect;
+                } else {
+                    options.setCSS(data);
+                    options.finalize();
+                    init.setCurrentUser(data.email);
+                }
             },
             error: function (res, status, xhr) {
                 options.finalize();

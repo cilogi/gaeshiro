@@ -32,7 +32,10 @@
     <div class="content">
         <section>
             <div>
+                <!--
                 <h1><button id="signIn" class="btn btn-primary">Sign In</button>
+                -->
+                <#include "inc/modal-login-body.ftl">
 <!--
                     <form id="persona" action="${userBaseUrl}/personaLogin" method="POST">
                         <button type="submit" class="btn-auth persona-button orange"><span>Email</span></button>
@@ -56,6 +59,8 @@
 
 <#include "inc/_foot.ftl">
 
+<!--
 <#include "inc/modal-login-template.ftl">
+-->
 </body>
 </html>

@@ -231,20 +231,19 @@ fb.live.host=http://gaeshiro.appspot.com
               <h4 class="modal-title">Login</h4>
             </div>
             <div class="modal-body">
-                <div>
-                    <form id="persona" action="/user/admin/personaLogin" method="POST">
-                        <button type="submit" class="btn-auth persona-button orange"><span>Email</span></button>
-                    </form>
-                    <form id="google" action="/user/admin/googleLogin" method="POST">
-                        <button type="submit" class="btn-auth btn-google"><b>Google</b></button>
-                    </form>
-                    <form id="facebook" action="/user/admin/socialLogin?provider=FACEBOOK" method="POST">
-                        <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b></button>
-                    </form>
-                    <a href="/login-help.ftl">?</a>
-                </div>
-            </div>
-        </div>
+    <div>
+        <form id="persona" action="/user/admin/personaLogin" method="POST">
+            <button type="submit" class="btn-auth persona-button orange"><span>Email</span></button>
+        </form>
+        <form id="google" action="/user/admin/googleLogin" method="POST">
+            <button type="submit" class="btn-auth btn-google"><b>Google</b></button>
+        </form>
+        <form id="facebook" action="/user/admin/socialLogin?provider=FACEBOOK" method="POST">
+            <button type="submit" class="btn-auth btn-facebook"><b>Facebook</b></button>
+        </form>
+        <a href="/login-help.ftl">?</a>
+    </div>
+</div>        </div>
       </div>
   </div>
 </body>

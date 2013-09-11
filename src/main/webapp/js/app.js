@@ -40,6 +40,8 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
 
         startSpin();
 
+        login.init(setCSS);
+
         runStatus({
             success: function(data) {
                 var email = data.email;
@@ -71,7 +73,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
             e.preventDefault();
             startSpin();
             init.setCurrentUser(null);
-            login(setCSS);
+            login.run();
             return false;
         });
 
