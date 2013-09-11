@@ -33,31 +33,39 @@
     <div class="content">
         <section>
             <div class="page-header">
-                <h1>Signing in</h1>
+                <h1>Signing in and Registering</h1>
             </div>
             <div class = "row">
-                <div class="span4"  style="min-height: 0;">
-                    &nbsp;  
-                </div>
-               <div class="span6">
-                   <h3>Email, Google or Facebook</h3>
-                   <p>You can choose whether to login with an email address, in which case you have to
-                      provide your Email address and a password, or use an account
-                      with Google or Facebook.</p>
-                   <p>If you use Google or Facebook we ask only for your email address.  We need this to contact you if there
-                      are problems and we need to contact you.</p>
-                   <p>You can log in with any method as long as you use the same Email address. So you can log in with Email one
+               <div class="col-lg-8">
+                   <h3>Your identity</h3>
+                   <p>Registration and sign in are the same -- we just require an email address which you control.
+                      Your account is tied to your email address.  The first time you visit we will create an account.
+                      On future visits you will get access to the account created on the first visit.
+                    </p>
+               </div>
+            </div>
+            <div class = "row">
+               <div class="col-lg-8">
+                   <h3>Persona, Google or Facebook</h3>
+                   <p>You can choose whether to login with an email address, in which case you sign in
+                      with <a href="http://www.mozilla.org/en-US/persona/">Mozilla Persona</a>, or use an account with Google or Facebook.</p>
+                   <p>If you use Google or Facebook we  only retain your email address.  We need this to contact you if there
+                      are problems.</p>
+                   <p>You can log in with any of these methods as long as you use the same Email address each time you sign in.
+                      So, you can log in with Persona one
                       day and Google the next if you wish.  Your id is your email address.</p>
                </div>
             </div>
         </section>
     </div>
 
+    <#include "inc/footer.ftl">
 
 </div>
 
-<#include "inc/footer.ftl">
 <#include "inc/_foot.ftl">
 
+<#include "inc/modal-login-template.ftl">
 </body>
+<#include "inc/_foot.ftl">
 </html>

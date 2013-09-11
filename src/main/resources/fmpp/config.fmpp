@@ -1,5 +1,5 @@
 sourceRoot: ../ftl
-sources: [index.ftl]
+sources: [index.ftl, errors/401.ftl]
 replaceExtensions: [ftl,html, fjs, js]
 data: {
     properties(data/const.properties)
