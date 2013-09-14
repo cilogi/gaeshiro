@@ -74,7 +74,6 @@ public class BindingModule extends AbstractModule {
         bind(SessionCleanupServlet.class).in(Scopes.SINGLETON); // needed to cleanup stale sessions from datastore
 
         bindString("tim", "tim");
-        bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
         bindString("social.site", isDevelopmentServer() ? "local" : "live");
