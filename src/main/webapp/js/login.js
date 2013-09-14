@@ -1,12 +1,4 @@
-define(["jquery", 'spin', "init", "personaWatch", "jquery.validate"], function($, spin, init, personaWatch) {
-
-    $(document).ready(function() {
-        $("#loginForm").validate({
-          errorPlacement: function(error, element) {
-               error.insertAfter(element);
-          }
-        });
-    });
+define(["jquery", 'spin', "init", "personaWatch"], function($, spin, init, personaWatch) {
 
     function initialize(setCSS) {
         $("#google").submit(function(e) {
@@ -23,8 +15,7 @@ define(["jquery", 'spin', "init", "personaWatch", "jquery.validate"], function($
             $("#modal-login").modal('hide');
             e.preventDefault();
             spin.start($("#spinner"));
-            init.setCurrentUser(null);
-            personaWatch.watch({setCSS: setCSS, finalize: spin.stop});
+            personaWatch.watch({setCSS: setCSS, finalize: spin.stop, userBaseUrl : init.getUserBaseUrl()});
             navigator.id.request({
                 siteName: "Cilogi"
             });

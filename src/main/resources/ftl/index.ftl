@@ -68,6 +68,9 @@
                 <li>All the URLs must run under <code>HTTPS</code>, since passwords are contained in the
                     HTTP requests, and since we use Ajax calls where going from <code>HTTP</code> to <code>HTTPS</code>,
                     which is cross-domain, is not allowed. This demo uses <code>HTTPS</code> throughout.</li>
+                <li>On the development server, if you choose the Google login and set the email address to be
+                    <code>tim@timniblett.net</code> you can view a list of users at <code>/listUsers.ftl</code>.
+                </li>
             </ul>
         </div>
     </div>
@@ -177,7 +180,7 @@ fb.live.host=http://gaeshiro.appspot.com
         </div>
     </div>
 
-<#include "inc/footer.ftl">
+<#include "inc/copyright.ftl">
 
 </div>
 <#include "inc/modal-login-template.ftl">

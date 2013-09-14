@@ -1,5 +1,4 @@
 <#assign title="Sign in Help">
-<#assign style="substyle.css">
 
 <!DOCTYPE html>
 <html lang="en" class="${userCSS}">
@@ -59,7 +58,7 @@
         </section>
     </div>
 
-    <#include "inc/footer.ftl">
+    <#include "inc/copyright.ftl">
 
 </div>
 

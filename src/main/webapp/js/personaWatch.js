@@ -1,9 +1,18 @@
 
-define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
-    var isWatching = false;
+define(['jquery', 'log', 'persona'], function ($, log) {
+    var isWatching = false,
+        currentUser = "";
 
+    function getCurrentUser() {
+        return currentUser;
+    }
+
+    function setCurrentUser(user) {
+        currentUser = user;
+    }
 
     function watch(options) {
+        setCurrentUser(null);
         if (!isWatching) {
             doWatch(options);
             isWatching = true;
@@ -13,7 +22,7 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
     function doWatch(options) {
         navigator.id.watch({
             onlogin: function (assertion) {
-                if (init.getCurrentUser() === null) {
+                if (getCurrentUser() === null) {
                     postLogin(assertion, options)
                 } else {
                     // login is ignored if currentUser isn't null
@@ -21,7 +30,7 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
                 }
             },
             onlogout: function() {
-                if (init.getCurrentUser() === null) {
+                if (getCurrentUser() === null) {
                     postLogout(options);
                 } else {
                     //options.setCSS({email: currentUser});
@@ -33,7 +42,7 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
     function postLogin(assertion, options) {
         $.ajax({
             type: 'POST',
-            url: init.getUserBaseUrl() + "/personaLogin",
+            url: options.userBaseUrl + "/personaLogin",
             data: {
                 password: assertion,
                 rememberMe: true
@@ -46,14 +55,14 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
                 } else {
                     options.setCSS(data);
                     options.finalize();
-                    init.setCurrentUser(data.email);
+                    setCurrentUser(data.email);
                 }
             },
             error: function (res, status, xhr) {
                 options.finalize();
                 navigator.id.logout();
-                init.setCurrentUser("");
-                alert("login failure" + res);
+                setCurrentUser("");
+                alert("login failure" + JSON.stringify(res));
             }
         });
     }
@@ -66,20 +75,21 @@ define(['jquery', 'log', 'init', 'persona'], function ($, log, init) {
                 options.setCSS({email: null});
                 options.finalize();
                 navigator.id.logout();
-                init.setCurrentUser("");
+                setCurrentUser("");
             },
             error: function (res, status, xhr) {
                 options.setCSS({email: null});
                 options.finalize();
                 navigator.id.logout();
-                init.setCurrentUser("");
+                setCurrentUser("");
                 log("logout failure" + res);
             }
         });
     }
 
     return {
-        watch: watch
+        watch: watch,
+        setCurrentUser: setCurrentUser
     }
 
 });

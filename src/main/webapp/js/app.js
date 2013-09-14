@@ -45,8 +45,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
         runStatus({
             success: function(data) {
                 var email = data.email;
-                init.setCurrentUser(email);
-                //personaWatch.watch({setCSS: setCSS, finalize: stopSpin});
+                personaWatch.setCurrentUser(email);
                 setCSS({email: email});
                 stopSpin();
             },
@@ -72,7 +71,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
         $("#signIn").click(function (e) {
             e.preventDefault();
             startSpin();
-            init.setCurrentUser(null);
+            personaWatch.setCurrentUser(null);
             login.run();
             return false;
         });
@@ -80,8 +79,7 @@ define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'login', 'init', 'jqu
         $("#logout").click(function (e) {
             e.preventDefault();
             startSpin();
-            init.setCurrentUser(null);
-            personaWatch.watch({setCSS: setCSS, finalize: stopSpin});
+            personaWatch.watch({setCSS: setCSS, finalize: stopSpin, userBaseUrl : init.getUserBaseUrl()});
             navigator.id.logout();
             return false;
         });

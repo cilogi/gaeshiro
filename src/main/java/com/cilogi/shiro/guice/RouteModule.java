@@ -29,6 +29,7 @@ import com.cilogi.shiro.web.persona.PersonaLoginServlet;
 import com.cilogi.shiro.web.user.*;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
+import com.google.apphosting.utils.servlet.SessionCleanupServlet;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.inject.servlet.ServletModule;
@@ -65,6 +66,8 @@ public class RouteModule extends ServletModule {
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
 
         serve("/login").with(LoginServlet.class);
+
+        serve("/_ah/sessioncleanup").with(SessionCleanupServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
         serve("/cron/wake").with(WakeServlet.class);
     }

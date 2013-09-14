@@ -53,7 +53,7 @@
         </section>
     </div>
 
-    <#include "inc/footer.ftl">
+    <#include "inc/copyright.ftl">
 
 </div>
 

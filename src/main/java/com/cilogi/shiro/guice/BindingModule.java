@@ -32,6 +32,7 @@ import com.cilogi.util.gae.db.UserCounterDAO;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
+import com.google.apphosting.utils.servlet.SessionCleanupServlet;
 import com.google.common.base.Charsets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -70,13 +71,14 @@ public class BindingModule extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
+        bind(SessionCleanupServlet.class).in(Scopes.SINGLETON); // needed to cleanup stale sessions from datastore
 
         bindString("tim", "tim");
         bindString("email.from", "admin@gaeshiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
         bindString("social.site", isDevelopmentServer() ? "local" : "live");
-        bindString("host", isDevelopmentServer() ? "http://localhost:8080" : "http://gaeshiro.appspot.com:80");
+        bindString("host", isDevelopmentServer() ? "http://localhost:8080" : "https://personashiro.appspot.com:443");
     }
 
     private void bindString(String key, String value) {
