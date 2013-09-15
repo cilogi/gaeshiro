@@ -69,8 +69,12 @@ public class ServeContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new BindingModule(userBaseUrl, staticBaseUrl),
+        long start = System.currentTimeMillis();
+        LOG.info("start injector creation");
+        Injector injector =  Guice.createInjector(new BindingModule(userBaseUrl, staticBaseUrl),
                                     new RouteModule(userBaseUrl));
+        LOG.info("stop injector creation (took " + (System.currentTimeMillis() - start) + "ms)");
+        return injector;
     }
     
 }
