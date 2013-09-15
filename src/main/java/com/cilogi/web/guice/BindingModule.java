@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.guice;
+package com.cilogi.web.guice;
 
 
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;

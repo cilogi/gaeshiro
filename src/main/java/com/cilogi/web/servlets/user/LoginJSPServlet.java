@@ -1,13 +1,14 @@
-// Copyright (c) 2013 Cilogi. All Rights Reserved.
+// Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        WakeServlet.java  (15/01/13)
-// Author:      Cilogi
+// File:        LoginJSPServlet.java  (02-Nov-2011)
+// Author:      tim
+
 //
 // Copyright in the whole and every part of this source file belongs to
-// Cilogi (the Author) and may not be used, sold, licenced, 
-// transferred, copied or reproduced in whole or in part in 
-// any manner or form or in or on any media to any person other than 
-// in accordance with the terms of The Author's agreement
+// Tim Niblett (the Author) and may not be used,
+// sold, licenced, transferred, copied or reproduced in whole or in
+// part in any manner or form or in or on any media to any person
+// other than in accordance with the terms of The Author's agreement
 // or otherwise without the prior written consent of The Author.  All
 // information contained in this source file is confidential information
 // belonging to The Author and as such may not be disclosed other
@@ -18,33 +19,34 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.web.servlets.user;
+
+
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
+import com.cilogi.web.servlets.BaseServlet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
- * Purely here to spin up an App Engine instance, to keep the app responsive.  Only include this
- * when you're giving a demo, in order not to waste resources otherwise!
+ * This is only here to avoid using JSP, which is slow to start up on App Engine apparently.
  */
 @Singleton
-public class WakeServlet extends HttpServlet {
+public class LoginJSPServlet extends BaseServlet {
+    static final Logger LOG = Logger.getLogger(LoginJSPServlet.class.getName());
 
     @Inject
-    public WakeServlet() {
-        super();
+    LoginJSPServlet(IGaeUserDAO gaeUserDAO) {
+        super(gaeUserDAO);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-        response.setStatus(200);
-        response.getWriter().println("ok");
+        showView(response, "login.ftl", mapping(request));
     }
-
 }

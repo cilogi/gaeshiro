@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.web.servlets;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;

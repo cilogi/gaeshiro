@@ -65,7 +65,7 @@
 
 
     <listener>
-        <listener-class>com.cilogi.shiro.guice.ServeContextListener</listener-class>
+        <listener-class>com.cilogi.web.guice.ServeContextListener</listener-class>
     </listener>
 
     <mime-mapping>

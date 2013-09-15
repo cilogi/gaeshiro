@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.web.oauth;
+package com.cilogi.web.servlets.oauth;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
@@ -28,7 +28,7 @@ import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.providers.oauth.provider.GoogleAuth;
 import com.cilogi.shiro.providers.oauth.provider.IOAuthProviderInfo;
-import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.web.servlets.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;

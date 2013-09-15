@@ -155,7 +155,7 @@
                 be easily re-usable. There are dependencies on Shiro, Objectify and Guava. The Guava
                 dependency could be removed with a little effort, Objectify somewhat more.</p>
 
-            <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
+            <p>The servlets in <code>com.cilogi.web.servlets</code> have parameters hard-wired and no
                 I18N for strings, but the logic is re-usable.</p>
 
             <h3>Secrets</h3>

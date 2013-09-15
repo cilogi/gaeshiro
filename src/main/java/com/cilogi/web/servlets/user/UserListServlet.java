@@ -19,12 +19,12 @@
 //
 
 
-package com.cilogi.shiro.web.user;
+package com.cilogi.web.servlets.user;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.gaeuser.impl.GaeUser;
-import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.web.servlets.BaseServlet;
 import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;

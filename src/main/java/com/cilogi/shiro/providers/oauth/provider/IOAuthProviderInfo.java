@@ -57,7 +57,7 @@ public interface IOAuthProviderInfo {
     public OAuthInfo getUserInfo(String code, String callBackUrl);
 
     /**
-     * Revoked a token whilst in a web session
+     * Revoked a token whilst in a servlets session
      * @param token The token to revoke
      * @param request  Current request
      * @param response Current response

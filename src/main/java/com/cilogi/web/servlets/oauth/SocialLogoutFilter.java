@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        GoogleLogoutFilter.java  (04-Oct-2012)
+// File:        SocialLogoutFilter.java  (04-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -17,7 +17,7 @@
 // effectively secure at all times.
 //
 
-package com.cilogi.shiro.web.appengine;
+package com.cilogi.web.servlets.oauth;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -34,16 +34,13 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-/**
- * Log a user out of Google is we're using the built-in Google login.
- * This isn't needed for OAuth as we invalidate the token right away, and
- * its not needed for Persona as there is no server-side login trace.
- */
-public class GoogleLogoutFilter extends LogoutFilter {
-    static final Logger LOG = Logger.getLogger(GoogleLogoutFilter.class.getName());
+//import static com.cilogi.shiro.gae.UserAuthType.*;
+
+public class SocialLogoutFilter extends LogoutFilter {
+    static final Logger LOG = Logger.getLogger(SocialLogoutFilter.class.getName());
 
     @Inject
-    public GoogleLogoutFilter() {}
+    public SocialLogoutFilter() {}
 
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
@@ -58,7 +55,7 @@ public class GoogleLogoutFilter extends LogoutFilter {
         return false;
     }
 
-    private static void logoutGoogleService(ServletRequest request, ServletResponse response, String redirectUrl) throws IOException {
+    static void logoutGoogleService(ServletRequest request, ServletResponse response, String redirectUrl) throws IOException {
         UserService service = UserServiceFactory.getUserService();
         User user = service.getCurrentUser();
         if (user != null) {
@@ -68,6 +65,4 @@ public class GoogleLogoutFilter extends LogoutFilter {
             WebUtils.issueRedirect(request, response, redirectUrl);
         }
     }
-
-
 }

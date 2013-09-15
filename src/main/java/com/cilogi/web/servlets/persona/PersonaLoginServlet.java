@@ -18,12 +18,12 @@
 //
 
 
-package com.cilogi.shiro.web.persona;
+package com.cilogi.web.servlets.persona;
 
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.providers.persona.PersonaLogin;
-import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.web.servlets.BaseServlet;
 import com.cilogi.util.doc.CreateDoc;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

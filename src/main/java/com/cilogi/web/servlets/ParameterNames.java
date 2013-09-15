@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.web.servlets;
 
 /**
  * These are the parameters used to post information from the

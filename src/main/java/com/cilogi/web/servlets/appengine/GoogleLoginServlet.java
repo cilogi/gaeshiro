@@ -18,12 +18,12 @@
 //
 
 
-package com.cilogi.shiro.web.appengine;
+package com.cilogi.web.servlets.appengine;
 
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
-import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.web.servlets.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;

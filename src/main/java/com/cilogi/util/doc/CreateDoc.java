@@ -49,7 +49,7 @@ public class CreateDoc {
 
     /**
      * The root location where the templates are stored, either a local file,
-     * or a directory served from a remote web server.
+     * or a directory served from a remote servlets server.
      */
     private final URL dataRoot;
     private final TemplateLoader templateLoader;
@@ -141,7 +141,7 @@ public class CreateDoc {
      * because we look for different files based on the locale.
      * @param map  The map passed in by FreeMarker when instantiating the template.
      * @return  The instantiated document.  Bytes are returned as this could be in any text encoding and will
-     * often just be set as a web resource.  May be some mileage in returning a string, even though.
+     * often just be set as a servlets resource.  May be some mileage in returning a string, even though.
      * @throws IOException If there are any problems locating or processint the template.
      */
     public byte[] createDocument(String templateName, Map<String, ?> map) throws IOException {

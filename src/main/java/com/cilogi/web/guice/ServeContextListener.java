@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.guice;
+package com.cilogi.web.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

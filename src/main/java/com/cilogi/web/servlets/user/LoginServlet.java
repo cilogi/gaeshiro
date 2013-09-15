@@ -19,10 +19,10 @@
 //
 
 
-package com.cilogi.shiro.web.user;
+package com.cilogi.web.servlets.user;
 
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
-import com.cilogi.shiro.web.BaseServlet;
+import com.cilogi.web.servlets.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
