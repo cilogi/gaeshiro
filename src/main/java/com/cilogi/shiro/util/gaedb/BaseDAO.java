@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.util.gae.db;
+package com.cilogi.shiro.util.gaedb;
 
 import com.googlecode.objectify.Key;
 

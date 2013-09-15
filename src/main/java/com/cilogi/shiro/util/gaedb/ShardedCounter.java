@@ -18,9 +18,9 @@
 //
 
 
-package com.cilogi.util.gae.db;
+package com.cilogi.shiro.util.gaedb;
 
-import com.cilogi.util.ICounter;
+import com.cilogi.shiro.util.ICounter;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;

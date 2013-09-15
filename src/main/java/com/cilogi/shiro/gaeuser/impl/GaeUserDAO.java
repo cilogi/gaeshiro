@@ -24,9 +24,9 @@ package com.cilogi.shiro.gaeuser.impl;
 
 import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
-import com.cilogi.util.ICounter;
-import com.cilogi.util.gae.db.BaseDAO;
-import com.cilogi.util.gae.db.UserCounterDAO;
+import com.cilogi.shiro.util.ICounter;
+import com.cilogi.shiro.util.gaedb.BaseDAO;
+import com.cilogi.shiro.util.gaedb.UserCounterDAO;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;

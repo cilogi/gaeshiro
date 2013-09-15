@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.util;
+package com.cilogi.shiro.util;
 
 public interface ICounter {
     public long getCount();
