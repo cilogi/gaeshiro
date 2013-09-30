@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * Create documents from FreeMarker templates. The documents can be text or images from SVG templates.
  * The locale and charset need to be defined, as well as a source of templates.
  */
-public class CreateDoc {
+public class CreateDoc implements ICreateDoc {
     private static final Logger LOG = Logger.getLogger(CreateDoc.class.getName());
 
     // used to share this common construct [just being fussy really]
@@ -125,14 +125,6 @@ public class CreateDoc {
             throw lastException;
         }
         return null;
-    }
-
-    public String createDocumentString(String templateName, Map<String, ?> map) {
-        try {
-            return new String(createDocument(templateName, map), charset);
-        }  catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

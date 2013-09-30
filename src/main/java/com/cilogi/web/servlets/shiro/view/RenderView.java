@@ -20,9 +20,10 @@
 
 package com.cilogi.web.servlets.shiro.view;
 
+import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.util.MimeTypes;
-import com.cilogi.util.doc.CreateDoc;
-import com.cilogi.web.servlets.shiro.IViewMapping;
+import com.cilogi.util.doc.ICreateDoc;
+import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +39,13 @@ public class RenderView implements IRenderView {
 
     private final int HTTP_STATUS_OK = 200;
 
-    private final CreateDoc create;
+    private final ICreateDoc create;
     private final IViewMapping viewMapping;
 
     @Inject
-    public RenderView(CreateDoc create, IViewMapping viewMapping) {
+    public RenderView(ICreateDoc create, IGaeUserDAO gaeUserDAO) {
         this.create = create;
-        this.viewMapping = viewMapping;
+        this.viewMapping = new ViewMapping(gaeUserDAO);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class RenderView implements IRenderView {
 
     @Override
     public void render(HttpServletRequest request, HttpServletResponse response, String name, Map<String,Object> bindings) throws IOException {
-        String html =  create.createDocumentString(name, bindings);
+        String html =  new String(create.createDocument(name, bindings), Charsets.UTF_8);
         issue(MimeTypes.MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
 
     }

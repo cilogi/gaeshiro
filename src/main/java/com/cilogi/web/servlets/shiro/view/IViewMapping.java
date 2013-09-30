@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.web.servlets.shiro;
+package com.cilogi.web.servlets.shiro.view;
 
 
 import javax.servlet.http.HttpServletRequest;

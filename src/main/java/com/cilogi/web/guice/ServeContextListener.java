@@ -71,8 +71,12 @@ public class ServeContextListener extends GuiceServletContextListener {
     protected Injector getInjector() {
         long start = System.currentTimeMillis();
         LOG.info("start injector creation");
-        Injector injector =  Guice.createInjector(new BindingModule(userBaseUrl, staticBaseUrl),
-                                    new RouteModule(userBaseUrl));
+        Injector injector =  Guice.createInjector(
+                new BindingModule(userBaseUrl, staticBaseUrl),
+                new ShiroBindingModule(userBaseUrl, staticBaseUrl),
+                new RouteModule(),
+                new ShiroRouteModule(userBaseUrl)
+        );
         LOG.info("stop injector creation (took " + (System.currentTimeMillis() - start) + "ms)");
         return injector;
     }

@@ -24,7 +24,6 @@ import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.providers.persona.PersonaLogin;
 import com.cilogi.util.MimeTypes;
-import com.cilogi.util.doc.CreateDoc;
 import com.cilogi.web.servlets.shiro.BaseServlet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -53,7 +52,7 @@ public class PersonaLoginServlet extends BaseServlet {
     private final PersonaLogin personaLogin;
 
     @Inject
-    PersonaLoginServlet(IGaeUserDAO gaeUserDAO, PersonaLogin personaLogin, @Named("host") String host, CreateDoc create) {
+    PersonaLoginServlet(IGaeUserDAO gaeUserDAO, PersonaLogin personaLogin, @Named("host") String host) {
         super(gaeUserDAO);
         this.personaLogin = personaLogin;
         this.host = host;
