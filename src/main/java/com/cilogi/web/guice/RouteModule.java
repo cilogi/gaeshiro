@@ -21,12 +21,15 @@
 
 package com.cilogi.web.guice;
 
-import com.cilogi.web.servlets.FreemarkerServlet;
 import com.cilogi.web.servlets.WakeServlet;
-import com.cilogi.web.servlets.appengine.GoogleLoginServlet;
-import com.cilogi.web.servlets.oauth.OAuthLoginServlet;
-import com.cilogi.web.servlets.persona.PersonaLoginServlet;
-import com.cilogi.web.servlets.user.*;
+import com.cilogi.web.servlets.shiro.FreemarkerServlet;
+import com.cilogi.web.servlets.shiro.appengine.GoogleLoginServlet;
+import com.cilogi.web.servlets.shiro.oauth.OAuthLoginServlet;
+import com.cilogi.web.servlets.shiro.persona.PersonaLoginServlet;
+import com.cilogi.web.servlets.shiro.user.LoginServlet;
+import com.cilogi.web.servlets.shiro.user.StatusServlet;
+import com.cilogi.web.servlets.shiro.user.UserListServlet;
+import com.cilogi.web.servlets.shiro.user.UserSuspendServlet;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.apphosting.utils.servlet.SessionCleanupServlet;

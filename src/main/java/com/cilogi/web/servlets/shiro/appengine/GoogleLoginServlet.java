@@ -18,12 +18,13 @@
 //
 
 
-package com.cilogi.web.servlets.appengine;
+package com.cilogi.web.servlets.shiro.appengine;
 
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
 import com.cilogi.shiro.providers.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.providers.oauth.UserAuthType;
-import com.cilogi.web.servlets.BaseServlet;
+import com.cilogi.util.MimeTypes;
+import com.cilogi.web.servlets.shiro.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -91,7 +92,7 @@ public class GoogleLoginServlet extends BaseServlet {
         try {
             User currentUser = userService.getCurrentUser();
             if (currentUser == null) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login as we can't find Google user", response);
+                issue(MimeTypes.MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot login as we can't find Google user", response);
                 return;
             }
             String userName = currentUser.getEmail();
@@ -109,10 +110,10 @@ public class GoogleLoginServlet extends BaseServlet {
                 String redirectUrl = (savedRequest == null) ? "/" : savedRequest.getRequestUrl();
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             } catch (AuthenticationException e) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + userName + ": " + e.getMessage(), response);
+                issue(MimeTypes.MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + userName + ": " + e.getMessage(), response);
             }
         } catch (Exception e) {
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
+            issue(MimeTypes.MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
 }

@@ -27,8 +27,12 @@ import com.cilogi.shiro.gaeuser.impl.GaeUserDAO;
 import com.cilogi.shiro.providers.oauth.provider.FacebookAuth;
 import com.cilogi.shiro.providers.oauth.provider.IOAuthProviderInfo;
 import com.cilogi.shiro.util.ICounter;
-import com.cilogi.util.doc.CreateDoc;
 import com.cilogi.shiro.util.gaedb.UserCounterDAO;
+import com.cilogi.util.doc.CreateDoc;
+import com.cilogi.web.servlets.shiro.IViewMapping;
+import com.cilogi.web.servlets.shiro.ViewMapping;
+import com.cilogi.web.servlets.shiro.view.IRenderView;
+import com.cilogi.web.servlets.shiro.view.RenderView;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
@@ -62,6 +66,8 @@ public class BindingModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(IViewMapping.class).to(ViewMapping.class).in(Scopes.SINGLETON);
+        bind(IRenderView.class).to(RenderView.class).in(Scopes.SINGLETON);
         bind(ICounter.class).to(UserCounterDAO.class).in(Scopes.SINGLETON);
         bind(IGaeUserDAO.class).to(GaeUserDAO.class);
         bind(GaeUserDAO.class).in(Scopes.SINGLETON);

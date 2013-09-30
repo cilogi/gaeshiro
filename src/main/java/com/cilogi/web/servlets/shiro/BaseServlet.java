@@ -19,14 +19,11 @@
 //
 
 
-package com.cilogi.web.servlets;
+package com.cilogi.web.servlets.shiro;
 
-import com.cilogi.shiro.gaeuser.IGaeUser;
 import com.cilogi.shiro.gaeuser.IGaeUserDAO;
-import com.cilogi.shiro.gaeuser.impl.GaeUser;
-import com.cilogi.shiro.providers.oauth.UserAuthType;
 import com.cilogi.util.MimeTypes;
-import com.cilogi.util.doc.CreateDoc;
+import com.cilogi.web.servlets.shiro.view.IRenderView;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -47,15 +44,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
+public class BaseServlet extends HttpServlet {
     static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
     private static final long serialVersionUID = 7427222103993326328L;
@@ -68,9 +62,7 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     protected final int HTTP_STATUS_FORBIDDEN = 403;
     protected final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
-    private CreateDoc create;
-
-    private static Map<String,Object> FMPP_MAP = fmppMap();
+    private IRenderView renderView;
 
     @Getter
     protected IGaeUserDAO gaeUserDAO;
@@ -79,9 +71,10 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         this.gaeUserDAO = gaeUserDAO;
     }
 
+
     @Inject
-    protected void setCreate(CreateDoc create) {
-        this.create = create;
+    protected void setRenderView(IRenderView renderView) {
+        this.renderView = renderView;
     }
 
     protected void issue(String mimeType, int returnCode, String output, HttpServletResponse response) throws IOException {
@@ -104,30 +97,20 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     }
 
     protected void issueJson(HttpServletResponse response, int status, JSONObject obj) throws IOException {
-        issue(MIME_APPLICATION_JSON, status, obj.toString(), response);
+        issue(MimeTypes.MIME_APPLICATION_JSON, status, obj.toString(), response);
     }
 
-    protected void showView(HttpServletResponse response, String templateName, Object... args) throws IOException {
-        showView(response, templateName, CreateDoc.map(args));
-    }
-
-    protected void showView(HttpServletResponse response, String templateName, Map<String,Object> args) throws IOException {
-         String html =  create.createDocumentString(templateName, args);
-         issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+    protected void showView(HttpServletResponse response, String templateName) throws IOException {
+        renderView.defaultRender(null, response, templateName);
      }
 
-    protected String view(String templateName, Object... args) {
-        return create.createDocumentString(templateName, CreateDoc.map(args));
-    }
+    protected void showView(HttpServletResponse response, String templateName, Map<String,Object> args) throws IOException {
+        renderView.render(null, response, templateName, args);
+     }
 
     protected int intParameter(String name, HttpServletRequest request, int deflt) {
         String s = request.getParameter(name);
         return (s == null) ? deflt : Integer.parseInt(s);
-    }
-
-    protected boolean booleanParameter(String name, HttpServletRequest request, boolean deflt) {
-        String s = request.getParameter(name);
-        return (s == null) ? deflt : Boolean.parseBoolean(s);
     }
 
     /**
@@ -161,18 +144,6 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         return subject.hasRole("admin");
     }
 
-    @SuppressWarnings({"unchecked"})
-    protected IGaeUser getCurrentGaeUser() {
-        Subject subject = SecurityUtils.getSubject();
-        String email = (String)subject.getPrincipal();
-        if (email == null) {
-            return null;
-        } else {
-            return gaeUserDAO.findUser(email);
-        }
-    }
-
-
     protected void setProviderInCookieComment(String provider) {
         SecurityManager man = SecurityUtils.getSecurityManager();
         if (man != null && man instanceof DefaultWebSecurityManager) {
@@ -198,51 +169,5 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
             }
         }
         return "";
-    }
-
-    protected Map<String,Object> mapping(HttpServletRequest request) {
-        Map<String,Object> map = Maps.newHashMap();
-        map.putAll(FMPP_MAP);
-
-        IGaeUser user = getCurrentGaeUser();
-        if (user != null) {
-            map.put("userName", user.getName());
-            map.put("userType", userType(user));
-            map.put("userCSS", "shiro-user-active");
-        } else {
-            map.put("userName", "");
-            map.put("userType", "UNKNOWN");
-            map.put("userCSS", "shiro-guest-active");
-        }
-        map.put("RequestParameters", requestParameters(request));
-        return map;
-    }
-
-    private static String userType(IGaeUser user) {
-        return (user instanceof GaeUser) ? UserAuthType.CILOGI.name() : "SOCIAL";
-    }
-
-    private static Map<String,String> requestParameters(HttpServletRequest request) {
-        Map<String,String> map = Maps.newHashMap();
-        for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
-            String key = (String)enumeration.nextElement();
-            map.put(key, request.getParameter(key));
-        }
-        return map;
-    }
-
-    private static Map<String,Object> fmppMap() {
-        final String PROP_FILE = "/ftl/data/const.properties";
-        Map<String,Object> map = Maps.newHashMap();
-        try (InputStream is = BaseServlet.class.getResourceAsStream(PROP_FILE)) {
-            Properties props = new Properties();
-            props.load(is);
-            for (Object key : props.keySet()) {
-                map.put((String)key, props.get(key));
-            }
-        } catch (IOException e) {
-            LOG.warning("Can't load fmpp properties, " + PROP_FILE + ": " + e.getMessage());
-        }
-        return map;
     }
 }

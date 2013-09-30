@@ -1,10 +1,10 @@
-// Copyright (c) 2011 Tim Niblett. All Rights Reserved.
+// Copyright (c) 2013 Cilogi. All Rights Reserved.
 //
-// File:        MimeTypes.java  (17-Nov-2011)
+// File:        IViewMapping.java  (30/09/13)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
-// Tim Niblett (the Author) and may not be used, sold, licenced, 
+// Cilogi (the Author) and may not be used, sold, licenced, 
 // transferred, copied or reproduced in whole or in part in 
 // any manner or form or in or on any media to any person other than 
 // in accordance with the terms of The Author's agreement
@@ -18,10 +18,12 @@
 //
 
 
-package com.cilogi.util;
+package com.cilogi.web.servlets.shiro;
 
-public class MimeTypes {
-    public static final String MIME_TEXT_PLAIN = "text/plain";
-    public static final String MIME_TEXT_HTML = "text/html";
-    public static final String MIME_APPLICATION_JSON = "application/json";
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
+public interface IViewMapping {
+    public Map<String,Object> baseMapping(HttpServletRequest request);
 }
