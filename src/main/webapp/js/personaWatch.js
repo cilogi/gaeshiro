@@ -1,5 +1,5 @@
 
-define(['jquery', 'log', 'persona'], function ($, log) {
+define(['jquery', 'underscore', 'log', 'persona'], function ($, _, log) {
     var isWatching = false,
         currentUser = "";
 
