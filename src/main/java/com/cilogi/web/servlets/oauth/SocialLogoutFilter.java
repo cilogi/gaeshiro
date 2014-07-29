@@ -45,7 +45,6 @@ public class SocialLogoutFilter extends LogoutFilter {
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         Subject subject = SecurityUtils.getSubject();
-
         try {
             subject.logout();
         } catch (SessionException ise) {
