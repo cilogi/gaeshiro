@@ -101,12 +101,17 @@ public class UserListServlet extends BaseServlet {
 
     private List<GaeUser> users(GaeUserDAO dao, String sSearch, int start, int length) {
         if (sSearch != null && !"".equals(sSearch)) {
-            return Lists.newArrayList(dao.findUser(sSearch));
+            GaeUser user = dao.findUser(sSearch);
+            List<GaeUser> list =  Lists.newArrayList();
+            if (user != null) {
+                list.add(user);
+            }
+            return list;
         } else {
             List<GaeUser> list =  ofy().load().type(GaeUser.class)
                     .offset(start)
                     .limit(length)
-                    .order("-dataRegistered")
+                    .order("-dateRegistered")
                     .list();
             LOG.info("Fresh load start " + start + " # " + length);
             return list;

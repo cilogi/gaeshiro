@@ -96,9 +96,8 @@ public class OAuthLoginServlet extends BaseServlet {
                 GaeUser user = dao.findUser(email);
                 if (user == null) {
                     user = new GaeUser(email, Sets.newHashSet("user"), Sets.<String>newHashSet());
+                    user.register();
                     dao.saveUser(user, true);
-                } else {
-                    dao.saveUser(user, false);
                 }
 
                 OAuthAuthenticationToken token = new OAuthAuthenticationToken(info.getToken(), info.getUserAuthType(), email, request.getRemoteHost());

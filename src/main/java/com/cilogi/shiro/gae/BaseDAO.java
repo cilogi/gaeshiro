@@ -38,38 +38,14 @@ public class BaseDAO<T> {
         this.clazz = clazz;
     }
 
-    public static ObjectifyFactory factory() {
-        return ObjectifyService.factory();
-    }
-
     @SuppressWarnings({"unchecked"})
     public T get(String id) {
         if (id == null || "".equals(id)) {
             return null;
         }
         T db = (T)ofy().load().key(Key.create(clazz, id)).now();
-        return (db == null) ? newInstance(id) : db;
+        return db;
     }
-
-    @SuppressWarnings({"unchecked"})
-    private T newInstance(String id) {
-        Constructor[] ctors = clazz.getDeclaredConstructors();
-        Constructor ctor = null;
-        for (int i = 0; i < ctors.length; i++) {
-            ctor = ctors[i];
-            if (ctor.getParameterTypes().length == 1 && ctor.getParameterTypes()[0].equals(String.class)) {
-                try {
-                    return (T)ctor.newInstance(id);
-                } catch (Exception e) {
-                    LOG.warning("Cannot construct instance of " + clazz.getName() + " with arg " + id + ": " + e.getMessage());
-                    return null;
-                }
-            }
-        }
-        LOG.warning("Cannot construct instance of " + clazz.getName() + " as there are no single-arg constructors");
-        return null;
-    }
-
 
     public void put(T object) {
         ofy().save().entity(object).now();

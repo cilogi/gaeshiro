@@ -20,12 +20,14 @@
 
 package com.cilogi.shiro.web.oauth;
 
+import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.googlegae.GoogleGAEAuthenticationToken;
 import com.cilogi.shiro.web.BaseServlet;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
@@ -95,6 +97,15 @@ public class GoogleLoginServlet extends BaseServlet {
                 return;
             }
             String username = currentUser.getEmail();
+
+            // add the user to the database
+            GaeUserDAO dao = daoProvider.get();
+            GaeUser user = dao.findUser(username);
+            if (user == null) {
+                user = new GaeUser(username, Sets.newHashSet("user"), Sets.<String>newHashSet());
+                user.register();
+                dao.saveUser(user, true);
+            }
 
             String host = request.getRemoteHost();
             GoogleGAEAuthenticationToken token = new GoogleGAEAuthenticationToken(username,  host);

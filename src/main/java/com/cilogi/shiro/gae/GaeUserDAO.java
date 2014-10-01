@@ -43,7 +43,6 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         super(GaeUser.class);
     }
 
-
     /**
      * Save user with authorization information
      * @param user  User
@@ -121,6 +120,9 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
     private void changeCount(final long delta) {
         GaeUserCounterDAO dao = new GaeUserCounterDAO();
         GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
+        if (count == null) {
+            count = new GaeUserCounter(GaeUserCounter.COUNTER_ID);
+        }
         count.delta(delta);
         dao.put(count);
     }
