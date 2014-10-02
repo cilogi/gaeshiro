@@ -1,5 +1,6 @@
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="${staticBaseUrl}js/lib/jquery.min.js"></script>
+<script src="${staticBaseUrl}js/lib/bootstrap.min.js"></script>
 
 <script src="${staticBaseUrl}js/lib/jquery.tmpl.min.js"></script>
 <script src="${staticBaseUrl}js/lib/jquery.validate.min.js"></script>
@@ -7,9 +8,6 @@
 <script src="${staticBaseUrl}js/lib/jquery.busy.min.js"></script>
 
 <script src="${staticBaseUrl}assets/js/google-code-prettify/prettify.js"></script>
-
-<script src="${staticBaseUrl}js/bootstrap/bootstrap-scrollspy.js"></script>
-<script src="${staticBaseUrl}js/bootstrap/bootstrap-modal.js"></script>
 
 <script src="${staticBaseUrl}js/init.js"></script>
 <script src="${staticBaseUrl}js/spin.js"></script>

@@ -11,31 +11,32 @@
 <div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;">
 </div>
 
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
-        <div class="container">
-            <a class="brand" href="#">GAEShiro</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#what">What</a></li>
-                <li><a href="#motivation">Why</a></li>
-                <li><a href="#shiro">How</a></li>
-                <li><a href="#social">Social</a></li>
-                <li><a href="#management">Manage</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
-                <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
-            </ul>
-            <#include "inc/loginoutbutton.ftl">
-        </div>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">GAEShiro</a>
     </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.ftl">Set</a></li>
+          <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
+          <#include "inc/loginoutbutton.ftl">
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
 </div>
 
 
-<div class="container">
 
 <!-- Main hero unit for a primary marketing message or call to action -->
-<div class="hero-unit">
+<div class="jumbotron">
     <div class="semi">
         <h1>Shiro on App Engine</h1>
 
@@ -47,36 +48,38 @@
 
         <p> Front end user registration and password management is also provided in as minimalistic
             a fashion as we could manage</p>
-        <p> <span class="btn danger">New!</span> Sign in with Google or Facebook accounts.</p>
+        <p> <span class="btn btn-danger">New!</span> Sign in with Google or Facebook accounts.</p>
     </div>
 </div>
 
 <!-- Example row of columns -->
-<div class="quickstart">
+
+<div class="container">
     <div class="row">
-        <div class="span6">
-            <h6>App Engine and Shiro</h6>
+        <div class="col-md-4">
+            <h2>App Engine and Shiro</h2>
 
             <p>We provide a Shiro Realm which works with the App Engine datastore via
                 <a href="http://code.google.com/p/objectify-appengine">Objectify</a>.
                 Caching comes via App Engine's memcached service.</p>
         </div>
-        <div class="span5">
-            <h6>Guice and Shiro</h6>
+        <div class="col-md-4">
+            <h2>Guice and Shiro</h2>
 
             <p>Shiro's <a href="http://shiro.apache.org/java-annotations-list.html">AOP</a> features,
                specifically the method annotations, work with Guice. Otherwise
                Shiro configuration is done with the Shiro ini file.</p>
         </div>
-        <div class="span5">
-            <h6>Fork on Github</h6>
+        <div class="col-md-4">
+            <h2>Fork on Github</h2>
 
             <p>Get the code, file issues, etc. on the Github repository</p>
 
-            <p><a class="btn primary" href="https://github.com/cilogi/gaeshiro">GAEShiro on GitHub &raquo;</a></p>
+            <p><a class="btn btn-primary" role="button" href="https://github.com/cilogi/gaeshiro">GAEShiro on GitHub &raquo;</a></p>
         </div>
     </div>
-</div>
+
+
 <section id="what">
     <div class="page-header">
         <h1>What
@@ -84,20 +87,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>You can</h2>
-
-            <p>Sign in as admin or user,</p>
-
-            <p>register with an Email address,</p>
-
-            <p>forget or change your password,</p>
-
-            <p>suspend users as an administrator, </p>
-
-            <p>and now login with Google or Facebook accounts.</p>
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>You can sign in from the link at the top right.  There is a built-in account you
                can user, <code>zenith@acme.com</code>.
                 It has password <code>pass</code>.  The <code>zenith</code> account is a normal user account.</p>
@@ -124,26 +115,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>Take home</h2>
-
-            <p>App Engine is great</p>
-
-            <p>but quirky</p>
-
-            <p>and doesn't come with a general authentication and authorization service.</p>
-
-            <p>Shiro is good for this and
-                we've done the needed porting, and</p>
-
-            <p>provided some simple user management.</p>
-
-            <p>Guice is used to glue things together</p>
-
-            <p>even though it slows down startup.</p>
-
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>App Engine is a remarkable achievement. You can create a small free website and
                 scale it indefinitely with almost no ongoing administration required. A wide range
                 of useful services are available out of the box, with almost no set-up or maintenance
@@ -198,16 +171,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>In Brief</h2>
-
-            <p>We have adapted realms and caches./p>
-
-            <p>Objectify is used to interface to the datastore</p>
-
-            <p>In memory caches are combined with memcached to keep things fast and cheap.</p>
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>The Shiro components which need to be adapted to App Engine are
                 <a href="http://shiro.apache.org/realm.html">realms</a>,
                 the <a href="http://shiro.apache.org/caching.html">cache</a> and
@@ -259,16 +224,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>Friends</h2>
-
-            <p>You can log in with Google or Facebook</p>
-
-
-            <p>We use OAuth 2 for both Google and Facebook authentication.  Google not so hot, Facebook better.
-               Facebook even does re-authentication.</p>
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>Its a lot easier for users if they don't have to go through the hassle of registration, and remember
                a password for yet another application. So, we've set things up to allow Google and Facebook login. The
                implementation is reasonably generic and can easily be extended to other providers, such as
@@ -305,16 +262,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>To summarize</h2>
-
-            <p>Users can register, choose to change password and reset a forgetten password</p>
-
-            <p>One-time. limited duration, tokens are used to provide links to unsecured change pages.</p>
-
-            <p>Registration and password change use essentially the same flow</p>
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>In an ideal world applications such as our would not need to do password management. Even though
                 there are now a variety of identity providers, not all users will want to use them. So, as a
                 fallback applications must provide <em>traditional</em> password management.</p>
@@ -364,17 +313,8 @@
         </h1>
     </div>
     <div class="row">
-        <div class="span4">
-            <h2>Also using</h2>
-
-            <p>As well as Guice and Shiro</p>
-            <p>the demo also uses <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter</a>
-               for its CSS framework</p>
-            <p><a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating.</p>
-            <p>and the megalicious <a href="https://github.com/fernandezpablo85/scribe-java">scribe</a></p>
-            library to do OAuth.
-        </div>
-        <div class="span9">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework
                (it actually uses <a href="http://lesscss.org/">less</a> to create CSS) which makes well laid out sites
                easy for those of us with no layout skills.</p>
@@ -390,7 +330,7 @@
                JavaScript to minimise round trips to the server to determine login status.  This doesn't compromise the
                server-side security but speeds things up and helps bring down App Engine's costs.</p>
             <h3>Reuse</h3>
-            <p>The <code>com.cilogi.shiro.gae</code> and <code>com.cilogi.shiro.aop</code> packages should
+            <p>The <code>com.cilogi.shiro.gae</code> package should
                be easily re-usable.  There are dependencies on Shiro, Objectify and Guava.  The Guava
                dependency could be removed with a little effort, Objectify somewhat more.</p>
             <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
@@ -431,8 +371,8 @@ fb.live.host=http://gaeshiro.appspot.com
             success: function(data, status) {
                 shiro.spin.stop();
                 if (status == 'success') {
-                    $("html").removeClass("shiro-none-active");
                     if (data.message == "known") {
+                        $("html").removeClass("shiro-none-active");
                         $("html").addClass("shiro-user-active");
                         $("span.shiro-principal").text(data.name);
                         if (data.authenticated == "true") {
@@ -442,9 +382,11 @@ fb.live.host=http://gaeshiro.appspot.com
                             $("html").addClass("shiro-admin-active");
                         }
                     } else {
+                        $("html").removeClass("shiro-none-active");
                         $("html").addClass("shiro-guest-active");
                     }
                 } else {
+                    $("html").removeClass("shiro-none-active");
                     alert("status check failed: " + data.message);
                 }
             },

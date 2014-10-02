@@ -9,15 +9,23 @@
 
 <body>
 
-<div class="topbar">
-    <div class="topbar-inner">
-        <div class="container">
-            <a class="brand" href="/index.html">Shiro on GAE</a>
-            <ul class="nav">
-                <li class="active"><a href="/index.html">Home</a></li>
-            </ul>
-        </div>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">GAEShiro</a>
     </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+          <li><a href="/index.html">Home</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
 </div>
 
 <div class="container">
@@ -33,7 +41,7 @@
                         </form>
                         -->
                     <form id="google" action="${userBaseUrl}/googleLogin" method="POST" style="display:inline">
-                        <button type="submit" class="btn-auth btn-google"><b>Google</b> login</button>
+                        <button type="submit" class="btn-auth btn-google" style="vertical-align:middle;"><b>Google</b> login</button>
                     </form>
                         <form id="facebook" action="${userBaseUrl}/socialLogin?provider=FACEBOOK" method="POST" style="display:inline;">
                             <button type="submit" class="btn-auth btn-facebook" style="vertical-align:middle;"><b>Facebook</b> login</button>

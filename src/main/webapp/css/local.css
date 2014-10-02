@@ -1,10 +1,6 @@
-.hero-unitA {
-    background-image: url(../images/grid.png);
-    background-repeat: repeat;
-    background-size: 3px 3px;
-}
 
-.hero-unit {
+
+.jumbotron {
     background-image: url(../images/grid.png), url(../images/lock.jpg);
     background-repeat: repeat, no-repeat;
     background-size: 3px 3px, cover;
@@ -20,7 +16,7 @@
     opacity: 1;
 }
 
-#modal-login {
+#modal-login .modal-content {
     background-color: #EDE8DE;
 }
 
@@ -48,4 +44,15 @@
 
 .modal-auth .btn-auth {
     margin-left: 1em;
+}
+
+.actions {
+    background: #f5f5f5;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    padding: 17px 20px 18px 150px;
+    border-top: 1px solid #ddd;
+    -webkit-border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
 }

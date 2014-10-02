@@ -24,7 +24,9 @@ package com.cilogi.shiro.web.user;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -73,30 +76,16 @@ public class UserListServlet extends BaseServlet {
             throws JSONException, IOException {
         GaeUserDAO dao = new GaeUserDAO();
         long nUsers = dao.getCount();
-        JSONObject obj = new JSONObject();
-        obj.put("iTotalRecords", nUsers);
-        obj.put("iTotalDisplayRecords", nUsers);
-        obj.put("sEcho", echo);
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("iTotalRecords", nUsers);
+        map.put("iTotalDisplayRecords", nUsers);
+        map.put("sEcho", echo);
 
         List<GaeUser> users = users(dao, sSearch, start, length);
-        JSONArray array = new JSONArray();
-        int index = 0;
-        for (GaeUser user : users) {
-            JSONArray arr = new JSONArray();
-            arr.put(user.getName());
-            arr.put(dateFrom(user.getDateRegistered()));
-            arr.put(set2string(user.getRoles()));
-            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" type=\"checkbox\" name=\"%s\" %s>",
-                    start, length,
-                    user.getName(), user.isSuspended() ? "checked" : ""));
-            arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" data-index=\"%d\" type=\"button\" name=\"%s\" value=\"delete\">",
-                    start, length, index,
-                    user.getName()));
-            array.put(arr);
-            index++;
-        }
-        obj.put("aaData", array);
-        issueJson(response, HTTP_STATUS_OK, obj);
+        map.put("aaData", users);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat( new SimpleDateFormat("MMM dd yyyy"));
+        issue(MIME_APPLICATION_JSON, HTTP_STATUS_OK, mapper.writeValueAsString(map), response);
     }
 
     private List<GaeUser> users(GaeUserDAO dao, String sSearch, int start, int length) {
@@ -116,21 +105,5 @@ public class UserListServlet extends BaseServlet {
             LOG.info("Fresh load start " + start + " # " + length);
             return list;
         }
-    }
-
-    private String dateFrom(Date date) {
-        return (date == null)
-                ? "<em>unregistered</em>"
-                : new SimpleDateFormat("MMM dd yyyy").format(date);
-    }
-
-    private String set2string(Set<String> set) {
-        boolean had = false;
-        String out = "";
-        for (String s : set) {
-            out += had ? "," + s : s;
-            had = true;
-        }
-        return out;
     }
 }

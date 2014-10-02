@@ -7,3 +7,4 @@ classes/
 *.zip
 fb.properties
 social.properties
+bower_components/
