@@ -21,6 +21,10 @@
 
 package com.cilogi.shiro.gae;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Cache;
@@ -33,6 +37,7 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.util.SimpleByteSource;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
@@ -42,6 +47,7 @@ import java.util.logging.Logger;
 
 @Cache
 @Entity
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GaeUser implements Serializable {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
@@ -52,6 +58,7 @@ public class GaeUser implements Serializable {
     @Id
     private String name;
 
+    @JsonIgnore
     private String passwordHash;
 
     /** The salt, used to make sure that a dictionary attack is harder given a list of all the
@@ -123,6 +130,7 @@ public class GaeUser implements Serializable {
         return dateRegistered == null ? null : new Date(dateRegistered.getTime());
     }
 
+    @JsonIgnore
     public boolean isRegistered() {
         return getDateRegistered() != null;
     }
@@ -139,6 +147,7 @@ public class GaeUser implements Serializable {
         return passwordHash;
     }
 
+    @JsonIgnore
     public byte[] getSalt() {
         return salt;
     }
@@ -174,5 +183,16 @@ public class GaeUser implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(name, passwordHash);
+    }
+
+    public String toJSONString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String out = mapper.writeValueAsString(this);
+            return out;
+        } catch (JsonProcessingException e) {
+            LOG.severe("Can't convert GaeUser " + this + " to JSON string");
+            return "";
+        }
     }
 }
