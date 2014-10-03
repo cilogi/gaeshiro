@@ -24,7 +24,9 @@ package com.cilogi.shiro.web.user;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import com.googlecode.objectify.VoidWork;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -39,6 +41,13 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
+/**
+ * This servlet registers a user for the first time and also changes the password
+ * if the user has lost it, or just wants a new one.
+ * A change of password is accompanied by a <code>change</code> parameter.
+ */
 @Singleton
 public class ConfirmServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(ConfirmServlet.class.getName());
@@ -51,27 +60,30 @@ public class ConfirmServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String code = request.getParameter(CODE);
-            String userName = request.getParameter(USERNAME);
-            String password = request.getParameter(PASSWORD);
+            final String code = Preconditions.checkNotNull(request.getParameter(CODE), "The registration code can't be null");
+            final String userName = Preconditions.checkNotNull(request.getParameter(USERNAME), "The user name can't be null");
+            final String password = Preconditions.checkNotNull(request.getParameter(PASSWORD), "The password can't be null");
+
             boolean isChange = "true".equals(request.getParameter(FORGOT));
 
-            GaeUserDAO dao = new GaeUserDAO();
+            final GaeUserDAO dao = new GaeUserDAO();
             String userNameFromCode = dao.findUserNameFromValidCode(code);
             if (userNameFromCode != null) {
-                // can't do this in a transaction as we need to update the counter, and I don't
-                // want to use the counter as the parent as it will not be efficient, and you
-                // can only transact a parent/child group in GAE.  Should be OK if a single person
-                // owns and transacts for a given user name.
-                GaeUser user = dao.findUser(userName);
-                if (user == null) {
-                    user = new GaeUser(userName, password, defaultRoles(), defaultPermissions());
-                    dao.saveUser(user, true);
-                } else {
-                    user.setPassword(password);
-                    dao.saveUser(user, false);
-                }
-                dao.register(code, userName);
+
+                // there are two objects, from two different groups, which can nowadays be run in a transaction
+                ofy().transact(new VoidWork() {
+                    public void vrun() {
+                        GaeUser user = dao.findUser(userName);
+                        if (user == null) {
+                            user = new GaeUser(userName, password, defaultRoles(), defaultPermissions());
+                            dao.saveUser(user, true);
+                        } else {
+                            user.setPassword(password);
+                            dao.saveUser(user, false);
+                        }
+                        dao.register(code, userName);
+                    }
+                });
 
                 Subject sub = SecurityUtils.getSubject();
                 UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
@@ -83,7 +95,7 @@ public class ConfirmServlet extends BaseServlet {
                                 : "OK, you're registered with user name " + userName);
             } else {
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
-                      "Wrong code, or code is expired: \"" + code +"\", you'll need to retry", response);
+                        "Wrong code, or code is expired: \"" + code + "\", you'll need to retry", response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,

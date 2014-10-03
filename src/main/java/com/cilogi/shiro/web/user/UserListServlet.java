@@ -108,9 +108,11 @@ public class UserListServlet extends BaseServlet {
         } else {
             List<GaeUser> list = Lists.newArrayList();
 
-            String cursorString = (String)session.getAttribute("cursor_" + start);
-            Cursor cursor = (cursorString == null) ? null : Cursor.fromWebSafeString(cursorString);
+            Cursor cursor = (Cursor)session.getAttribute("cursor_" + start);
             if (cursor == null && start >= MAX_QUERY_OFFSET) {
+                // Doing a query with an offset is very expensive as you have to read through
+                // everything up to the offset.  So we just bail out if that it the case. The font
+                // end should display an error of some sort.
                 LOG.warning("Can't process query for offset " + start + " as its too expensive");
                 return list;
             }
@@ -119,11 +121,7 @@ public class UserListServlet extends BaseServlet {
                     .limit(length)
                     .order("-dateRegistered");
 
-            if (cursor != null) {
-                query = query.startAt(cursor);
-            } else {
-                query = query.offset(start);
-            }
+            query = (cursor != null) ? query.startAt(cursor) : query.offset(start);
 
             QueryResultIterator<GaeUser> it = query.iterator();
             while (it.hasNext()) {
@@ -131,7 +129,7 @@ public class UserListServlet extends BaseServlet {
                 list.add(user);
             }
 
-            session.setAttribute("cursor_" + (start+length), it.getCursor().toWebSafeString());
+            session.setAttribute("cursor_" + (start+length), it.getCursor());
             return list;
         }
     }

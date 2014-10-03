@@ -24,6 +24,7 @@ package com.cilogi.shiro.gae;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -34,10 +35,12 @@ import java.util.logging.Logger;
 class RegistrationString {
     static final Logger LOG = Logger.getLogger(RegistrationString.class.getName());
 
-    @Id
+    @Id @Getter
     private String registrationString;
 
+    @Getter
     private String username;
+
     private Date dateCreated;
     private long validityMilliseconds;
 
@@ -49,14 +52,6 @@ class RegistrationString {
         this.username = username;
         this.dateCreated = new Date();
         this.validityMilliseconds = unit.toMillis(amount);
-    }
-
-    String getRegistrationString() {
-        return registrationString;
-    }
-
-    String getUsername() {
-        return username;
     }
 
     boolean isValid() {
