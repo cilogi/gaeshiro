@@ -21,10 +21,7 @@
 package com.cilogi.shiro.gae;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
 
-import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;

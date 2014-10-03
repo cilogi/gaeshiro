@@ -27,6 +27,7 @@ import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import lombok.NonNull;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.session.Session;
@@ -105,9 +106,18 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
         return create.createDocumentString(templateName, CreateDoc.map(args));
     }
 
+    protected String stringParameter(@NonNull String name, HttpServletRequest request, String deflt) {
+        String s = request.getParameter(name);
+        return (s == null) ? deflt : s;
+    }
+
     protected int intParameter(String name, HttpServletRequest request, int deflt) {
         String s = request.getParameter(name);
-        return (s == null) ? deflt : Integer.parseInt(s);
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return deflt;
+        }
     }
 
     protected boolean booleanParameter(String name, HttpServletRequest request, boolean deflt) {

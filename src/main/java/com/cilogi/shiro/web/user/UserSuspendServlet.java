@@ -26,6 +26,7 @@ import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

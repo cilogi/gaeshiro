@@ -88,7 +88,7 @@ public class ServeLogic extends AbstractModule {
         }
     }
 
-    private static boolean isDevelopmentServer() {
+    static boolean isDevelopmentServer() {
         SystemProperty.Environment.Value server = SystemProperty.environment.value();
         return server == SystemProperty.Environment.Value.Development;
     }

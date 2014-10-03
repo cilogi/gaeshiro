@@ -28,6 +28,7 @@ import com.cilogi.shiro.web.WakeServlet;
 import com.cilogi.shiro.web.oauth.GoogleLoginServlet;
 import com.cilogi.shiro.web.oauth.OAuthLoginServlet;
 import com.cilogi.shiro.web.user.*;
+import com.cilogi.shiro.web.user.dev.AddUsersServlet;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Preconditions;
@@ -75,6 +76,10 @@ public class ServeModule extends ServletModule {
         serve("/_ah/mail/*").with(MailReceiveServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
         serve("/cron/wake").with(WakeServlet.class);
+
+        if (ServeLogic.isDevelopmentServer()) {
+            serve(userBaseUrl + "/testAdd").with(AddUsersServlet.class);
+        }
     }
 
     private static Map<String,String> map(String... params) {

@@ -1,6 +1,6 @@
 // Copyright (c) 2014 Cilogi. All Rights Reserved.
 //
-// File:        UserDeleteServlet.java  (03/10/14)
+// File:        AddUsersServlet.java  (04/10/14)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,11 +18,13 @@
 //
 
 
-package com.cilogi.shiro.web.user;
+package com.cilogi.shiro.web.user.dev;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,39 +36,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 @Singleton
-public class UserDeleteServlet extends BaseServlet {
-    static final Logger LOG = LoggerFactory.getLogger(UserDeleteServlet.class);
+public class AddUsersServlet extends BaseServlet {
+    static final Logger LOG = LoggerFactory.getLogger(AddUsersServlet.class);
+
+    private static final int DEFAULT_COUNT = 100;
+    private static final String DEFAULT_DOMAIN = "dummy.com";
 
     @Inject
-    public UserDeleteServlet(Provider<GaeUserDAO> daoProvider) {
+    public AddUsersServlet(Provider<GaeUserDAO> daoProvider) {
         super(daoProvider);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-        String userName = request.getParameter(USERNAME);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int count = intParameter("count", request, DEFAULT_COUNT);
+        String domain = stringParameter("domain", request, DEFAULT_DOMAIN);
+
         GaeUserDAO dao = daoProvider.get();
-        GaeUser user = dao.findUser(userName);
-        if (user != null) {
-            if (isCurrentUserAdmin()) {
-                dao.deleteUser(user);
-                issueJson(response, HTTP_STATUS_OK,
-                        MESSAGE, "User " + userName + " is deleted");
-            } else {
-                issueJson(response, HTTP_STATUS_OK,
-                        MESSAGE, "Only admins can delete users", CODE, "404");
-                }
-        } else {
-            LOG.warn("Can't find user " + userName);
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
-                  "Can't find user " + userName, response);
+        for (int i = 0; i < count; i++) {
+            String nm = "user_"+i+"@" + domain;
+            GaeUser user = dao.get(nm);
+            if (user == null) {
+                user =  new GaeUser(nm, "friend", ImmutableSet.<String>of("user"), Sets.<String>newHashSet());
+                user.register();
+                dao.saveUser(user, true);
+            }
         }
-    } catch (Exception e) {
-        LOG.error("Suspend failure: " + e.getMessage());
-        issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-              "Error generating JSON: " + e.getMessage(), response);
     }
-    }
+
+
 }

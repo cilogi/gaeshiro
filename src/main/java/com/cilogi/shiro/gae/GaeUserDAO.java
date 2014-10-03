@@ -21,13 +21,14 @@
 
 package com.cilogi.shiro.gae;
 
-
-import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class GaeUserDAO extends BaseDAO<GaeUser> {
     static final Logger LOG = Logger.getLogger(GaeUserDAO.class.getName());
@@ -38,20 +39,6 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         ObjectifyService.register(GaeUser.class);
         ObjectifyService.register(GaeUserCounter.class);
         ObjectifyService.register(RegistrationString.class);
-
-        SystemProperty.Environment.Value server = SystemProperty.environment.value();
-        if (server == SystemProperty.Environment.Value.Development) {
-            GaeUserDAO dao = new GaeUserDAO();
-            for (int i = 0; i < 100; i++) {
-                String nm = "user_"+i+"@foo.com";
-                GaeUser user = dao.get(nm);
-                if (user == null) {
-                    user = new GaeUser(nm);
-                    user.register();
-                    dao.saveUser(user, true);
-                }
-            }
-        }
     }
 
     public GaeUserDAO() {
@@ -64,18 +51,26 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
      * @param changeCount should the user count be incremented
      * @return the user, after changes
      */
-    public GaeUser saveUser(GaeUser user, boolean changeCount) {
-        super.put(user);
-        if (changeCount) {
-            changeCount(1L);
-        }
-        return user;
+    public GaeUser saveUser(final GaeUser user, final boolean changeCount) {
+        return ofy().transact(new Work<GaeUser>() {
+            public GaeUser run() {
+                put(user);
+                if (changeCount) {
+                    changeCount(1L);
+                }
+                return user;
+            }
+        });
     }
 
-    public GaeUser deleteUser(GaeUser user) {
-        super.delete(user.getName());
-        changeCount(-1L);
-        return user;
+    public GaeUser deleteUser(final GaeUser user) {
+        return ofy().transact(new Work<GaeUser>() {
+             public GaeUser run() {
+                delete(user.getName());
+                changeCount(-1L);
+                return user;
+             }
+        });
     }
 
     public RegistrationString saveRegistration(String registrationString, String userName) {
@@ -104,28 +99,26 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
      * @param userName the user name for the code
      */
     public void register(final String code, final String userName) {
-        GaeUser user = get(userName);
-        if (user != null) {
-            user.register();
-            saveUser(user, true);
-        }
-        RegistrationDAO dao = new RegistrationDAO();
-        RegistrationString reg = dao.get(code);
-        if (reg != null) {
-            dao.delete(code);
-        }
+        ofy().transact(new VoidWork() {
+            public void vrun() {
+                GaeUser user = get(userName);
+                if (user != null) {
+                    user.register();
+                    saveUser(user, true);
+                }
+                RegistrationDAO dao = new RegistrationDAO();
+                RegistrationString reg = dao.get(code);
+                if (reg != null) {
+                    dao.delete(code);
+                }
+            }
+        });
     }
 
     public long getCount() {
         GaeUserCounterDAO dao = new GaeUserCounterDAO();
         GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
         return (count == null) ? 0 : count.getCount();
-    }
-
-    public Date getCountLastModified() {
-        GaeUserCounterDAO dao = new GaeUserCounterDAO();
-        GaeUserCounter count = dao.get(GaeUserCounter.COUNTER_ID);
-        return (count == null) ? new Date(0L) : count.getLastModified();
     }
 
     /**
