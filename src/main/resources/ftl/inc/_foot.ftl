@@ -1,6 +1,7 @@
 
 <script src="${staticBaseUrl}js/lib/jquery.min.js"></script>
 <script src="${staticBaseUrl}js/lib/bootstrap.min.js"></script>
+<script src="${staticBaseUrl}js/lib/mustache.js"></script>
 
 <script src="${staticBaseUrl}js/lib/jquery.tmpl.min.js"></script>
 <script src="${staticBaseUrl}js/lib/jquery.validate.min.js"></script>

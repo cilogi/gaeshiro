@@ -24,7 +24,8 @@ package com.cilogi.shiro.web.user;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
 import com.cilogi.shiro.web.BaseServlet;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -32,11 +33,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
+
 
 @Singleton
 public class UserSuspendServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(UserSuspendServlet.class);
 
     @Inject
     UserSuspendServlet(Provider<GaeUserDAO> daoProvider) {
@@ -50,38 +51,23 @@ public class UserSuspendServlet extends BaseServlet {
             GaeUserDAO dao = daoProvider.get();
             GaeUser user = dao.findUser(userName);
             if (user != null) {
-                boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
-                boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
-                if (isDelete) {
                     if (isCurrentUserAdmin()) {
-                        dao.deleteUser(user);
-                        issueJson(response, HTTP_STATUS_OK,
-                                MESSAGE, "User " + userName + " is deleted");
-                    } else {
-                        issueJson(response, HTTP_STATUS_OK,
-                                MESSAGE, "Only admins can delete users", CODE, "404");
-                    }
-                } else {
-                    if (isCurrentUserAdmin()) {
-                        user.setSuspended(isSuspend);
+                        user.setSuspended(true);
                         dao.saveUser(user, false);
                         issueJson(response, HTTP_STATUS_OK,
-                                MESSAGE, isSuspend
-                                        ? "User " + userName + " is suspended"
-                                        : "User " + userName + " is not suspended");
+                                MESSAGE, "User " + userName + " is suspended");
                     } else {
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, "Only admins can suspend users", CODE, "404");
 
                     }
-                }
             } else {
-                LOG.warning("Can't find user " + userName);
+                LOG.warn("Can't find user " + userName);
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
                       "Can't find user " + userName, response);
             }
         } catch (Exception e) {
-            LOG.severe("Suspend failure: " + e.getMessage());
+            LOG.error("Suspend failure: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Error generating JSON: " + e.getMessage(), response);
         }

@@ -12,7 +12,7 @@
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<link href="css/dataTables/demo_table.css" type="text/css" rel="stylesheet">
+<link href="css/dataTables/jQuery.dataTables.css" type="text/css" rel="stylesheet">
 
 
 <!-- Le styles -->
@@ -440,10 +440,9 @@ fb.live.host=http://gaeshiro.appspot.com
         </div>
         <div class="form-group">
             <label for="password" class="col-sm-3 control-label">Password</label>
-
             <div class="col-sm-8">
                 <input class="form-control required xlarge" id="password" name="password" size="30" type="password"/>
-                <a id="loginForgot" style="margin-left:150px; padding-left: 15px;" href="/register.ftl?forgot=true">Forgot your password?</a>
+                <a id="loginForgot" href="/register.ftl?forgot=true">Forgot your password?</a>
             </div>
         </div>
       <!-- /clearfix -->
@@ -468,6 +467,7 @@ fb.live.host=http://gaeshiro.appspot.com
 
 <script src="js/lib/jquery.min.js"></script>
 <script src="js/lib/bootstrap.min.js"></script>
+<script src="js/lib/mustache.js"></script>
 
 <script src="js/lib/jquery.tmpl.min.js"></script>
 <script src="js/lib/jquery.validate.min.js"></script>

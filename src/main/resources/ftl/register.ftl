@@ -43,55 +43,55 @@
             </div>
             <div class="row">
                <div class="col-md-10">
-                    <form id="registration-form" action="${userBaseUrl}/register" method="POST">
+                    <form class="form-horizontal" id="registration-form" action="${userBaseUrl}/register" method="POST">
                         <fieldset>
                             <legend>Please enter your Email</legend>
-                            <div class="clearfix">
-                                <label for="username">Email Address</label>
-
-                                <div class="input">
-                                    <input class="required email xlarge" id="username" name="username"
+                            <div class="form-group">
+                                <label for="username" class="col-sm-2 control-label">Email Address</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control required email" id="username" name="username"
                                            size="30" type="text"/>
                                 </div>
                             </div>
+
                         </fieldset>
                         <div id="stage1" class="actions">
                         <#if RequestParameters.forgot??>
-                            <button id="register" type="submit" class="btn primary">Change Password</button>
+                            <button id="register" type="submit" class="btn btn-primary">Change Password</button>
                         <#else>
-                            <button id="register" type="submit" class="btn primary">Register</button>
+                            <button id="register" type="submit" class="btn btn-primary">Register</button>
                         </#if>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="row" id="stage2" style="display:none">
-                <div class="span12">
+                <div class="col-md-10">
                     <p>Please wait for an email which will
                        provide you with a key, and a link.  Enter the key and choose a password
                        to complete your registration.</p>
-                    <form id="passwordSetForm" action="${userBaseUrl}/confirm" method="POST">
+                    <form id="passwordSetForm" class="form-horizontal" action="${userBaseUrl}/confirm" method="POST">
                         <fieldset>
                             <legend>Please fill in the code, password and the retype field</legend>
-                            <div class="clearfix">
-                                <label for="confirmCode">Code received</label>
+                            <div class="form-group">
+                                <label for="confirmCode" class="col-sm-3 control-label">Code received</label>
 
-                                <div class="input">
-                                    <input class="required xlarge" id="confirmCode" name="confirmCode"
-                                           size="40" type="text"/>
+                                <div class="col-sm-8">
+                                    <input class="form-control required" id="confirmCode" name="confirmCode"
+                                           type="text"/>
                                 </div>
                             </div>
-                            <div class="clearfix">
-                                <label for="password">Password</label>
-                                <div class="input">
-                                    <input class="required xlarge" id="password" name="password" size="30" type="password"/>
+                            <div class="form-group">
+                                <label for="password" class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control required" id="password" name="password" type="password"/>
                                 </div>
                             </div>
                             <!-- /clearfix -->
-                            <div class="clearfix">
-                                <label for="checkPassword">Retype Password</label>
-                                <div class="input">
-                                    <input class="xlarge" id="checkPassword" name="checkPassword" size="30"
+                            <div class="form-group">
+                                <label for="checkPassword" class="col-sm-3 control-label">Retype Password</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="checkPassword" name="checkPassword"
                                            type="password"/>
                                 </div>
                             </div>
@@ -99,9 +99,9 @@
                         </fieldset>
                         <div class="actions" id="resetButton">
                             <#if RequestParameters.forgot??>
-                              <button id="register" type="submit" class="btn primary">Reset</button>
+                              <button id="register" type="submit" class="btn btn-primary">Reset</button>
                              <#else>
-                               <button id="register" type="submit" class="btn primary">Register</button>
+                               <button id="register" type="submit" class="btn btn-primary">Register</button>
                             </#if>
                         </div>
                     </form>

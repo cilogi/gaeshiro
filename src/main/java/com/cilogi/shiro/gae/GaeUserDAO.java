@@ -22,6 +22,7 @@
 package com.cilogi.shiro.gae;
 
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.ObjectifyService;
 
 import java.util.Date;
@@ -37,6 +38,20 @@ public class GaeUserDAO extends BaseDAO<GaeUser> {
         ObjectifyService.register(GaeUser.class);
         ObjectifyService.register(GaeUserCounter.class);
         ObjectifyService.register(RegistrationString.class);
+
+        SystemProperty.Environment.Value server = SystemProperty.environment.value();
+        if (server == SystemProperty.Environment.Value.Development) {
+            GaeUserDAO dao = new GaeUserDAO();
+            for (int i = 0; i < 100; i++) {
+                String nm = "user_"+i+"@foo.com";
+                GaeUser user = dao.get(nm);
+                if (user == null) {
+                    user = new GaeUser(nm);
+                    user.register();
+                    dao.saveUser(user, true);
+                }
+            }
+        }
     }
 
     public GaeUserDAO() {

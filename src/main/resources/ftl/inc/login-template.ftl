@@ -8,7 +8,6 @@
         </div>
         <div class="form-group">
             <label for="password" class="col-sm-3 control-label">Password</label>
-
             <div class="col-sm-8">
                 <input class="form-control required xlarge" id="password" name="password" size="30" type="password"/>
                 <a id="loginForgot" href="/register.ftl?forgot=true">Forgot your password?</a>

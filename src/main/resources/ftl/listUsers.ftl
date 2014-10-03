@@ -78,29 +78,52 @@
 
 <#include "inc/_foot.ftl">
 
-<script src="js/lib/jquery.dataTables.min.js"></script>
+<script src="js/lib/jquery.dataTables.js"></script>
 
 <script>
+
+    // convert checked value into a checkbox for suspension, which may or may not be set
+    function editCheck(row, data) {
+        var isChecked = data["suspended"],
+            name = data["name"],
+            html = Mustache.render("<input type='checkbox' data-name='{{name}}' {{checked}}>", {
+                      name: name,
+                      checked: isChecked ? "checked" : ""
+                  });
+        console.log("row is " + row + " data is " + data);
+        $('td:eq(3)', row).html(html);
+    }
+
+    function editDelete(row, data) {
+        var name = data["name"],
+        html = Mustache.render("<input type='button' name='{{name}}' value='delete'>", {
+                     name: name
+        });
+        $('td:eq(4)', row).html(html);
+    }
+
     $(document).ready(function() {
-        var oTable = $("#userList").dataTable({
-            iDisplayLength: 20,
-            //bFilter: false,
-            bSort: false,
-            bLengthChange: false,
-            sPaginationType: "full_numbers",
-            bProcessing: true,
-            bServerSide: true,
-            sAjaxSource: shiro.userBaseUrl + "/list",
-            fnServerData: function ( sSource, aoData, fnCallback ) {
-                $.ajax( {
-                    "dataType": 'json',
-                    "type": "POST",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback
-                } );
+        var oTable = $("#userList").DataTable({
+            processing: true,
+            serverSide: true,
+            pagingType: "simple",
+            ajax: {
+                url: shiro.userBaseUrl + "/list",
+                type: "POST"
+            },
+            columns: [
+                { data: "name" },
+                {  data: "dateRegistered" },
+                {  data: "roles" },
+                {  data: "suspended" },
+                {  data: "name" }
+            ],
+            rowCallback : function(row, data) {
+                editCheck(row, data);
+                editDelete(row, data);
             }
         });
+
 
         // This change is done so that the search only occurs on enter (13).
         // First, we can't afford a search on each character over the wire, and
@@ -113,35 +136,55 @@
            }
         });
 
-
-        function processCheckOrDelete(tgt, isCheck) {
+        function processCheck(tgt) {
             var isChecked = tgt.is(":checked"),
-                name = tgt.attr("name"),
-                start = tgt.attr("data-start"),
-                length = tgt.attr("data-length"),
-                index = tgt.attr("data-index"),
+                name = tgt.attr("data-name"),
                 spin = shiro.spin.start(tgt.parent()),
-                data = isCheck
-                        ? { username : name, suspend : isChecked, delete: false}
-                        : { username : name, suspend : false, delete: true};
+                data = {username : name, suspend : isChecked};
+
             $.ajax(shiro.userBaseUrl+"/suspend", {
                 type: "POST",
                 dataType: "json",
                 data: data,
                 success: function(data, status) {
-                    if (!isCheck) {
-                        oTable.fnDeleteRow(index);
-                    }
-                    if (isCheck && data.code && data.code == "404") {
+                    if (data.code && data.code == "404") {
                         tgt.removeAttr('checked');
                     }
-                    spin.stop();
                     alert(data.message);
                 },
                 error: function(xhr) {
-                    spin.stop();
                     alert("suspend failed: " + xhr.responseText);
+                },
+                complete: function() {
+                    spin.stop();
                 }
+            });
+        }
+
+        function processDelete(tgt) {
+            var name = tgt.attr("name"),
+                spin = shiro.spin.start(tgt.parent()),
+                data = { username : name};
+
+            $.ajax(shiro.userBaseUrl+"/delete", {
+                type: "POST",
+                dataType: "json",
+                data: data,
+                success: function(data, status) {
+                    var rowElement = tgt.closest("tr");
+                    try {
+                        oTable.row(rowElement).remove().draw();
+                    } catch (err) {
+                        console.log("Error removing user row: " + err);
+                    }
+                },
+                error: function(xhr) {
+                    console.log("suspend failed: " + xhr.responseText);
+                },
+                complete: function() {
+                    spin.stop();
+                }
+
             });
 
             function success() {
@@ -151,11 +194,13 @@
         // When a checkbox is changed both suspend or unsuspend the relevant
         // user and invalidate the cache so we can see the change if we come back to this
         // page later.
-        $("#userList input[type='checkbox']").live("click", function() {
-            processCheckOrDelete($(this), true);
+        $("#userList").on("click", "input[type='checkbox']", function(e) {
+            e.preventDefault();
+            processCheck($(this));
         });
-        $("#userList input[type='button']").live("click", function() {
-            processCheckOrDelete($(this), false);
+        $("#userList").on("click", "input[type='button']", function(e) {
+            e.preventDefault();
+            processDelete($(this));
         });
 
     });

@@ -67,6 +67,7 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
+        serve(userBaseUrl + "/delete").with(UserDeleteServlet.class);
         serve(userBaseUrl + "/settings").with(SettingsServlet.class);
             // this one is here so that the default login filter works
         serve("/login").with(LoginServlet.class);
