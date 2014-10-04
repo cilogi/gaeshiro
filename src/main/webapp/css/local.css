@@ -1,9 +1,10 @@
 
 
 .jumbotron {
-    background-image: url(../images/grid.png), url(../images/lock.jpg);
+    background-image: url(../images/grid.png), url(../images/lock-cropped.jpg);
     background-repeat: repeat, no-repeat;
-    background-size: 3px 3px, cover;
+    background-size: 3px 3px, auto;
+    background-position: center center;
 }
 
 .semi {

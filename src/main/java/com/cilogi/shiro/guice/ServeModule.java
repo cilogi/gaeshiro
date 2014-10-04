@@ -78,7 +78,7 @@ public class ServeModule extends ServletModule {
         serve("/cron/wake").with(WakeServlet.class);
 
         if (ServeLogic.isDevelopmentServer()) {
-            serve(userBaseUrl + "/testAdd").with(AddUsersServlet.class);
+            serve("/testAdd").with(AddUsersServlet.class);
         }
     }
 

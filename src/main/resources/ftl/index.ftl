@@ -46,8 +46,7 @@
             with <a href="http://code.google.com/appengine/">App Engine</a> and
             <a href="http://code.google.com/p/google-guice/">Google Guice</a>.
 
-        <p> Front end user registration and password management is also provided in as minimalistic
-            a fashion as we could manage</p>
+        <p> Front end user registration and password management is also provided.</p>
         <p> <span class="btn btn-danger">New!</span> Sign in with Google or Facebook accounts.</p>
     </div>
 </div>
@@ -108,60 +107,6 @@
     </div>
 </section>
 
-<section id="motivation">
-    <div class="page-header">
-        <h1>Why
-            <small>are we doing this?</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <p>App Engine is a remarkable achievement. You can create a small free website and
-                scale it indefinitely with almost no ongoing administration required. A wide range
-                of useful services are available out of the box, with almost no set-up or maintenance
-                needed.</p>
-
-            <p>With scalability comes a set of restrictions and limitations. Interfaces are
-                non-standard: in particular you don't get SQL by default, which makes persistent storage and retrieval
-                'different'. Application instances are started on demand, so startup must be rapid. Startup is a
-                particular challenge for Java which is known to initialize with the alacrity of a drowsy snail.
-                App Engine charges for resources so you need to be careful to minimise their use and maximise caching.</p>
-
-            <p>There is a Google accounts service, but this can't be used in an application for a wider
-               public who don't have or don't want use a Google login. Even with a user service many sites
-               also need a permissions system to decide who gets to access what.</p>
-
-            <p><a href="http://shiro.apache.org/">Shiro</a> is a lightweight system for Authentication
-                and authorization. Startup on App Engine for Shiro seems to be about 1 second (on top of other
-                components of course), which is faster than for a heavier stack such as
-                <a href="http://static.springsource.org/spring-security/site/">Spring Security</a>.
-                The shorter the startup the easier it is to scale an app by adding
-                new instances in response to demand. So, Shiro is a good fit with App Engine and its worth
-                making the adaptation to the Datastore and Memcached services.</p>
-
-            <p>If you're not using the built-in authentication system for Google email addresses then you'll
-                likely want a basic system for user password management. Even if your preference is for a
-                federated login you'll probably still need your own system for those users that don't want to use
-                or can't use the federated system. This sample provides a basic password management system
-                which can easily be extended, or used as-is</p>
-
-            <p>The fastest way to run App Engine is with basic servlets run from <code>web.xml</code>.
-                This can be quite painful, so we're using Google Guice. Guice is a lightweight dependency
-                injection framework with an extension for web applications and it makes wiring an application
-                together much simpler.</p>
-
-            <p>Although Guice is considered to be lightweight (compared to Spring) it does slow down the
-                startup of the application. This is because Guice does its wiring at startup, so pretty-much
-                all your code will be loaded at once. With plain servlets you may be able to load classes incrementally.</p>
-
-            <p>This demonstration uses a simple trick to make the startup seem faster by using a static HTML page
-                as the home page and performing an Ajax call from Javascript to do the initialization. Some crufty
-                animation on load takes your attention away from the 5 second start-up delay!  The startup page is
-                generated from FreeMarker templates, just as the other pages, but at compile time, rather than run-time</p>
-        </div>
-    </div>
-</section>
 <section id="shiro">
     <div class="page-header">
         <h1>How
@@ -175,10 +120,7 @@
                 <a href="http://shiro.apache.org/realm.html">realms</a>,
                 the <a href="http://shiro.apache.org/caching.html">cache</a> and
                 the AOP-based annotations. If the annotations aren't required then
-                they can be eliminated and startup time will be reduced.
-
-            <p>
-
+                they can be eliminated and startup time will be reduced.</p>
             <p>To create a new realm only two methods need to be implemented, namely:</p>
 <pre class="prettyprint" lang-java>
     AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
@@ -210,8 +152,7 @@
                 is time-limited so that archived emails don't cause a problem.</p>
             <p>The final database object is a counter to keep track of the number of users we have.  Its
                too inefficient to count users when the number is large so a counter is needed.  We don't expect
-               the counter to be changed very often (not more than once a second) so there's no need for fancy
-               tricks like sharding.</p>
+               the counter to be changed very often (not more than once a second) so there's no need for sharding.</p>
         </div>
     </div>
 </section>
@@ -267,7 +208,7 @@
                 fallback applications must provide <em>traditional</em> password management.</p>
 
             <p>This sample provides the basics packaged so that anyone working with App Engine can incorporate
-                it relatively simply, although presentational changes will be required.</p>
+                it relatively simply, although changes will be required to the front end code.</p>
 
             <p>In describing the flow we use relative URLs to describe processes controlled by servlets.</p>
 
@@ -281,8 +222,7 @@
                     and a link. The user can either
                     enter the code and the desired password on the page or click the link in the sent email and
                     enter the code and password at the page which comes up.
-                    In either case
-                    we post or get to the <code>/confirm</code> URL with the code as a parameter.
+                    In either case we post or get to the <code>/confirm</code> URL with the code as a parameter.
                 <li>This checks the validity of the code, and if its valid
                     adds a confirmation message to the current page. The user is logged in on the server and
                     we are done.
@@ -313,14 +253,12 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-            <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework
-               (it actually uses <a href="http://lesscss.org/">less</a> to create CSS) which makes well laid out sites
-               easy for those of us with no layout skills.</p>
+            <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework.</p>
             <p>The HTML pages are organised using the Freemarker templating language. The <code>index.html</code>
                main page for example (this one) is pre-generated using Freemarker to avoid a wait while App Engine spins
                up an instance.  This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
                the Freemarker pre-processor</p>
-            <p>OAuth for the social login is done with <code>scribe</code> which makes a complicated process incredibly
+            <p>OAuth for the social login is done with <code>scribe</code> which makes a complicated process
                simple.  Heartily recommended.</p>
             <p>All the administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax
                features.  This is intended to decouple the login from the presentation if we wish to produce
@@ -329,13 +267,13 @@
                server-side security but speeds things up and helps bring down App Engine's costs.</p>
             <h3>Reuse</h3>
             <p>The <code>com.cilogi.shiro.gae</code> package should
-               be easily re-usable.  There are dependencies on Shiro, Objectify and Guava.  The Guava
-               dependency could be removed with a little effort, Objectify somewhat more.</p>
+               be re-usable.  There are dependencies on Shiro, Objectify and Guava.  The Guava
+               dependency could be removed with a some effort, Objectify somewhat more.</p>
             <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
                I18N for strings, but the logic is re-usable.</p>
             <h3>Secrets</h3>
             <p>Note that to use Facebook you need to register a Web App with Facebook and put the keys in
-               <code>src/main/resources/social.properties</code>.  The file will look something like this:</p>
+              <code>src/main/resources/social.properties</code>.  The file will look something like this:</p>
 <pre class="prettyprint" lang-java>
 fb.local.apiKey=*your key here*
 fb.local.apiSecret=*your secret here*

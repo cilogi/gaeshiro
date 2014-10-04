@@ -44,7 +44,7 @@
             </div>
             <div class="row">
                <div class="col-md-12">
-                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="userList">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table display" id="userList">
                     <thead>
                         <tr>
                             <th>Email Address</th>
@@ -79,6 +79,7 @@
 <#include "inc/_foot.ftl">
 
 <script src="js/lib/jquery.dataTables.js"></script>
+<script src="js/lib/dataTables.bootstrap.js"></script>
 
 <script>
 
