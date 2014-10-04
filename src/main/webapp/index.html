@@ -174,13 +174,13 @@ body {
                 needed.</p>
 
             <p>With scalability comes a set of restrictions and limitations. Interfaces are
-                non-standard: in particular you don't get SQL (its coming), so persistent storage and retrieval are
+                non-standard: in particular you don't get SQL by default, which makes persistent storage and retrieval
                 'different'. Application instances are started on demand, so startup must be rapid. Startup is a
                 particular challenge for Java which is known to initialize with the alacrity of a drowsy snail.
-                App Engine charges for resources so you need to be careful to minimise use.</p>
+                App Engine charges for resources so you need to be careful to minimise their use and maximise caching.</p>
 
-            <p>There is a Google accounts service, but this can't be used for an application used by a wider
-               public, who don't have or don't want use a Google login. Even with a user service many sites
+            <p>There is a Google accounts service, but this can't be used in an application for a wider
+               public who don't have or don't want use a Google login. Even with a user service many sites
                also need a permissions system to decide who gets to access what.</p>
 
             <p><a href="http://shiro.apache.org/">Shiro</a> is a lightweight system for Authentication
@@ -204,14 +204,12 @@ body {
 
             <p>Although Guice is considered to be lightweight (compared to Spring) it does slow down the
                 startup of the application. This is because Guice does its wiring at startup, so pretty-much
-                all your code will be loaded at once. With plain servlets you may be able to load classes incrementally.
-                It is possible to use Guice without its AOP features, which slow down startup, but we've chosen
-                to go with the whole package to show the use of Shiro annotations which require AOP.</p>
+                all your code will be loaded at once. With plain servlets you may be able to load classes incrementally.</p>
 
             <p>This demonstration uses a simple trick to make the startup seem faster by using a static HTML page
                 as the home page and performing an Ajax call from Javascript to do the initialization. Some crufty
                 animation on load takes your attention away from the 5 second start-up delay!  The startup page is
-                generated from FreeMarker templates, just as the other pages, but at compile time, rather than runtime</p>
+                generated from FreeMarker templates, just as the other pages, but at compile time, rather than run-time</p>
         </div>
     </div>
 </section>

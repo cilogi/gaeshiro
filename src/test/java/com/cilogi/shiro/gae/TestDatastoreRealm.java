@@ -37,7 +37,7 @@ public class TestDatastoreRealm extends TestCase {
     static final Logger LOG = Logger.getLogger(TestDatastoreRealm.class.getName());
 
     private final LocalServiceTestHelper helper =
-        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setApplyAllHighRepJobPolicy());
 
     public TestDatastoreRealm(String nm) {
         super(nm);

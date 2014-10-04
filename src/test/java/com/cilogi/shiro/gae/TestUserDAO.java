@@ -32,7 +32,7 @@ public class TestUserDAO extends TestCase {
     static final Logger LOG = Logger.getLogger(TestUserDAO.class.getName());
 
     private final LocalServiceTestHelper helper =
-        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setApplyAllHighRepJobPolicy());
 
     public TestUserDAO(String nm) {
         super(nm);
@@ -50,13 +50,11 @@ public class TestUserDAO extends TestCase {
 
     public void testBase() {
         GaeUserDAO dao = new GaeUserDAO();
-        long startCount = dao.getCount();
         GaeUser user = new GaeUser("tim", "tim");
         user.register();
         dao.saveUser(user, true);
         GaeUser back = dao.findUser("tim");
         assertEquals(user, back);
-        assertEquals(1L + startCount, dao.getCount());
     }
 
 }
