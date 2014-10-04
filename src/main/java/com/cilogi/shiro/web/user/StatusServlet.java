@@ -76,8 +76,7 @@ public class StatusServlet extends BaseServlet {
                         "admin", "false");
             }
         } catch (Exception e) {
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                  "Internal error getting status: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Internal error getting status: " + e.getMessage());
         }
     }
 

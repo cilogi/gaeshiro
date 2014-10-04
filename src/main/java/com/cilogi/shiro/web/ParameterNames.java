@@ -27,11 +27,6 @@ package com.cilogi.shiro.web;
 interface ParameterNames {
     String CODE = "code";
 
-    // these 4 are from jQuery.dataTables
-    String DATATABLE_ECHO = "sEcho";
-    String DATATABLE_START = "iDisplayStart";
-    String DATATABLE_LENGTH = "iDisplayLength";
-    String DATATABLE_SEARCH = "sSearch";
 
     String DELETE = "delete";
     String FORGOT = "forgot";

@@ -79,7 +79,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr) {
-                    alert("submission failed: " + xhr.responseText);
+                    alert("submission failed: " + xhr.responseJSON);
                 }
             });
         }

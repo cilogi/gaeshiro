@@ -62,21 +62,20 @@ public class SettingsServlet extends BaseServlet {
                         dao.saveUser(user, false);
                         issueJson(response, HTTP_STATUS_OK, MESSAGE, "password changed successfully");
                     } else {
-                        issue(MIME_TEXT_PLAIN, HTTP_STATUS_FORBIDDEN, "Your password is invalid: " + password, response);
+                        issueJson(response, HTTP_STATUS_FORBIDDEN, MESSAGE, "Your password is invalid: " + password);
                     }
                 } else {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "You're not " + userName, response);
+                    issueJson(response, HTTP_STATUS_NOT_FOUND, MESSAGE, "You're not " + userName);
                 }
             }  else {
                 if (user == null) {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_FORBIDDEN, "You're not a user I can set the password for", response);
+                    issueJson(response, HTTP_STATUS_FORBIDDEN, MESSAGE, "You're not a user I can set the password for");
                 }  else {
-                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_FORBIDDEN, "You're not authenticated", response);
+                    issueJson(response, HTTP_STATUS_FORBIDDEN, MESSAGE, "You're not authenticated");
                 }
             }
         } catch (Exception e) {
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                  "Oops, error in settings: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Oops, error in settings: " + e.getMessage());
         }
     }
 }

@@ -22,7 +22,6 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.GaeUserDAO;
-import com.cilogi.shiro.gae.UserAuthType;
 import com.google.common.collect.Maps;
 
 import javax.inject.Inject;
@@ -69,7 +68,7 @@ public class FreemarkerServlet extends BaseServlet {
 
     private static String userType(GaeUser user) {
         String hash = user.getPasswordHash();
-        return (hash == null) ? "SOCIAL" : UserAuthType.CILOGI.name();
+        return (hash == null) ? "SOCIAL" : "CILOGI";
     }
 
     private static Map<String,String> requestParameters(HttpServletRequest request) {

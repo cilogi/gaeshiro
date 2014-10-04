@@ -60,13 +60,11 @@ public class UserDeleteServlet extends BaseServlet {
                 }
         } else {
             LOG.warn("Can't find user " + userName);
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
-                  "Can't find user " + userName, response);
+            issueJson(response, HTTP_STATUS_NOT_FOUND, MESSAGE, "Can't find user " + userName);
         }
     } catch (Exception e) {
         LOG.error("Suspend failure: " + e.getMessage());
-        issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-              "Error generating JSON: " + e.getMessage(), response);
+        issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Error generating JSON: " + e.getMessage());
     }
     }
 }

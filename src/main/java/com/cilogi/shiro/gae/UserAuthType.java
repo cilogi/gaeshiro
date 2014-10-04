@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.gae;
 
-public enum
-        UserAuthType {
+public enum UserAuthType {
     CILOGI, GOOGLE, FACEBOOK;
 }

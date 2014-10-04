@@ -93,8 +93,7 @@ public class RegisterServlet extends BaseServlet {
             }
         } catch (Exception e) {
             LOG.warning("Can't register: " + e.getMessage());
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                  "Internal error: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Internal error: " + e.getMessage());
         }
     }
 

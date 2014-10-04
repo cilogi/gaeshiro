@@ -70,8 +70,7 @@ public class UserListServlet extends BaseServlet {
             doOutput(session, response, search, start, length, draw);
         } catch (Exception e) {
             LOG.severe("Error posting to list: " + e.getMessage());
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                    "Error generating JSON: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Error generating JSON: " + e.getMessage());
         }
     }
 
@@ -89,7 +88,7 @@ public class UserListServlet extends BaseServlet {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat( new SimpleDateFormat("MMM dd yyyy"));
         String output = mapper.writeValueAsString(map);
-        issue(MIME_APPLICATION_JSON, HTTP_STATUS_OK, output, response);
+        issue(MIME_APPLICATION_JSON, HTTP_STATUS_OK, output, response); // This is JSON
     }
 
     private List<GaeUser> users(HttpSession session, GaeUserDAO dao, String sSearch, int start, int length) {

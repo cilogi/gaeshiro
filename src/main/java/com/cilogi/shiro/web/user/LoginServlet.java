@@ -68,10 +68,10 @@ public class LoginServlet extends BaseServlet {
                 //subject.login(token);
                 issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");
             } catch (AuthenticationException e) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
+                issueJson(response, HTTP_STATUS_NOT_FOUND, MESSAGE, "cannot authorize " + username + ": " + e.getMessage());
             }
         } catch (Exception e) {
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Internal error: " + e.getMessage());
         }
     }
 }

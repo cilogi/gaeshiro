@@ -55,22 +55,17 @@ public class UserSuspendServlet extends BaseServlet {
                     if (isCurrentUserAdmin()) {
                         user.setSuspended(true);
                         dao.saveUser(user, false);
-                        issueJson(response, HTTP_STATUS_OK,
-                                MESSAGE, "User " + userName + " is suspended");
+                        issueJson(response, HTTP_STATUS_OK, MESSAGE, "User " + userName + " is suspended");
                     } else {
-                        issueJson(response, HTTP_STATUS_OK,
-                                MESSAGE, "Only admins can suspend users", CODE, "404");
-
+                        issueJson(response, HTTP_STATUS_OK, MESSAGE, "Only admins can suspend users", CODE, "404");
                     }
             } else {
                 LOG.warn("Can't find user " + userName);
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
-                      "Can't find user " + userName, response);
+                issueJson(response, HTTP_STATUS_NOT_FOUND, MESSAGE, "Can't find user " + userName);
             }
         } catch (Exception e) {
             LOG.error("Suspend failure: " + e.getMessage());
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                  "Error generating JSON: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Error generating JSON: " + e.getMessage());
         }
     }
 }

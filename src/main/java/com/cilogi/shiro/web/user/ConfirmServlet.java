@@ -94,12 +94,10 @@ public class ConfirmServlet extends BaseServlet {
                                 ? "OK, password changed for user name " + userName
                                 : "OK, you're registered with user name " + userName);
             } else {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND,
-                        "Wrong code, or code is expired: \"" + code + "\", you'll need to retry", response);
+                issueJson(response, HTTP_STATUS_NOT_FOUND, MESSAGE, "Wrong code, or code is expired: \"" + code + "\", you'll need to retry");
             }
         } catch (Exception e) {
-            issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                  "Oops, error in confirm: " + e.getMessage(), response);
+            issueJson(response, HTTP_STATUS_INTERNAL_SERVER_ERROR, MESSAGE, "Error in confirm: " + e.getMessage());
         }
     }
 
