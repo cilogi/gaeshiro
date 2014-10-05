@@ -98,8 +98,12 @@ public class BaseServlet extends HttpServlet implements ParameterNames, MimeType
     }
 
     protected void showView(HttpServletResponse response, String templateName, Map<String,Object> args) throws IOException {
-         String html =  create.createDocumentString(templateName, args);
-         issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+        try {
+            String html =  create.createDocumentString(templateName, args);
+            issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+        } catch (Exception e) {
+            issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "Can't find " + templateName + ": "  +e.getMessage(), response);
+        }
      }
 
     protected String view(String templateName, Object... args) {
